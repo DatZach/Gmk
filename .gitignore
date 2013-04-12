@@ -17,6 +17,9 @@ TestResults
 [Bb]in/
 *_i.c
 *_p.c
+*.idb
+*.manifest
+*.tlog
 *.ilk
 *.meta
 *.obj
