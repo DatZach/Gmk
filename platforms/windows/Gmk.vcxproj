@@ -66,10 +66,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\gmk.cpp" />
+    <ClCompile Include="..\..\src\gmkresource.cpp" />
+    <ClCompile Include="..\..\src\gmksettings.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\src\stream.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\include\gmk.hpp" />
+    <ClInclude Include="..\..\src\include\gmkresource.hpp" />
+    <ClInclude Include="..\..\src\include\gmksettings.hpp" />
     <ClInclude Include="..\..\src\include\stream.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
