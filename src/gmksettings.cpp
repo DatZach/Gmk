@@ -24,6 +24,9 @@ namespace Gmk
 		unsigned int ver = stream->ReadDword();
 
 		Stream* settingsStream = stream->Deserialize();
+		Stream* tmpStream = new Stream("settings.bin", Stream::SmWrite);
+		tmpStream->WriteData(settingsStream->GetMemoryBuffer());
+		delete tmpStream;
 
 		/*
 		 *	These are the Studio additions to the GM8.1 GMK format.
@@ -72,6 +75,49 @@ namespace Gmk
 		priority				= settingsStream->ReadDword();
 		freeze					= settingsStream->ReadBoolean();
 		showProgress			= settingsStream->ReadDword();
+
+		// TODO Fix this piece of shit, doesn't work as fucking usual
+		if (ver > 800)
+		{
+			if (showProgress)
+			{
+				backImage = settingsStream->ReadBitmap();
+				frontImage = settingsStream->ReadBitmap();
+			}
+
+			if (settingsStream->ReadBoolean())
+				loadImage = settingsStream->ReadBitmap();
+		}
+		else
+		{
+			if (showProgress == 2)
+			{
+				backImage = settingsStream->ReadBitmap();
+				frontImage = settingsStream->ReadBitmap();
+			}
+
+			loadImage = settingsStream->ReadBitmap();
+		}
+
+		loadTransparent			= settingsStream->ReadBoolean();
+		loadAlpha				= settingsStream->ReadDword();
+		scaleProgress			= settingsStream->ReadBoolean();
+		displayErrors			= settingsStream->ReadBoolean();
+		writeErrors				= settingsStream->ReadBoolean();
+		abortErrors				= settingsStream->ReadBoolean();
+		variableErrors			= settingsStream->ReadBoolean();
+		
+		if (ver >= 820)
+		{
+			webGL				= settingsStream->ReadBoolean();
+			creationEventOrder	= settingsStream->ReadBoolean();
+		}
+
+		if (ver > 800)
+		{
+			unsigned int consantsCount = settingsStream->ReadDword();
+			// TODO read constants
+		}
 
 		delete settingsStream;
 	}

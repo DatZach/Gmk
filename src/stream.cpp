@@ -195,11 +195,6 @@ namespace Gmk
 		return buffer.data();
 	}
 
-	Stream* Stream::ReadCompressedData()
-	{
-		return NULL;
-	}
-
 	void Stream::ReadData(const StreamBuffer& value)
 	{
 		if (streamMode == SmMemory)
@@ -332,9 +327,12 @@ namespace Gmk
 		return (time_t)(8640000000000.0 * ReadDouble() + GmTimestampEpoch);
 	}
 
-	void Stream::WriteCompressedData(Stream* value)
+	Stream* Stream::ReadBitmap()
 	{
+		if (!ReadBoolean())
+			return NULL;
 
+		return Deserialize();
 	}
 
 	void Stream::WriteData(const StreamBuffer& value)
@@ -437,6 +435,14 @@ namespace Gmk
 	void Stream::WriteTimestamp()
 	{
 		WriteDouble((double)(time(NULL) - GmTimestampEpoch) / 8640000000000.0);
+	}
+
+	void Stream::WriteBitmap(Stream* value)
+	{
+		WriteBoolean(value != NULL);
+		
+		if (value != NULL)
+			Serialize(value);
 	}
 
 	void Stream::Deflate()

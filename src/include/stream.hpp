@@ -51,7 +51,6 @@ namespace Gmk
 		const unsigned char* GetRawMemoryBuffer() const;
 
 		// Reading
-		Stream* ReadCompressedData();
 		void ReadData(const StreamBuffer& value);
 		bool ReadBoolean();	
 		unsigned char ReadByte();
@@ -62,9 +61,9 @@ namespace Gmk
 		float ReadFloat();
 		std::string ReadString();
 		time_t ReadTimestamp();
+		Stream* ReadBitmap();
 
 		// Writing
-		void WriteCompressedData(Stream* value);
 		void WriteData(const StreamBuffer& value);
 		void WriteBoolean(bool value);
 		void WriteByte(unsigned char value);
@@ -75,6 +74,7 @@ namespace Gmk
 		void WriteFloat(float value);
 		void WriteString(const std::string& value);
 		void WriteTimestamp();
+		void WriteBitmap(Stream* value);
  
 		// Compression
 		void Deflate();

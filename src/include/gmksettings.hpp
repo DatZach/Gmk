@@ -49,6 +49,7 @@ namespace Gmk
 		int				showProgress;
 		Stream*			frontImage;
 		Stream*			backImage;
+		Stream*			loadImage;
 		bool			loadTransparent;
 		unsigned int	loadAlpha;
 		bool			scaleProgress;
@@ -57,6 +58,8 @@ namespace Gmk
 		bool			writeErrors;
 		bool			abortErrors;
 		bool			variableErrors;
+		bool			webGL;
+		bool			creationEventOrder;
 		std::string		author;
 		std::string		version;
 		std::string		information;
