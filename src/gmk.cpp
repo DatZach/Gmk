@@ -85,12 +85,25 @@ namespace Gmk
 			case 810:
 				version = Ver81;
 				break;
+
+			default:
+				throw new std::exception("Unknown or unsupported version!");
 		}
 
 		gameId = stream->ReadDword();
 		for(unsigned int i = 0; i < GMK_GUID_LENGTH; ++i)
 			guid[i] = stream->ReadByte();
 
+		switch(version)
+		{
+			case Ver81:
+				LoadVer81(stream);
+				break;
+		}
+	}
+
+	void Gmk::LoadVer81(Stream* stream)
+	{
 		// Load settings
 		settings = new Settings(this);
 		settings->Read(stream);

@@ -21,7 +21,7 @@ namespace Gmk
 		Ver61,
 		Ver7,
 		Ver8,
-		Ver81
+		Ver81								// GM 8.1.141 (r11549)
 	} Version;
 
 	class GmkResource
