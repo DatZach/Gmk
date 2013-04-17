@@ -104,8 +104,45 @@ namespace Gmk
 
 	void Gmk::LoadVer81(Stream* stream)
 	{
+		unsigned int count = 0;
+
 		// Load settings
 		settings = new Settings(this);
 		settings->Read(stream);
+
+		// Load triggers
+		stream->ReadDword();
+		count = stream->ReadDword();
+		while(count--)
+		{
+			Trigger* trigger = new Trigger(this);
+			trigger->Read(stream);
+			triggers.push_back(trigger);
+		}
+
+		stream->ReadTimestamp();
+
+		// Load constants
+		stream->ReadDword();
+		count = stream->ReadDword();
+		while(count--)
+		{
+			std::string name = stream->ReadString();
+			std::string value = stream->ReadString();
+
+			constants.insert(std::pair<std::string, std::string>(name, value));
+		}
+
+		stream->ReadTimestamp();
+
+		// Load sounds
+		stream->ReadDword();
+		count = stream->ReadDword();
+		while(count--)
+		{
+			Sound* sound = new Sound(this);
+			sound->Read(stream);
+			sounds.push_back(sound);
+		}
 	}
 }

@@ -13,6 +13,11 @@ namespace Gmk
 		// TODO declare defaults
 	}
 
+	Settings::~Settings()
+	{
+		// TODO Clean allocated resources
+	}
+
 	void Settings::WriteVer81(Stream* stream)
 	{
 
@@ -77,7 +82,7 @@ namespace Gmk
 		showProgress			= settingsStream->ReadDword();
 
 		// TODO Fix this piece of shit, doesn't work as fucking usual
-		if (ver > 800)
+		/*if (ver > 800)
 		{
 			if (showProgress)
 			{
@@ -117,7 +122,7 @@ namespace Gmk
 		{
 			unsigned int consantsCount = settingsStream->ReadDword();
 			// TODO read constants
-		}
+		}*/
 
 		delete settingsStream;
 	}

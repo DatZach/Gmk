@@ -199,7 +199,8 @@ namespace Gmk
 	{
 		if (streamMode == SmMemory)
 		{
-			// TODO Is this even important?
+			std::memcpy((void*)value.data(), buffer.data() + position, value.size());
+			position += value.size();
 		}
 		else
 			fileStream.read(reinterpret_cast<char*>(const_cast<unsigned char*>(value.data())), value.size());

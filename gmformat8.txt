@@ -1,0 +1,700 @@
+----------------------------
+--------Introduction--------
+----------------------------
+
+Binary Format of GameMaker 8 Files (gmk)
+Copyright (c) 2008, 2009 IsmAvatar <IsmAvatar@gmail.com>
+
+License:
+Redistribution and use of this document, with or without modification,
+is permitted provided that redistributions retain the above copyright
+notice, this condition, and the following disclaimer.
+
+Disclaimer:
+THIS DOCUMENT IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THIS DOCUMENT OR THE USE OR OTHER DEALINGS IN
+THIS DOCUMENT.
+
+You may need a hex editor to examine GM files and/or make modifications. For Windows, I would recommend XVI32, found at http://www.chmaas.handshake.de/delphi/freeware/xvi32/xvi32.htm and for Linux I would recommend Okteta
+
+Note About Legality:
+I have thoroughly reviewed the Licence Agreement of GameMaker, and have a general knowledge of copyrights and such. These activities are legal, as long as I do not tamper with the compiler and as long as I maintain credit to Mark Overmars for the original GameMaker, which I will make sure to revere and worship greatly in this product. A note from Mark Overmars himself regarding this activity:
+"Sorry for not replying earlier. I was first was on holidays and then trying to catch up. I don;t think this is an important issue. Actually .gm6 files are not really protected. And even though I prefer people not to hack them, I cannot see a reason to be worried about this.
+
+Mark"
+
+Note About Version:
+From time to time, you'll see some bytes documented as "GM Version needed for the following info". For resources, first GM version tells when the resource type was added, while the second GM version tells when the last update of the resource type was.
+We will only focus on versions 530, 600, and 702 although these other versions may be mentioned elsewhere.
+* 800 for GM8.0 (notice, GM8's GMKs are zlib compressed. Please see Note About GM8 below)
+* 702 for GM7.0 (notice, GM7's GMKs are obfuscated. Please see the GMKrypt Documentation)
+* 701 for GM7.0 as well.
+* 620 for GM7.0 in some places. This may be because Mark was planning on calling it 6.2
+* 600 for GM6.1 and GM6.0 (cross-compatible)
+* 530 for GM5.3 and GM5.3a (bug-fix version. cross-compatible)
+* 520 for 510 for GM5.1
+* 500 for GM5.2 and GM5.0 (forward compatible)
+* 430 for GM4.3
+and so on. Other numbers may pop up as well, as in-between versions. For example, 542 means that 530 cannot read it, but 600 can. Software usually does this for format changes during development. Also see Angle Brackets below.
+
+Note About Longint / Numbers:
+GM uses primarily 32-bit (4-byte) little-endian signed integers, which I choose to call "longints", for most of its data. Even basic things like True/False and Radio Buttons etc. each tend to be stored in their own 4-byte/32-bit set, rather than merging 8 of them to make a single byte or merging 32 of them to make that same 4-byte.
+I will display any dates as Gregorian ISO standard (yyyy-mm-dd).
+Dates are stored in 64-bit (8-byte) signed doubles representing the number of days that have passed since 1899-12-30. Fractional parts are used to represent fractions of days (hours, minutes, seconds, etc).
+Colors are stored in a longint, usually only using the first 3 bytes as R G B respectively, although sometimes they'll make use of the 4th byte, so handle carefully. Usually the 4th byte is 0.
+Unless otherwise denoted by a preceding (<byte size>-bytes) note, all data is stored in 32-bit integers or 32-bit preceded 8-bit character sequences (as denoted by insertions, explained below).
+
+Note About Insertion and Curly Brackets { }
+Insertion will take 2 normal forms, and a third special form (see Angle Brackets). Both normal forms will almost always have a longint before the insertion to indicate how much information is contained in the insertion. If this number is 0, no additional data will be inserted. The data is then surrounded by curly brackets { }.
+The first kind of insertion is String Insertion. This is when the data is a series of 8-bit (1-byte) characters. My documentation will show these by having all the information (the length longint, the curly brackets, and the data) on one line.
+Example of string insertion:
+Length of Name { Name }
+which would turn out as something like 07 Sprites ...
+or just 00 ...
+The second kind of insertion is Structured Insertion (although you needn't remember the name - it's stolen from C's struct). For this, the documentation format will be the length longint, and then the first curly bracket { on a new line, followed by the data on its own lines separate from the curly brackets, and then concluded with an end curly bracket on a new line. See the examples below.
+Two common forms will arise. One is the true/false Structured Insertion. This determines simply whether or not the insertion will appear.
+Example of a true/false
+Object exists
+{
+Object ID
+}
+The other is the Repitition Structured Insertion. This means that the first longint will indicate *how many times* the data within will be inserted. The data itself is not actually repeated - only the structure format is.
+Example of repetition
+Number of Objects
+{
+View ID
+}
+In this case, supposing there's 8 views, each with increments of ID
+The result would be: 08 00 01 02 03 04 05 06 07 (replacing each of those numbers with the longint equivelent)
+
+Note about Conditional Insertions and Angle Brackets < >
+Conditional Insertions are when a certain condition (e.g. the value of a prior longint) must be met in order for the data to be inserted. This is set apart from normal insertions because that longint may not be adjacent, or because the longint value may not be an obvious indicator of the repetitions (e.g. 0 may indicate that data is indeed inserted, while 1 may indicate that it is not). Angle Brackets are placed around this conditional expression.
+A very common example of Conditional Insertions is the Version Number, as this weighs heavily on what data appears in which version. Each section has its own version number - there's one for Game Information, one for each resource, and a separate one for the format of each resource. Thus you should keep an eye on which version number is being used for that section - and also keep an eye on the scope of that version number.
+Example of Version Numbers:
+> GM version needed for the following info (440/600/800)
+> <440 only> Kind (-1*=None, 0="Wave", 1="Midi", 2="Mp3", 10="Unknown")
+> <600+> Kind (0=Normal, 1=Background, 2=3D, 3=Multimedia)
+> <440-600> Preload (1)
+Here we see something specific to 440, followed by something which only appears in 600 and up (and does not appear in 440), followed by something specific to versions 440 to 600 (and does not appear in 800)
+When different versions get grouped together, I try to group the older versions first and the newer versions later.
+Of course, Conditional Insertions aren't solely dependant on a version number. Here's an example of Special Case insertion (one which does not denote how often the data is repeated)
+10 or -1
+<if not -1> Size of Image data { Image Data }
+This frequently occurs in Sounds and Images. At this time we do not understand why this odd conditional is there - why use 10 instead of 1, and -1 instead of 0?
+
+Note about Default Values in Parenthesis ()
+I've also included default values and value ranges to my format documentations, for your convenience. When the default value is not obvious by the format, I will put an asterisk (*) next to it.
+Here are a few examples of the formats used;
+(<Default>) e.g. (0)
+(<Lower>-<Upper>,<Default>) e.g. (0-100,10)
+(<Lower> to <Upper>,<Default>)  e.g. (-1 to 100,-1)
+([Range,]<Val1>=Name1,<Val2>=Name2[,<Val3>=Name3[,...]]) e.g. (0-2,0*=Yes,1=No,2=Cancel)
+
+----------------------------
+---------Base Format--------
+----------------------------
+
+File format identifier (1234321)
+Format version (530/600/701/800)
+Game ID (0-100,000,000, Random*)
+(16 bytes) These seem to go hand-in-hand with the Game ID, for when they change. Its purpose is unclear. You may just plug in 0's with no apparent effects.
+
+GM version needed for Game Settings (530/542/600/702/800)
+<800+> Length of Zlib Game Settings { Zlib Game Settings }
+
+<800+> GM version needed for Triggers (800)
+<800+> How many Trigger ID's there are (0)
+{
+ Length of ZLib Trigger { ZLib Trigger }
+}
+<800+> (double) Last time Triggers were changed
+
+<800+> GM version needed for Constants (800)
+<800+> How many Constants there are (0)
+{
+ Length of Name { Name }
+ Length of Value { Value }
+}
+<800+> (double) Last time Constants were changed
+
+<Sounds, Sprites, Backrounds, Paths, Scripts,
+ Fonts, Timelines, Objects, Rooms>
+GM version needed for Resource (800)
+How many Resource ID's of this type there are (0)
+{
+ <800+> Length of Zlib Resource { Zlib Resource }
+}
+
+ID of last instance placed (100000)
+ID of last tile placed (1000000)
+
+<700+> GM version needed for Included Files (620/800)
+<620+> How many Included Files there are (0)
+{
+ <620 only> See 'Included Files' in 'Resource Formats', no ZLib compression
+ <800+> Length of ZLib Included File info { ZLib Included File info }
+}
+
+<700+> GM version needed for Packages (700)
+<700+> How many Packages there are (0)
+{
+ Length of Package Name { Package Name }
+}
+
+GM version needed for Game Information (430/600/620/800)
+<800+> Length of Zlib Game Information { Zlib Game Information }
+
+GM version needed for the following info (500)
+How many library dependancies there are (these are stored in the order of the lib's filenames, in alphabetical order. Likewise, they are executed in this same order)
+{
+ Length of Library Creation Code { Library Creation Code }
+}
+
+GM version needed for the following info (500/540/700)
+How many executable rooms there are (this stores the room indexes in execution order, so you know which room to summon next via room_goto_next() etc.)
+{
+ Room index (in execution order, which is usally the same as the Tree Order)
+}
+
+<700+> <12 Root Tree Resources>
+<500 and 540> <11 Root Tree Resources>
+{
+ Status (1=Primary, 2=Group, 3=Secondary)
+ Grouping (1-13, See "Resource Tree" Documentation below)
+ Index
+ Name Length { Name }
+ Contents
+ {
+  <Recurse> (See "Resource Tree" Documentation below)
+ }
+}
+
+<Additional data may be stored at the end of the file and GM will ignore/discard it>
+
+<End Of File>
+
+
+----------------------------
+------Resource Formats------
+----------------------------
+
+<Game Settings (530/542/600/702/800)> {
+ Start in full-screen mode (0)
+ <600+> Interpolate colors between pixels (0)
+ Don't draw a border in windowed mode (0)
+ Display the cursor (1)
+ <530 only> Scale percentage in windowed mode (1-999, 100*)
+ <530 only> Scale percentage in fullscreen mode (0=max) (0-999, 100*)
+ <530 only> Only scale when there is hardware support (1)
+ <542+> Scaling (-1 to 999, -1* = Keep Aspect Ratio, 0 = Full Scale, 1-999 = Fixed Scale)
+ <542+> Allow the player to resize the game window (0)
+ <542+> Let the game window always stay on top (0)
+ <542+> Color outside the room region (0 or 0x00000000)
+ Set the resolution of the screen (0)
+ <530 only> Color Depth (0* = 16-bit, 1 = 32-bit)
+ <530 only> Use exclusive graphics mode (0)
+ <530 only> Resolution (0-6, 0=640x480, 1*=800x600, ..., 5=320x240, 6=No Change)
+ <530 only> Frequency (0-4, 4)
+ <530 only> Wait for a vertical blank before drawing (0)
+ <530 only> Display the caption in full-screen mode (1)
+ <542+> Color Depth (0* = No Change, 1 = 16-bit, 2 = 32-bit)
+ <542+> Resolution (0-6, 0* = No change, ...)
+ <542+> Frequency (0-5, 0* = No change, 1 = 60, ...)
+ Don't show the buttons in the window caption (0)
+ <542+> Use synchronization to avoid tearing (0)
+ <800+> Disable screensavers and power saving actions (1)
+ Let <F4> switch between screen modes (1)
+ Let <F1> show the game information (1)
+ Let <Esc> end the game (1)
+ Let <F5> save the game and <F6> load a game (1)
+ <702+> Let <F9> take a screenshot of the game (1)
+ <702+> Treat the close button as <Esc> key (1)
+ Game Process Priority (0* = Normal, 1 = High, 2 = Highest)
+ <530 only> Reserved (1)
+ <530 only> Reserved (1)
+ Freeze the game when the form looses focus (0)
+ Loading Progress Bar (LPB) (0 = No LPB, 1* = Default LPB, 2 = Own LPB)
+ <if LPB = 2> {
+  <530-702> 10 or -1
+  <530-702 and if not -1> Size of Back Image data { Back Image data (Zlib bitmap) }
+  <530-702> 10 or -1
+  <530-702 and if not -1> Size of Front Image data { Front Image data (Zlib bitmap) }
+  <800+> Back Image data exists
+  {
+   Size of Back Image Data { Back Image data (Zlib bitmap) }
+  }
+  <800+> Front Image data exists
+  {
+   Size of Front Image Data { Front Image data (Zlib bitmap) }
+  }
+ }
+ Show your own image while loading (0)
+ {
+  <530-702> 10 or -1
+  <530-702 and if not -1> Size of Image data { Image Data (Zlib bitmap) }
+  <800+> Image data exists
+  {
+   Size of Image data { Image data (Zlib bitmap) }
+  }
+ }
+ Make image partially transparent (0)
+ Make translucent with alpha value (0-255, 255)
+ Scale progress bar image (1)
+ Size of Icon data (2238 in 530-702, 22486 in 800+) { Icon Image Data (raw ICO) }
+ Display error messages (1)
+ Write error messages to file game_errors.log (0)
+ Abort on all error messages (0)
+ Treat uninitialized variables as value 0 (evil!) (0)
+ Length of Author (0) { Author }
+ <530-600> Version (100)
+ <702+> Length of Version (3) { Version ("100") }
+ (double) Last Changed date and time (generated)
+ Length of Information (0) { Information }
+ <530-702> How many Constants there are (0)
+ {
+  Length of Name { Name }
+  Length of Value { Value }
+ }
+ <542 and 600> How many Include files there are (0)
+ {
+  Length of Filename { Filename }
+ }
+ <542 and 600> Folder to save Include files to (0* = main, 1 = temp)
+ <542 and 600> Overwrite existing Include files (0)
+ <542 and 600> Remove Include files at game end (0)
+ <702+> Major (1)
+ <702+> Minor (0)
+ <702+> Release (0)
+ <702+> Build (0)
+ <702+> Length of Company (0) { Company }
+ <702+> Length of Product (0) { Product }
+ <702+> Length of Copyright (0) { Copyright }
+ <702+> Length of Description (0) { Description }
+ <800+> (double) Last time Global Game Settings were changed
+}
+
+<Triggers> {
+ Whether Trigger of this ID exists or not
+ {
+  GM version needed for the following info (800)
+  Length of Name { Name }
+  Length of Condition { Condition }
+  Moment of Checking (0 = Begin, 1* = Middle, 2 = End)
+  Length of Constant Name { Constant Name }
+ }
+}
+
+<Sounds> {
+ Whether Sound of this ID exists or not
+ {
+  Length of Name { Name }
+  <800+> (double) Last time this Sound was changed
+  GM version needed for the following info (440/600/800)
+  <440 only> Kind (-1*=None, 0="Wave", 1="Midi", 2="Mp3", 10="Unknown")
+  <600+> Kind (0=Normal, 1=Background, 2=3D, 3=Multimedia)
+  Length of Filetype { Filetype (like ".wav") }
+  <600+> Length of Filename { Filename (no directory) }
+  <600+> Music exists
+  {
+   <600 only> Size of Music Data { Music Data (original format with Zlib compression) }
+   <800+> Size of Music Data { Music Data (original format uncompressed) }
+  }
+  <440 only and Kind is not -1> Size of Music Data { Music Data (original format with Zlib compression) }
+  <440 only> Allow for sound effects (0)
+  <440 only> Buffers (1)
+  <440 only> Load only on use (0)
+  <600+> Effects (Chorus=1, Echo=2, Flanger=4, Gargle=8, Reverb=16)
+   Notice, Effects is actually merged into 1 longint
+   To get the value, simply add active Effect numbers together
+  <600+> (double) Volume (0.0 to 1.0, 1.0*)
+  <600+> (double) Pan (-1.0 to 1.0, 0.0* = center)
+  <600+> Preload (1)
+ }
+}
+
+<Sprites> {
+ Whether Sprite of this ID exists or not
+ {
+  Length of Name { Name }
+  <800+> (double) Last time this Sprite was changed
+  GM version needed for the following info (400/542/800)
+  <400-542> Width
+  <400-542> Height
+  <400-542> Left Bounding Box (can be negative)
+  <400-542> Right Bounding Box (can be negative)
+  <400-542> Bottom Bounding Box (can be negative)
+  <400-542> Top Bounding Box (can be negative)
+  <400-542> Transparent (1)
+  <542 only> Smooth Edges (0)
+  <542 only> Preload Texture (1)
+  <400-542> Bounding Box (0*=Automatic, 1=Full image, 2=Manual)
+  <400-542> Precise collision checking (1)
+  <400 only> Use video memory (1)
+  <400 only> Load only on use (0)
+  X Origin (0)
+  Y Origin (0)
+  <400-542> How many subimages there are
+  {
+   10 or -1
+   <if not -1> Size of Image Data { Image Data (Zlib Bitmap) }
+  }
+  <800+> How many subimages there are
+  {
+   GM version needed for the following info (800)
+   Width
+   Height
+   <if Width and Height are not 0> Size of Image data { Image data (raw BGRA) }
+  }
+  <800+> Shape (0*=Precise, 1=Rectangle,  2=Disk, 3=Diamond)
+  <800+> Alpha Tolerance (0 to 255, 0)
+  <800+> Separate Collision Masks (0)
+  <800+> Bounding Box (0*=Automatic, 1=Full, 2=Manual)
+  <800+> Left (0)
+  <800+> Right
+  <800+> Bottom
+  <800+> Top (0)
+ }
+}
+
+<Backgrounds> {
+ Whether Background of this ID exists or not
+ {
+  Length of Name { Name }
+  <800+> (double) Last time this Background was changed
+  GM version needed for the following info (400/543/710)
+  <400-543> Width
+  <400-543> Height
+  <400-543> Transparent (0)
+  <400 only> Use video memory (1)
+  <400 only> Load only on use (1)
+  <543 only> Smooth Edges (0)
+  <543 only> Preload Texture (0)
+  <543+> Use as tile set (0)
+  <543+> tile width (16)
+  <543+> tile height (16)
+  <543+> horizontal offset (0)
+  <543+> vertical offset (0)
+  <543+> horizontal sep (0)
+  <543+> vertical sep (0)
+  <400-543> Image exists
+  {
+   10 or -1
+   <if not -1> Size of Image data { Image Data (Zlib Bitmap) }
+  }
+  <710+> GM version needed for the following info (800)
+  <800+> Width (0)
+  <800+> Height (0)
+  <800+ and Width and Height are not 0> Size of Image data { Image data (raw BGRA) }
+ }
+}
+
+<Paths> {
+ Whether Path of this ID exists or not
+ {
+  Length of Name { Name }
+  <800+> (double) Last time this Path was changed
+  GM version needed for the following info (530)
+  Connection Kind (0* = Straight lines, 1 = Smooth curve)
+  Closed (1)
+  Precision (1-8, 4)
+  Room Index to show as Background (-1* = none)
+  Snap X (16)
+  Snap Y (16)
+  How many Points there are (0)
+  {
+   (double) X
+   (double) Y
+   (double) Speed
+  }
+ }
+}
+
+<Scripts> {
+ Whether Script of this ID exists or not
+ {
+  Length of Name { Name }
+  <800+> (double) Last time this Script was changed
+  GM version needed for the following info (400/800)
+  Length of Script { Script }
+ }
+}
+
+<Fonts> {
+ Whether Font of this ID exists or not
+ {
+  Length of Name { Name }
+  <800+> (double) Last time this Font was changed
+  GM version needed for the following info (540/800)
+  Length of Font Name { Font Name }
+  Size (12)
+  Bold (0)
+  Italic (0)
+  Character Range Begin (32)
+  Character Range End (127)
+ }
+}
+
+<Time Lines> {
+ Whether Time Line of this ID exists or not
+ {
+  Length of Name { Name }
+  <800+> (double) Last time this Time Line was changed
+  GM version needed for the following info (500)
+  How many Moments there are (0)
+  {
+   Moment position
+Here is where Action information is inserted. This information is exactly the same as it appears in objects. As such, to understand how these bytes work, rather than documenting it twice, I shall refer you to see Actions below, between the **stars**
+  }
+ }
+}
+
+<Objects> {
+ Whether Object of this ID exists or not
+ {
+  Length of Name { Name }
+  <800+> (double) Last time this Object was changed
+  GM version needed for the following info (430)
+  Sprite Index (-1* = none)
+  Solid (0)
+  Visible (1)
+  Depth (0)
+  Persistent (0)
+  Parent object index (-100* = none)
+  Mask sprite index (-1* = none)
+  How many Event Types there are minus 1 (10 in v400, 11 in v800, unclear why it's off by one)
+Now we have an interesting thing. We have -1's thrown in for each of the event types. They appear after each event's data (or simply appear where they are if the event type has no data), but the events may have -1's in them too, so you can't just count down -1's and hope to be at the end of the object. No event begins with -1, so if you have a -1 where an event should be, you know that the event has no data. If there is data, it is documented here. If there are multiple kinds (event kind = 'numb' in the GM manual) of the same event, each kind will be added in without a -1 appended on the end until the last. The first kind to appear will actually be the highest kind number, and then it will count down. Other than that, Events appear in standard order. The stars ** you will see below relate to Time Lines. See Time Lines for more info.
+  {
+   Event Numb (see GM Manual)
+   **GM version needed for the following info (400)
+   How many actions this event has
+   {
+    GM version needed for the following info (440)
+    Library ID
+    Action ID
+    Action Kind (Normal, Begin Group, Else, etc. See Lib Builder)
+    Action may be Relative
+    Action is a Question
+    Action Applies to something
+    Action Type (0=Nothing, 1=Function, 2=Code)
+    Length of Function Name { Function Name }
+    Length of Code { Code }
+    How many Arguments are actually used
+    How many arguments there are (always 8)
+    {
+     Argument Kind (See Lib Builder)
+    }
+    Applies to Object Index (-1 for Self, -2 for Other)
+    Relative
+    How many arguments there are (always 8)
+    {
+     Argument Length { Argument Value }
+    }
+    NOT
+   }**
+  }
+  (Don't forget the -1 after each Primary event)
+ }
+}
+
+<Rooms> {
+ Whether room of this ID exists or not
+ {
+  Length of Name { Name }
+  <800+> (double) Last time this Room was changed
+  GM version needed for the following info (520/541)
+  Length of Room Caption (0) { Room Caption }
+  Width (640)
+  Height (480)
+  Snap Y (16)
+  Snap X (16)
+  Turn the grid into an isometric grid (0)
+  Speed (30)
+  Persistent (0)
+  Background Color (12632256 or 0xC0C0C000)
+  Draw background color (1)
+  Length of Creation Code { Creation Code }
+  How many Backgrounds there are (always 8)
+  {
+   Visible when room starts (0)
+   Foreground Image (0)
+   Background Image index (-1* = none)
+   X (0)
+   Y (0)
+   Tile Hor. (1)
+   Tile Vert. (1)
+   Hor. Speed (0)
+   Vert. Speed (0)
+   Stretch (0)
+  }
+  Enable the use of Views (0)
+  How many Vies there are (always 8)
+  {
+   Visible when room starts (0)
+   <520 only> Left
+   <520 only> Top
+   <520 only> Width
+   <520 only> Height
+   <520 only> X
+   <520 only> Y
+   <541+> View X (min 0, 0)
+   <541+> View Y (min 0, 0)
+   <541+> View W (min 1, 640)
+   <541+> View H (min 1, 480)
+   <541+> Port X (min 0, 0)
+   <541+> Port Y (min 0, 0)
+   <541+> Port W (min 1, 640)
+   <541+> Port H (min 1, 480)
+   Hbor (min 0, 32)
+   Vbor (min 0, 32)
+   Hsp (min -1*)
+   Vsp (min -1*)
+   Object following (-1* = none)
+  }
+  How many Instances are in the room (0)
+  {
+   X
+   Y
+   Object Index
+   ID (starts with 100001)
+   Length of Creation Code { Creation Code }
+   Locked
+  }
+  How many Tiles are in the room (0)
+  {
+   X
+   Y
+   Background Index
+   TileX
+   TileY
+   Width
+   Height
+   Layer/Depth (1000000)
+   ID (starts with 10000001dec)
+   Locked
+  }
+  Remember the Room Editor Info (REI if 0. May be 0 if all settings are defaults)
+  Room Editor Width (646, 0 if REI)
+  Room Editor Height (488, 0 if REI)
+  Toggle the showing of the grid (1, 0 if REI)
+  Show Objects (1, 0 if REI)
+  Show Tiles (1, 0 if REI)
+  Show Backgrounds (1, 0 if REI)
+  Show Foregrounds (1, 0 if REI)
+  Show Views (0, 0 if REI)
+  Delete underlying objects (1, 0 if REI)
+  Delete underlying tiles (1, 0 if REI)
+  <520 only> Tile Width (16)
+  <520 only> Tile Height (16)
+  <520 only> Tile Hsep (1)
+  <520 only> Tile Vsep (1)
+  <520 only> Tile Horizontal Offset (0)
+  <520 only> Tile Vertical Offset (0)
+  Tab (0-4, 0, 0 if REI)
+    0* = objects, 1 settings, 2 tiles, 3 backgrounds, 4 views
+  X Position of the horizontal scrollbar of the Room Editor (0, 0 if REI)
+  Y Position of the vertical scrollbar of the Room Editor (0, 0 if REI)
+ }
+}
+
+<Included Files> {
+ <800+> (double) Last time this Include File was changed
+ GM version needed for the following info (620/800)
+ Length of Filename (0) { Filename }
+ Length of Filepath (0) { Filepath }
+ Whether an Original File is chosen or not
+ Original File Size (0)
+ Store in editable gmk file (0)
+ {
+  Length of File Data (0) { File Data }
+ }
+ Export (0=Don't, 1=Temp Dir, 2*=Working Dir, 3=Following Folder)
+ Length of Folder To Export To (0) { Folder To Export To }
+ Overwrite the file if it exists (0)
+ Free memory after export (1)
+ Remove at game end (1)
+}
+
+<Game Information> {
+ Background Color of Game Information (-16777192 or 0x180000FF)
+ <430-620> Mimic the main game window/main form (0)
+ <800+> Show help in a separate window (1)
+ <600+> Length of Form Caption (16) { Form Caption ("Game Information") }
+ <600+> Position Left (-1)
+ <600+> Position Top (-1)
+ <600+> Position Width (600)
+ <600+> Position Height (400)
+ <600+> Show the window border and caption (1)
+ <600+> Allow the player to resize the window (1)
+ <600+> Stay always on top (0)
+ <600+> Stop the game while showing help (1)
+ <800+> (double) Last time Game Information was changed (not including RTF)
+ Length of Game Information RTF (147) { Game Information (Rich Text Format) }
+}
+
+
+----------------------------
+-------Resource Tree--------
+----------------------------
+
+<700+> There are 12 Root Tree Resources - 9 primary, 3 secondary
+<500 and 540> There are 11 Root Tree Resources - 9 primary, 2 secondary
+
+Format:
+Status, Grouping, Index, Length, { Name }, Contents
+You repeat that for all things on the resource tree, as they appear, going down, all branches expanded.
+
+Status:
+1) Primary Resource
+2) Group
+3) Secondary Resource
+
+Grouping (in the order they appear in the file):
+2) Sprites
+3) Sounds
+6) Backgrounds
+8) Paths
+7) Scripts
+9) <500> Data Files / <540+> Fonts
+C) Time Lines
+1) Objects
+4) Rooms
+A) Game Information*
+B) <500> Game Options* / <540+> Global Game Settings*
+D) <700+> Extension Packages*
+*Considered Secondary Resources that don't belong in a primary resource group.
+
+Index:
+All Secondary Resources are given an Index, or a reference number, which reflects the index of the resource far above, where you set their properties and options. Primary Resources, Groups, and Game Information and Game Options / Global Game Settings all use 0 for their Index. Occasionally you may find that they will actually use a number other than zero. It is unclear why they would do this, but just keep it in mind.
+If the index does not reflect their resource number above, you may either get invisible resources, or <undefined> resources. Also, make sure that no two secondary resources under a single Grouping have the same Index. This may result in Duplicate Complex, in which both are dependant on each other and anything you do to one is done to the other.
+
+Name Length { Name }:
+All have a Name Length. After that, it will count out that many bytes for the name itself.
+
+Contents:
+All Primary Resources and Groups have Contents count, which is how many groups/secondary resources it has within itself, non-recursive. Secondary Resources always have a content count of 0, since they may never contain anything.
+Non-recursive means that if a folder has several resources, only that folder is counted. Once it reaches the folder, it will tell how many resources it contains.
+Let's say you have 5 sprites, but all 5 of them are inside a Group, and that group falls under Sprites. The Sprites Primary Resource has 1 content, which is the Group. The Group has 5 contents - the 5 sprites.
+
+
+In an empty file, it would look something like this:
+1 2 0 7 Sprites 0 1 3 0 6 Sounds 0 etc.
+In the pacman example that comes with most distributions of GM, it would look like this:
+1 2 0 7 Sprites 6 2 2 0 7 pacmans 5 3 2 0 8 pac_left 0 3 2 1 9 pac_right 0 3 2 2 6 pac_up 0 3 2 3 8 pac_down 0 3 2 4 9 pac_stand 0 2 2 0 8 monsters 2 etc.
+This will cause the tree to look like this:
++Sprites
+ -pacmans
+  []pac_left
+  []pac_right
+  []pac_up
+  []pac_down
+  []pac_stand
+ -monsters (etc...)
+
+Since Primary Resources are included in the save file, you can change their names (and their lengths, as long as you update the longint before their name to reflect the new length) and it will actually display in the resource tree to the left.
+
+
+--End--

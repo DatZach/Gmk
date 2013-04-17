@@ -10,6 +10,12 @@
     <ClCompile Include="..\..\src\gmksettings.cpp">
       <Filter>resources</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\gmktrigger.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gmksound.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
@@ -33,6 +39,45 @@
       <Filter>include\resources</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\include\gmkresource.hpp">
+      <Filter>include\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\include\gmkbackground.hpp">
+      <Filter>include\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\include\gmkfont.hpp">
+      <Filter>include\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\include\gmkgameinfo.hpp">
+      <Filter>include\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\include\gmkinclude.hpp">
+      <Filter>include\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\include\gmkobject.hpp">
+      <Filter>include\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\include\gmkpath.hpp">
+      <Filter>include\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\include\gmkroom.hpp">
+      <Filter>include\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\include\gmkscript.hpp">
+      <Filter>include\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\include\gmksound.hpp">
+      <Filter>include\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\include\gmksprite.hpp">
+      <Filter>include\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\include\gmktimeline.hpp">
+      <Filter>include\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\include\gmktree.hpp">
+      <Filter>include\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\include\gmktrigger.hpp">
       <Filter>include\resources</Filter>
     </ClInclude>
   </ItemGroup>

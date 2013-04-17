@@ -12,6 +12,8 @@ namespace Gmk
 {
 	class Settings : public GmkResource
 	{
+	public:
+
 	protected:
 		void WriteVer81(Stream* stream);
 		void ReadVer81(Stream* stream);
@@ -67,6 +69,7 @@ namespace Gmk
 		// TODO Add more (start with constants)
 
 		Settings(Gmk* gmk);
+		~Settings();
 	};
 }
 

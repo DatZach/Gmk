@@ -69,13 +69,28 @@
     <ClCompile Include="..\..\src\gmk.cpp" />
     <ClCompile Include="..\..\src\gmkresource.cpp" />
     <ClCompile Include="..\..\src\gmksettings.cpp" />
+    <ClCompile Include="..\..\src\gmksound.cpp" />
+    <ClCompile Include="..\..\src\gmktrigger.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\src\stream.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\include\gmk.hpp" />
+    <ClInclude Include="..\..\src\include\gmkbackground.hpp" />
+    <ClInclude Include="..\..\src\include\gmkfont.hpp" />
+    <ClInclude Include="..\..\src\include\gmkgameinfo.hpp" />
+    <ClInclude Include="..\..\src\include\gmkinclude.hpp" />
+    <ClInclude Include="..\..\src\include\gmkobject.hpp" />
+    <ClInclude Include="..\..\src\include\gmkpath.hpp" />
     <ClInclude Include="..\..\src\include\gmkresource.hpp" />
+    <ClInclude Include="..\..\src\include\gmkroom.hpp" />
+    <ClInclude Include="..\..\src\include\gmkscript.hpp" />
     <ClInclude Include="..\..\src\include\gmksettings.hpp" />
+    <ClInclude Include="..\..\src\include\gmksound.hpp" />
+    <ClInclude Include="..\..\src\include\gmksprite.hpp" />
+    <ClInclude Include="..\..\src\include\gmktimeline.hpp" />
+    <ClInclude Include="..\..\src\include\gmktree.hpp" />
+    <ClInclude Include="..\..\src\include\gmktrigger.hpp" />
     <ClInclude Include="..\..\src\include\stream.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

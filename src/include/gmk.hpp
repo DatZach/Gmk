@@ -11,6 +11,8 @@
 #include <map>
 #include <gmkresource.hpp>
 #include <gmksettings.hpp>
+#include <gmktrigger.hpp>
+#include <gmksound.hpp>
 
 namespace Gmk
 {
@@ -31,10 +33,11 @@ namespace Gmk
 		unsigned int						gameId;
 		unsigned char						guid[GMK_GUID_LENGTH];
 		Settings*							settings;
-		/*
 		std::vector<Trigger*>				triggers;
 		std::map<std::string, std::string>	constants;
 		std::vector<Sound*>					sounds;
+
+		/*
 		std::vector<Sprite*>				sprites;
 		std::vector<Background*>			backgrounds;
 		std::vector<Path*>					paths;
