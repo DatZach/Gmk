@@ -207,5 +207,15 @@ namespace Gmk
 			timeline->Read(stream);
 			timelines.push_back(timeline);
 		}
+
+		// Load objects
+		stream->ReadDword();
+		count = stream->ReadDword();
+		while(count--)
+		{
+			Object* object = new Object(this);
+			object->Read(stream);
+			objects.push_back(object);
+		}
 	}
 }

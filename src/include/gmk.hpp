@@ -19,6 +19,7 @@
 #include <gmkscript.hpp>
 #include <gmkfont.hpp>
 #include <gmktimeline.hpp>
+#include <gmkobject.hpp>
 
 namespace Gmk
 {
@@ -48,9 +49,9 @@ namespace Gmk
 		std::vector<Script*>				scripts;
 		std::vector<Font*>					fonts;
 		std::vector<Timeline*>				timelines;
+		std::vector<Object*>				objects;
 		
-		/*std::vector<Object*>				objects;
-		std::vector<Room*>					rooms;
+		/*std::vector<Room*>					rooms;
 		// Resource files?
 		unsigned int						lastInstancePlacedId;
 		unsigned int						lastTilePlacedId;
