@@ -187,5 +187,15 @@ namespace Gmk
 			script->Read(stream);
 			scripts.push_back(script);
 		}
+
+		// Load fonts
+		stream->ReadDword();
+		count = stream->ReadDword();
+		while(count--)
+		{
+			Font* font = new Font(this);
+			font->Read(stream);
+			fonts.push_back(font);
+		}
 	}
 }

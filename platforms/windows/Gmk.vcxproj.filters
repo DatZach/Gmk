@@ -28,6 +28,9 @@
     <ClCompile Include="..\..\src\gmkscript.cpp">
       <Filter>resources</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\gmkfont.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
