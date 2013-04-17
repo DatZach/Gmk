@@ -9,7 +9,8 @@
 namespace Gmk
 {
 	GmkResource::GmkResource(Gmk* gmk)
-		: version(gmk->version)
+		: version(gmk->version),
+		  gmkHandle(gmk)
 	{
 
 	}

@@ -18,6 +18,7 @@
 #include <gmkpath.hpp>
 #include <gmkscript.hpp>
 #include <gmkfont.hpp>
+#include <gmktimeline.hpp>
 
 namespace Gmk
 {
@@ -46,9 +47,9 @@ namespace Gmk
 		std::vector<Path*>					paths;
 		std::vector<Script*>				scripts;
 		std::vector<Font*>					fonts;
+		std::vector<Timeline*>				timelines;
 		
-		/*std::vector<Timeline*>				timelines;
-		std::vector<Object*>				objects;
+		/*std::vector<Object*>				objects;
 		std::vector<Room*>					rooms;
 		// Resource files?
 		unsigned int						lastInstancePlacedId;

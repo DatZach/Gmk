@@ -31,6 +31,15 @@
     <ClCompile Include="..\..\src\gmkfont.cpp">
       <Filter>resources</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\gmkaction.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gmktimeline.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gmkobject.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
@@ -93,6 +102,9 @@
       <Filter>include\resources</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\include\gmktrigger.hpp">
+      <Filter>include\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\include\gmkaction.hpp">
       <Filter>include\resources</Filter>
     </ClInclude>
   </ItemGroup>

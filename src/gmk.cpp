@@ -197,5 +197,15 @@ namespace Gmk
 			font->Read(stream);
 			fonts.push_back(font);
 		}
+	
+		// Load timelines
+		stream->ReadDword();
+		count = stream->ReadDword();
+		while(count--)
+		{
+			Timeline* timeline = new Timeline(this);
+			timeline->Read(stream);
+			timelines.push_back(timeline);
+		}
 	}
 }

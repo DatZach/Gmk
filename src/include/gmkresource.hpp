@@ -30,6 +30,8 @@ namespace Gmk
 		Version version;
 
 	protected:
+		Gmk* gmkHandle;
+
 		virtual void WriteVer81(Stream* stream) = 0;
 		virtual void ReadVer81(Stream* stream) = 0;
 
