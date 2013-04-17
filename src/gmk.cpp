@@ -10,14 +10,16 @@
 namespace Gmk
 {
 	Gmk::Gmk()
-		: version(VerUnknown), gameId(0), settings(NULL)
+		: version(VerUnknown),
+		  gameId(0),
+		  settings(NULL)
 	{
-
+		// TODO Set defaults
 	}
 
 	Gmk::~Gmk()
 	{
-
+		// TODO Clean memory
 	}
 
 	bool Gmk::Save(const std::string& filename)
@@ -38,6 +40,7 @@ namespace Gmk
 		catch(std::exception* e)
 		{
 			std::cerr << "Gmk::Load Error: " << e->what() << std::endl;
+			version = VerUnknown;
 			return false;
 		}
 
@@ -143,6 +146,26 @@ namespace Gmk
 			Sound* sound = new Sound(this);
 			sound->Read(stream);
 			sounds.push_back(sound);
+		}
+
+		// Load sprites
+		stream->ReadDword();
+		count = stream->ReadDword();
+		while(count--)
+		{
+			Sprite* sprite = new Sprite(this);
+			sprite->Read(stream);
+			sprites.push_back(sprite);
+		}
+
+		// Load backgrounds
+		stream->ReadDword();
+		count = stream->ReadDword();
+		while(count--)
+		{
+			Background* background = new Background(this);
+			background->Read(stream);
+			backgrounds.push_back(background);
 		}
 	}
 }

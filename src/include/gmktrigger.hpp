@@ -21,7 +21,7 @@ namespace Gmk
 		};
 
 	protected:
-		void WriteVer81(Stream* steram);
+		void WriteVer81(Stream* stream);
 		void ReadVer81(Stream* stream);
 
 	public:

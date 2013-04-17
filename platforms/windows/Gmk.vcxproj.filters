@@ -16,6 +16,12 @@
     <ClCompile Include="..\..\src\gmksound.cpp">
       <Filter>resources</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\gmksprite.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gmkbackground.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">

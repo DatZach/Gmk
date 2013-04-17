@@ -67,9 +67,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\gmk.cpp" />
+    <ClCompile Include="..\..\src\gmkbackground.cpp" />
     <ClCompile Include="..\..\src\gmkresource.cpp" />
     <ClCompile Include="..\..\src\gmksettings.cpp" />
     <ClCompile Include="..\..\src\gmksound.cpp" />
+    <ClCompile Include="..\..\src\gmksprite.cpp" />
     <ClCompile Include="..\..\src\gmktrigger.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\src\stream.cpp" />

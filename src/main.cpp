@@ -20,5 +20,7 @@ int main(int argc, char* argv[])
 
 	std::getchar();
 
+	delete gmk;
+
 	return 0;
 }

@@ -47,7 +47,7 @@ namespace Gmk
 		extension		= soundStream->ReadString();
 		filename		= soundStream->ReadString();
 		if (soundStream->ReadBoolean())
-			data			= soundStream->Deserialize(false);
+			data = soundStream->Deserialize(false);
 		effects			= soundStream->ReadDword();
 		volume			= soundStream->ReadDouble();
 		pan				= soundStream->ReadDouble();
