@@ -217,5 +217,15 @@ namespace Gmk
 			object->Read(stream);
 			objects.push_back(object);
 		}
+
+		// Load rooms
+		stream->ReadDword();
+		count = stream->ReadDword();
+		while(count--)
+		{
+			Room* room = new Room(this);
+			room->Read(stream);
+			rooms.push_back(room);
+		}
 	}
 }

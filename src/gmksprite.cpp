@@ -28,7 +28,7 @@ namespace Gmk
 
 	Sprite::~Sprite()
 	{
-		for(size_t i = 0; i < subimages.size(); ++i)
+		for(std::size_t i = 0; i < subimages.size(); ++i)
 		{
 			if (subimages[i].data == NULL)
 				continue;

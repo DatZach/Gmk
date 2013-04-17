@@ -7,6 +7,8 @@
 #define __GMK_RESOURCE_HPP
 
 #include <iostream>
+#include <vector>
+#include <string>
 #include <stream.hpp>
 
 namespace Gmk

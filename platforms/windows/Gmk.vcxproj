@@ -73,6 +73,7 @@
     <ClCompile Include="..\..\src\gmkobject.cpp" />
     <ClCompile Include="..\..\src\gmkpath.cpp" />
     <ClCompile Include="..\..\src\gmkresource.cpp" />
+    <ClCompile Include="..\..\src\gmkroom.cpp" />
     <ClCompile Include="..\..\src\gmkscript.cpp" />
     <ClCompile Include="..\..\src\gmksettings.cpp" />
     <ClCompile Include="..\..\src\gmksound.cpp" />
