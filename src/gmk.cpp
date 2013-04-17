@@ -177,5 +177,15 @@ namespace Gmk
 			path->Read(stream);
 			paths.push_back(path);
 		}
+
+		// Load scripts
+		stream->ReadDword();
+		count = stream->ReadDword();
+		while(count--)
+		{
+			Script* script = new Script(this);
+			script->Read(stream);
+			scripts.push_back(script);
+		}
 	}
 }
