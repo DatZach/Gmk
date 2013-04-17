@@ -167,5 +167,15 @@ namespace Gmk
 			background->Read(stream);
 			backgrounds.push_back(background);
 		}
+
+		// Load paths
+		stream->ReadDword();
+		count = stream->ReadDword();
+		while(count--)
+		{
+			Path* path = new Path(this);
+			path->Read(stream);
+			paths.push_back(path);
+		}
 	}
 }

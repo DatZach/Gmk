@@ -15,6 +15,7 @@
 #include <gmksound.hpp>
 #include <gmksprite.hpp>
 #include <gmkbackground.hpp>
+#include <gmkpath.hpp>
 
 namespace Gmk
 {
@@ -39,10 +40,10 @@ namespace Gmk
 		std::map<std::string, std::string>	constants;
 		std::vector<Sound*>					sounds;
 		std::vector<Sprite*>				sprites;
-		
 		std::vector<Background*>			backgrounds;
-		/*std::vector<Path*>					paths;
-		std::vector<Script*>				scripts;
+		std::vector<Path*>					paths;
+		
+		/*std::vector<Script*>				scripts;
 		std::vector<Font*>					fonts;
 		std::vector<Timeline*>				timelines;
 		std::vector<Object*>				objects;

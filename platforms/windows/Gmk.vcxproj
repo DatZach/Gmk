@@ -68,6 +68,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\gmk.cpp" />
     <ClCompile Include="..\..\src\gmkbackground.cpp" />
+    <ClCompile Include="..\..\src\gmkpath.cpp" />
     <ClCompile Include="..\..\src\gmkresource.cpp" />
     <ClCompile Include="..\..\src\gmksettings.cpp" />
     <ClCompile Include="..\..\src\gmksound.cpp" />
