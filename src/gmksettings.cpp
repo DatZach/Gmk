@@ -8,53 +8,79 @@
 namespace Gmk
 {
 	Settings::Settings(Gmk* gmk)
-		: GmkResource(gmk)
+		: GmkResource(gmk),
+		  fullscreen(false),
+		  interpolatePixels(false),
+		  noBorder(false),
+		  showCursor(true),
+		  scale(ScalingKeepAspectRatio),
+		  sizeable(false),
+		  stayOnTop(false),
+		  windowColor(0x00000000),
+		  changeResolution(false),
+		  colorDepth(Cd16Bit),
+		  resolution(ResolutionNoChange),
+		  frequency(FrequencyNoChange),
+		  noButtons(false),
+		  vsync(false),
+		  noScreenSaver(true),
+		  fullscreenKey(true),
+		  helpKey(true),
+		  quitKey(true),
+		  screenshotKey(true),
+		  closeSecondary(true),
+		  priority(PriorityNormal),
+		  freeze(false),
+		  showProgress(LpbtDefault),
+		  frontImage(NULL),
+		  backImage(NULL),
+		  loadTransparent(false),
+		  loadAlpha(0xFF),
+		  scaleProgress(true),
+		  iconImage(NULL),									// TODO Default icon
+		  displayErrors(true),
+		  writeErrors(false),
+		  abortErrors(false),
+		  treatUninitializedVariablesAsZero(false),
+		  argumentError(true),
+		  author(""),
+		  versionString("100"),
+		  information(""),
+		  major(1),
+		  minor(0),
+		  release(0),
+		  build(0),
+		  company(""),
+		  product(""),
+		  copyright(""),
+		  description("")
 	{
-		// TODO declare defaults
+
 	}
 
 	Settings::~Settings()
 	{
-		// TODO Clean allocated resources
+		if (frontImage != NULL)
+			delete frontImage;
+
+		if (backImage != NULL)
+			delete backImage;
+
+		if (loadImage != NULL)
+			delete loadImage;
+
+		if (iconImage != NULL)
+			delete iconImage;
 	}
 
 	void Settings::WriteVer81(Stream* stream)
 	{
-
+		
 	}
 
 	void Settings::ReadVer81(Stream* stream)
 	{
-		// Read version, it's actually important for once
-		unsigned int ver = stream->ReadDword();
-
 		Stream* settingsStream = stream->Deserialize();
-		Stream* tmpStream = new Stream("settings.bin", Stream::SmWrite);
-		tmpStream->WriteData(settingsStream->GetMemoryBuffer());
-		delete tmpStream;
-
-		/*
-		 *	These are the Studio additions to the GM8.1 GMK format.
-		 *		Studio "supports" these values but doesn't build them,
-		 *		studio builds using v820.
-		 */
-
-		if (ver >= 830)
-			debugEnabled = settingsStream->ReadBoolean();
-
-		config = ver < 831 ? "none" : settingsStream->ReadString();
-
-		if (ver >= 832)
-			useNewAudio = settingsStream->ReadBoolean();
-
-		if (ver >= 833)
-			studioEdition = settingsStream->ReadDword();
-
-		if (ver >= 834)
-			displayName = settingsStream->ReadString();
-
-		if (ver >= 835)
-			activeTargets = settingsStream->ReadQword();
 
 		fullscreen				= settingsStream->ReadBoolean();
 		interpolatePixels		= settingsStream->ReadBoolean();
@@ -69,7 +95,7 @@ namespace Gmk
 		resolution				= settingsStream->ReadDword();
 		frequency				= settingsStream->ReadDword();
 		noButtons				= settingsStream->ReadBoolean();
-		syncVertex				= settingsStream->ReadBoolean();
+		vsync					= settingsStream->ReadBoolean();
 		noScreenSaver			= settingsStream->ReadBoolean();
 		fullscreenKey			= settingsStream->ReadBoolean();
 		helpKey					= settingsStream->ReadBoolean();
@@ -81,48 +107,43 @@ namespace Gmk
 		freeze					= settingsStream->ReadBoolean();
 		showProgress			= settingsStream->ReadDword();
 
-		// TODO Fix this piece of shit, doesn't work as fucking usual
-		/*if (ver > 800)
+		if (showProgress == 2)
 		{
-			if (showProgress)
-			{
-				backImage = settingsStream->ReadBitmap();
-				frontImage = settingsStream->ReadBitmap();
-			}
-
-			if (settingsStream->ReadBoolean())
-				loadImage = settingsStream->ReadBitmap();
+			backImage = settingsStream->ReadBitmap();
+			frontImage = settingsStream->ReadBitmap();
 		}
-		else
-		{
-			if (showProgress == 2)
-			{
-				backImage = settingsStream->ReadBitmap();
-				frontImage = settingsStream->ReadBitmap();
-			}
 
+		if (settingsStream->ReadBoolean())
 			loadImage = settingsStream->ReadBitmap();
-		}
 
 		loadTransparent			= settingsStream->ReadBoolean();
 		loadAlpha				= settingsStream->ReadDword();
 		scaleProgress			= settingsStream->ReadBoolean();
+
+		iconImage				= settingsStream->Deserialize(false);
+
 		displayErrors			= settingsStream->ReadBoolean();
 		writeErrors				= settingsStream->ReadBoolean();
 		abortErrors				= settingsStream->ReadBoolean();
-		variableErrors			= settingsStream->ReadBoolean();
 		
-		if (ver >= 820)
-		{
-			webGL				= settingsStream->ReadBoolean();
-			creationEventOrder	= settingsStream->ReadBoolean();
-		}
+		unsigned int errorFlags = settingsStream->ReadDword();
 
-		if (ver > 800)
-		{
-			unsigned int consantsCount = settingsStream->ReadDword();
-			// TODO read constants
-		}*/
+		treatUninitializedVariablesAsZero = (errorFlags & 0x01) == 0x01;
+		argumentError = (errorFlags & 0x02) == 0x02;
+
+		author					= settingsStream->ReadString();
+		versionString			= settingsStream->ReadString();
+		settingsStream->ReadTimestamp();
+		information				= settingsStream->ReadString();
+		major					= settingsStream->ReadDword();
+		minor					= settingsStream->ReadDword();
+		release					= settingsStream->ReadDword();
+		build					= settingsStream->ReadDword();
+		company					= settingsStream->ReadString();
+		product					= settingsStream->ReadString();
+		copyright				= settingsStream->ReadString();
+		description				= settingsStream->ReadString();
+		settingsStream->ReadTimestamp();
 
 		delete settingsStream;
 	}

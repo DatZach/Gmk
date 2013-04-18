@@ -12,14 +12,73 @@ namespace Gmk
 	Gmk::Gmk()
 		: version(VerUnknown),
 		  gameId(0),
-		  settings(NULL)
+		  guid(),
+		  settings(NULL),
+		  triggers(),
+		  constants(),
+		  sounds(),
+		  sprites(),
+		  backgrounds(),
+		  paths(),
+		  scripts(),
+		  fonts(),
+		  timelines(),
+		  objects(),
+		  rooms(),
+		  lastInstancePlacedId(100000),
+		  lastTilePlacedId(1000000),
+		  includeFiles(),
+		  gameInformation(NULL),
+		  libraryCreationCode(),
+		  roomExecutionOrder(),
+		  resourceTree(NULL)
 	{
-		// TODO Set defaults
+		
 	}
 
 	Gmk::~Gmk()
 	{
-		// TODO Clean memory
+		if (settings != NULL)
+			delete settings;
+
+		for(std::size_t i = 0; i < triggers.size(); ++i)
+			delete triggers[i];
+
+		for(std::size_t i = 0; i < sounds.size(); ++i)
+			delete sounds[i];
+
+		for(std::size_t i = 0; i < sprites.size(); ++i)
+			delete sprites[i];
+
+		for(std::size_t i = 0; i < backgrounds.size(); ++i)
+			delete backgrounds[i];
+
+		for(std::size_t i = 0; i < paths.size(); ++i)
+			delete paths[i];
+
+		for(std::size_t i = 0; i < scripts.size(); ++i)
+			delete scripts[i];
+
+		for(std::size_t i = 0; i < fonts.size(); ++i)
+			delete fonts[i];
+
+		for(std::size_t i = 0; i < timelines.size(); ++i)
+			delete timelines[i];
+
+		for(std::size_t i = 0; i < objects.size(); ++i)
+			delete objects[i];
+
+		for(std::size_t i = 0; i < rooms.size(); ++i)
+			delete rooms[i];
+
+		for(std::size_t i = 0; i < includeFiles.size(); ++i)
+			delete includeFiles[i];
+
+		if (gameInformation != NULL)
+			delete gameInformation;
+
+		if (resourceTree != NULL)
+			delete resourceTree;
 	}
 
 	bool Gmk::Save(const std::string& filename)
@@ -110,6 +169,7 @@ namespace Gmk
 		unsigned int count = 0;
 
 		// Load settings
+		stream->ReadDword();
 		settings = new Settings(this);
 		settings->Read(stream);
 
@@ -263,7 +323,7 @@ namespace Gmk
 		stream->ReadDword();
 		count = stream->ReadDword();
 		while(count--)
-			roomExceutionOrder.push_back(stream->ReadDword());
+			roomExecutionOrder.push_back(stream->ReadDword());
 
 		// Read resource tree
 		resourceTree = new Tree(this);

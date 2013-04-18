@@ -13,18 +13,59 @@ namespace Gmk
 	class Settings : public GmkResource
 	{
 	public:
+		enum Scaling
+		{
+			ScalingKeepAspectRatio = -1,
+			ScalingFullScale
+		};
+
+		enum ColorDepth
+		{
+			CdNoChange,
+			Cd16Bit,
+			Cd32Bit
+		};
+
+		enum Resolution
+		{
+			Resolution640x480,
+			Resolution800x600,
+			Resolution1024x768,
+			Resolution1280x1024,
+			Resolution1600x1200,
+			Resolution320x240,
+			ResolutionNoChange
+		};
+
+		enum Frequency
+		{
+			FrequencyNoChange,
+			Frequency60,
+			Frequency70,
+			Frequency85,
+			Frequency100,
+			Frequency120
+		};
+
+		enum Priority
+		{
+			PriorityNormal,
+			PriorityHigh,
+			PriorityHighest
+		};
+
+		enum LoadingProgressBarType
+		{
+			LpbtNone,
+			LpbtDefault,
+			LpbtCustom
+		};
 
 	protected:
 		void WriteVer81(Stream* stream);
 		void ReadVer81(Stream* stream);
 
 	public:
-		bool			debugEnabled;
-		std::string		config;
-		bool			useNewAudio;
-		unsigned int	studioEdition;
-		std::string		displayName;
-		unsigned long long	activeTargets;
 		bool			fullscreen;
 		bool			interpolatePixels;
 		bool			noBorder;
@@ -38,7 +79,7 @@ namespace Gmk
 		unsigned int	resolution;
 		unsigned int	frequency;
 		bool			noButtons;
-		bool			syncVertex;
+		bool			vsync;
 		bool			noScreenSaver;
 		bool			fullscreenKey;
 		bool			helpKey;
@@ -59,14 +100,19 @@ namespace Gmk
 		bool			displayErrors;
 		bool			writeErrors;
 		bool			abortErrors;
-		bool			variableErrors;
-		bool			webGL;
-		bool			creationEventOrder;
+		bool			treatUninitializedVariablesAsZero;
+		bool			argumentError;
 		std::string		author;
-		std::string		version;
+		std::string		versionString;
 		std::string		information;
-
-		// TODO Add more (start with constants)
+		unsigned int	major;
+		unsigned int	minor;
+		unsigned int	release;
+		unsigned int	build;
+		std::string		company;
+		std::string		product;
+		std::string		copyright;
+		std::string		description;
 
 		Settings(Gmk* gmk);
 		~Settings();

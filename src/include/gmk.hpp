@@ -61,7 +61,7 @@ namespace Gmk
 		std::vector<std::string>			packages;
 		GameInformation*					gameInformation;
 		std::vector<std::string>			libraryCreationCode;
-		std::vector<unsigned int>			roomExceutionOrder;
+		std::vector<unsigned int>			roomExecutionOrder;
 		Tree*								resourceTree;
 
 		Gmk();

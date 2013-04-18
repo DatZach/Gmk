@@ -21,6 +21,7 @@ TestResults
 *.manifest
 *.tlog
 *.ilk
+*.idb
 *.meta
 *.obj
 *.pch
