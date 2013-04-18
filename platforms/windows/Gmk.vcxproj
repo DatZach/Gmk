@@ -70,6 +70,8 @@
     <ClCompile Include="..\..\src\gmkaction.cpp" />
     <ClCompile Include="..\..\src\gmkbackground.cpp" />
     <ClCompile Include="..\..\src\gmkfont.cpp" />
+    <ClCompile Include="..\..\src\gmkgameinfo.cpp" />
+    <ClCompile Include="..\..\src\gmkincludefile.cpp" />
     <ClCompile Include="..\..\src\gmkobject.cpp" />
     <ClCompile Include="..\..\src\gmkpath.cpp" />
     <ClCompile Include="..\..\src\gmkresource.cpp" />
@@ -79,6 +81,7 @@
     <ClCompile Include="..\..\src\gmksound.cpp" />
     <ClCompile Include="..\..\src\gmksprite.cpp" />
     <ClCompile Include="..\..\src\gmktimeline.cpp" />
+    <ClCompile Include="..\..\src\gmktree.cpp" />
     <ClCompile Include="..\..\src\gmktrigger.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\src\stream.cpp" />
@@ -89,7 +92,7 @@
     <ClInclude Include="..\..\src\include\gmkbackground.hpp" />
     <ClInclude Include="..\..\src\include\gmkfont.hpp" />
     <ClInclude Include="..\..\src\include\gmkgameinfo.hpp" />
-    <ClInclude Include="..\..\src\include\gmkinclude.hpp" />
+    <ClInclude Include="..\..\src\include\gmkincludefile.hpp" />
     <ClInclude Include="..\..\src\include\gmkobject.hpp" />
     <ClInclude Include="..\..\src\include\gmkpath.hpp" />
     <ClInclude Include="..\..\src\include\gmkresource.hpp" />

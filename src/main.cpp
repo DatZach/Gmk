@@ -17,6 +17,9 @@ int main(int argc, char* argv[])
 	std::cout << "Version \t\t: " << gmk->version << std::endl;
 	std::cout << "Game ID \t\t: " << gmk->gameId << std::endl;
 	std::cout << "Fullscreen \t\t: " << gmk->settings->fullscreen << std::endl;
+	std::cout << "Packages: " << gmk->packages.size() << std::endl;
+	for(size_t i = 0; i < gmk->packages.size(); ++i)
+		std::cout << gmk->packages[i] << std::endl;
 
 	std::getchar();
 

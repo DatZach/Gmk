@@ -21,6 +21,9 @@
 #include <gmktimeline.hpp>
 #include <gmkobject.hpp>
 #include <gmkroom.hpp>
+#include <gmkincludefile.hpp>
+#include <gmkgameinfo.hpp>
+#include <gmktree.hpp>
 
 namespace Gmk
 {
@@ -52,16 +55,14 @@ namespace Gmk
 		std::vector<Timeline*>				timelines;
 		std::vector<Object*>				objects;
 		std::vector<Room*>					rooms;
-
-		// Resource files?
-		/*unsigned int						lastInstancePlacedId;
+		unsigned int						lastInstancePlacedId;
 		unsigned int						lastTilePlacedId;
 		std::vector<IncludeFile*>			includeFiles;
 		std::vector<std::string>			packages;
 		GameInformation*					gameInformation;
 		std::vector<std::string>			libraryCreationCode;
 		std::vector<unsigned int>			roomExceutionOrder;
-		*/
+		Tree*								resourceTree;
 
 		Gmk();
 		~Gmk();

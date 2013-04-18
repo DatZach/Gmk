@@ -43,6 +43,15 @@
     <ClCompile Include="..\..\src\gmkroom.cpp">
       <Filter>resources</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\gmkincludefile.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gmkgameinfo.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gmktree.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
@@ -77,9 +86,6 @@
     <ClInclude Include="..\..\src\include\gmkgameinfo.hpp">
       <Filter>include\resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\include\gmkinclude.hpp">
-      <Filter>include\resources</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\include\gmkobject.hpp">
       <Filter>include\resources</Filter>
     </ClInclude>
@@ -108,6 +114,9 @@
       <Filter>include\resources</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\include\gmkaction.hpp">
+      <Filter>include\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\include\gmkincludefile.hpp">
       <Filter>include\resources</Filter>
     </ClInclude>
   </ItemGroup>

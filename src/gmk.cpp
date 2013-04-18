@@ -227,5 +227,46 @@ namespace Gmk
 			room->Read(stream);
 			rooms.push_back(room);
 		}
+
+		// Load last ids
+		lastInstancePlacedId = stream->ReadDword();
+		lastTilePlacedId = stream->ReadDword();
+
+		// Load include files
+		stream->ReadDword();
+		count = stream->ReadDword();
+		while(count--)
+		{
+			IncludeFile* includeFile = new IncludeFile(this);
+			includeFile->Read(stream);
+			includeFiles.push_back(includeFile);
+		}
+
+		// Load packages
+		stream->ReadDword();
+		count = stream->ReadDword();
+		while(count--)
+			packages.push_back(stream->ReadString());
+
+		// Read game information
+		stream->ReadDword();
+		gameInformation = new GameInformation(this);
+		gameInformation->Read(stream);
+
+		// Read library creation code
+		stream->ReadDword();
+		count = stream->ReadDword();
+		while(count--)
+			libraryCreationCode.push_back(stream->ReadString());
+
+		// Read room execution order
+		stream->ReadDword();
+		count = stream->ReadDword();
+		while(count--)
+			roomExceutionOrder.push_back(stream->ReadDword());
+
+		// Read resource tree
+		resourceTree = new Tree(this);
+		resourceTree->Read(stream);
 	}
 }
