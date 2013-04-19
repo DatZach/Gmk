@@ -29,7 +29,30 @@ namespace Gmk
 
 	void Font::WriteVer81(Stream* stream)
 	{
+		Stream* fontStream = new Stream();
 
+		fontStream->WriteBoolean(exists);
+		if (exists)
+		{
+			fontStream->WriteString(name);
+			fontStream->WriteTimestamp();
+			fontStream->WriteDword(800);
+			fontStream->WriteString(fontName);
+			fontStream->WriteDword(size);
+			fontStream->WriteBoolean(bold);
+			fontStream->WriteBoolean(italic);
+			
+			unsigned int value = 0;
+			value |= (characterSet & 0xFF) << 16;
+			value |= (antiAliasing & 0xFF) << 24;
+			value |= characterRangeBegin & 0xFFFF;
+			
+			fontStream->WriteDword(value);
+			fontStream->WriteDword(characterRangeEnd);
+		}
+
+		stream->Serialize(fontStream);
+		delete fontStream;
 	}
 
 	void Font::ReadVer81(Stream* stream)
