@@ -28,7 +28,32 @@ namespace Gmk
 
 	void Path::WriteVer81(Stream* stream)
 	{
+		Stream* pathStream = new Stream();
 
+		pathStream->WriteBoolean(exists);
+		if (exists)
+		{
+			pathStream->WriteString(name);
+			pathStream->WriteTimestamp();
+			pathStream->WriteDword(530);
+			pathStream->WriteDword(connectionKind);
+			pathStream->WriteBoolean(closed);
+			pathStream->WriteDword(precision);
+			pathStream->WriteDword(roomIndex);
+			pathStream->WriteDword(snapX);
+			pathStream->WriteDword(snapY);
+
+			pathStream->WriteDword(points.size());
+			for(std::size_t i = 0; i < points.size(); ++i)
+			{
+				pathStream->WriteDouble(points[i].x);
+				pathStream->WriteDouble(points[i].y);
+				pathStream->WriteDouble(points[i].speed);
+			}
+		}
+
+		stream->Serialize(pathStream);
+		delete pathStream;
 	}
 
 	void Path::ReadVer81(Stream* stream)

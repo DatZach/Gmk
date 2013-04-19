@@ -22,7 +22,19 @@ namespace Gmk
 
 	void Script::WriteVer81(Stream* stream)
 	{
+		Stream* scriptStream = new Stream();
 
+		scriptStream->WriteBoolean(exists);
+		if (exists)
+		{
+			scriptStream->WriteString(name);
+			scriptStream->WriteTimestamp();
+			scriptStream->WriteDword(800);
+			scriptStream->WriteString(value);
+		}
+
+		stream->Serialize(scriptStream);
+		delete scriptStream;
 	}
 
 	void Script::ReadVer81(Stream* stream)
