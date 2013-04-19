@@ -83,7 +83,22 @@ namespace Gmk
 
 	bool Gmk::Save(const std::string& filename)
 	{
-		return false;
+		try
+		{
+			Stream* stream = new Stream(filename, Stream::SmWrite);
+
+			SaveGmk(stream);
+
+			delete stream;
+		}
+		catch(std::exception* e)
+		{
+			std::cerr << "Gmk::Save Error: " << e->what() << std::endl;
+			version = VerUnknown;
+			return false;
+		}
+
+		return true;
 	}
 
 	bool Gmk::Load(const std::string& filename)
@@ -118,11 +133,35 @@ namespace Gmk
 
 	void Gmk::SaveGmk(Stream* stream)
 	{
+		const unsigned int Versions[6] = { 0, 530, 600, 701, 800, 810 };
+		
+		// Write header
+		stream->WriteDword(GMK_MAGIC);
+		stream->WriteDword(Versions[static_cast<int>(version)]);
+		stream->WriteDword(gameId);
+		for(unsigned int i = 0; i < GMK_GUID_LENGTH; ++i)
+		{
+			unsigned char guidByte = gameId >> i / 4;
+			guidByte %= ((i >> 6) + guidByte & 0x7F) + 0xFF;
+			guidByte ^= (i * guidByte >> 3) & 0xAB;
 
+			stream->WriteByte(guidByte);
+		}
+		
+		switch(version)
+		{
+			case Ver81:
+				SaveVer81(stream);
+				break;
+
+			default:
+				throw new std::exception("Unsupported version");
+		}
 	}
 
 	void Gmk::LoadGmk(Stream* stream)
 	{
+		// Read header
 		if (stream->ReadDword() != GMK_MAGIC)
 			throw new std::exception("Invalid magic!");
 
@@ -162,6 +201,16 @@ namespace Gmk
 				LoadVer81(stream);
 				break;
 		}
+	}
+
+	void Gmk::SaveVer81(Stream* stream)
+	{
+		// Write settings
+		stream->WriteDword(800);
+		if (settings == NULL)
+			throw new std::exception("Settings are not declared");
+
+		settings->Write(stream);
 	}
 
 	void Gmk::LoadVer81(Stream* stream)

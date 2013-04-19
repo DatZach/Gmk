@@ -75,7 +75,74 @@ namespace Gmk
 
 	void Settings::WriteVer81(Stream* stream)
 	{
+		Stream* settingsStream = new Stream();
+
+		settingsStream->WriteBoolean(fullscreen);
+		settingsStream->WriteBoolean(interpolatePixels);
+		settingsStream->WriteBoolean(noBorder);
+		settingsStream->WriteBoolean(showCursor);
+		settingsStream->WriteDword(scale);
+		settingsStream->WriteBoolean(sizeable);
+		settingsStream->WriteBoolean(stayOnTop);
+		settingsStream->WriteDword(windowColor);
+		settingsStream->WriteBoolean(changeResolution);
+		settingsStream->WriteDword(colorDepth);
+		settingsStream->WriteDword(resolution);
+		settingsStream->WriteDword(frequency);
+		settingsStream->WriteBoolean(noButtons);
+		settingsStream->WriteBoolean(vsync);
+		settingsStream->WriteBoolean(noScreenSaver);
+		settingsStream->WriteBoolean(fullscreenKey);
+		settingsStream->WriteBoolean(helpKey);
+		settingsStream->WriteBoolean(quitKey);
+		settingsStream->WriteBoolean(saveKey);
+		settingsStream->WriteBoolean(screenshotKey);
+		settingsStream->WriteBoolean(closeSecondary);
+		settingsStream->WriteDword(priority);
+		settingsStream->WriteBoolean(freeze);
+		settingsStream->WriteDword(showProgress);
+
+		if (showProgress == LpbtCustom)
+		{
+			settingsStream->WriteBitmap(backImage);
+			settingsStream->WriteBitmap(frontImage);
+		}
+
+		if (loadImage != NULL)
+		{
+			settingsStream->WriteBoolean(true);
+			settingsStream->WriteBitmap(loadImage);
+		}
+		else
+			settingsStream->WriteBoolean(false);
+
+		settingsStream->WriteBoolean(loadTransparent);
+		settingsStream->WriteDword(loadAlpha);
+		settingsStream->WriteBoolean(scaleProgress);
+
+		settingsStream->Serialize(iconImage, false);
 		
+		settingsStream->WriteBoolean(displayErrors);
+		settingsStream->WriteBoolean(writeErrors);
+		settingsStream->WriteBoolean(abortErrors);
+		settingsStream->WriteDword(BuildByte(0, 0, 0, 0, 0, 0, argumentError, treatUninitializedVariablesAsZero));
+
+		settingsStream->WriteString(author);
+		settingsStream->WriteString(versionString);
+		settingsStream->WriteTimestamp();
+		settingsStream->WriteString(information);
+		settingsStream->WriteDword(major);
+		settingsStream->WriteDword(minor);
+		settingsStream->WriteDword(release);
+		settingsStream->WriteDword(build);
+		settingsStream->WriteString(company);
+		settingsStream->WriteString(product);
+		settingsStream->WriteString(copyright);
+		settingsStream->WriteString(description);
+		settingsStream->WriteTimestamp();
+
+		stream->Serialize(settingsStream);
+		delete settingsStream;
 	}
 
 	void Settings::ReadVer81(Stream* stream)
@@ -107,7 +174,7 @@ namespace Gmk
 		freeze					= settingsStream->ReadBoolean();
 		showProgress			= settingsStream->ReadDword();
 
-		if (showProgress == 2)
+		if (showProgress == LpbtCustom)
 		{
 			backImage = settingsStream->ReadBitmap();
 			frontImage = settingsStream->ReadBitmap();

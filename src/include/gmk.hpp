@@ -25,6 +25,8 @@
 #include <gmkgameinfo.hpp>
 #include <gmktree.hpp>
 
+// TODO Use new Stream macros in place of old magic numbers
+
 namespace Gmk
 {
 	class Gmk
@@ -34,6 +36,7 @@ namespace Gmk
 		static const unsigned int GMK_GUID_LENGTH	= 16;
 
 	private:
+		void SaveVer81(Stream* stream);
 		void LoadVer81(Stream* stream);
 
 		void SaveGmk(Stream* stream);

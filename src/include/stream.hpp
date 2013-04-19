@@ -14,6 +14,26 @@
 
 namespace Gmk
 {
+	#define BuildByte(a, b, c, d, e, f, g, h)			((static_cast<unsigned int>((a) & 0x01) << 7) | \
+														(static_cast<unsigned int>((b) & 0x01) << 6) | \
+														(static_cast<unsigned int>((c) & 0x01) << 5) | \
+														(static_cast<unsigned int>((d) & 0x01) << 4) | \
+														(static_cast<unsigned int>((e) & 0x01) << 3) | \
+														(static_cast<unsigned int>((f) & 0x01) << 2) | \
+														(static_cast<unsigned int>((g) & 0x01) << 1) | \
+														(static_cast<unsigned int>((h) & 0x01) << 0))
+
+	#define GetBit(a, b)								(((a) & (1 << (b))) != 0)
+
+	#define BuildColor(r, g, b)							(((r) << 24) | \
+														 ((g) << 16) | \
+														 ((b) << 8)  | \
+														  0x00)
+
+	#define ColorGetRed(x)								(((x) >> 24) & 0xFF)
+	#define ColorGetGreen(x)							(((x) >> 16) & 0xFF)
+	#define ColorGetBlue(x)								(((x) >> 8) & 0xFF)
+
 	class Stream
 	{
 	public:
