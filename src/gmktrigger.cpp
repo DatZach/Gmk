@@ -26,13 +26,16 @@ namespace Gmk
 	{
 		Stream* writeStream = new Stream();
 
-		writeStream->WriteBoolean(true);
-		writeStream->WriteDword(800);
+		writeStream->WriteBoolean(exists);
+		if (exists)
+		{
+			writeStream->WriteDword(800);
 
-		writeStream->WriteString(name);
-		writeStream->WriteString(condition);
-		writeStream->WriteDword(momentOfChecking);
-		writeStream->WriteString(constantName);
+			writeStream->WriteString(name);
+			writeStream->WriteString(condition);
+			writeStream->WriteDword(momentOfChecking);
+			writeStream->WriteString(constantName);
+		}
 		
 		stream->Serialize(writeStream);
 		delete writeStream;
@@ -43,7 +46,10 @@ namespace Gmk
 		Stream* triggerStream = stream->Deserialize();
 
 		if (!triggerStream->ReadBoolean())
+		{
+			exists = false;
 			return;
+		}
 
 		triggerStream->ReadDword();
 		name				= triggerStream->ReadString();
@@ -52,5 +58,6 @@ namespace Gmk
 		constantName		= triggerStream->ReadString();
 
 		delete triggerStream;
+		exists = true;
 	}
 }

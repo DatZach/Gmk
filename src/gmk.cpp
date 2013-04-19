@@ -242,6 +242,58 @@ namespace Gmk
 		stream->WriteDword(sprites.size());
 		for(std::size_t i = 0; i < sprites.size(); ++i)
 			sprites[i]->Write(stream);
+
+		// Write backgrounds
+		stream->WriteDword(800);
+		stream->WriteDword(backgrounds.size());
+		for(std::size_t i = 0; i < backgrounds.size(); ++i)
+			backgrounds[i]->Write(stream);
+
+		// Write paths
+		stream->WriteDword(800);
+		stream->WriteDword(paths.size());
+		for(std::size_t i = 0; i < paths.size(); ++i)
+			paths[i]->Write(stream);
+
+		// Write scripts
+		stream->WriteDword(800);
+		stream->WriteDword(scripts.size());
+		for(std::size_t i = 0; i < scripts.size(); ++i)
+			scripts[i]->Write(stream);
+
+		// Write fonts
+		stream->WriteDword(800);
+		stream->WriteDword(fonts.size());
+		for(std::size_t i = 0; i < fonts.size(); ++i)
+			fonts[i]->Write(stream);
+
+		// Write timelines
+		stream->WriteDword(800);
+		stream->WriteDword(timelines.size());
+		for(std::size_t i = 0; i < timelines.size(); ++i)
+			timelines[i]->Write(stream);
+
+		// Write objects
+		stream->WriteDword(800);
+		stream->WriteDword(objects.size());
+		for(std::size_t i = 0; i < objects.size(); ++i)
+			objects[i]->Write(stream);
+
+		// Write rooms
+		stream->WriteDword(800);
+		stream->WriteDword(rooms.size());
+		for(std::size_t i = 0; i < rooms.size(); ++i)
+			rooms[i]->Write(stream);
+
+		// Write last ids
+		stream->WriteDword(lastInstancePlacedId);
+		stream->WriteDword(lastTilePlacedId);
+
+		// Write include files
+		stream->WriteDword(800);
+		stream->WriteDword(includeFiles.size());
+		for(std::size_t i = 0; i < includeFiles.size(); ++i)
+			includeFiles[i]->Write(stream);
 	}
 
 	void Gmk::LoadVer81(Stream* stream)

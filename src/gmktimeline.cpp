@@ -34,7 +34,10 @@ namespace Gmk
 		Stream* timelineStream = stream->Deserialize();
 
 		if (!timelineStream->ReadBoolean())
+		{
+			exists = false;
 			return;
+		}
 
 		name				= timelineStream->ReadString();
 		timelineStream->ReadTimestamp();
@@ -60,5 +63,6 @@ namespace Gmk
 		}
 
 		delete timelineStream;
+		exists = true;
 	}
 }

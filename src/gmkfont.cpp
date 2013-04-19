@@ -37,7 +37,10 @@ namespace Gmk
 		Stream* fontStream = stream->Deserialize();
 
 		if (!fontStream->ReadBoolean())
+		{
+			exists = false;
 			return;
+		}
 
 		name				= fontStream->ReadString();
 		fontStream->ReadTimestamp();
@@ -55,5 +58,6 @@ namespace Gmk
 		characterRangeEnd	= fontStream->ReadDword();
 
 		delete fontStream;
+		exists = true;
 	}
 }

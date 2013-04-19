@@ -20,7 +20,7 @@ namespace Gmk
 		  freeMemory(true),
 		  removeAtEndOfGame(true)
 	{
-
+		exists = true;
 	}
 
 	IncludeFile::~IncludeFile()

@@ -41,7 +41,10 @@ namespace Gmk
 		Stream* objectStream = stream->Deserialize();
 
 		if (!objectStream->ReadBoolean())
+		{
+			exists = false;
 			return;
+		}
 
 		name				= objectStream->ReadString();
 		objectStream->ReadTimestamp();
@@ -84,5 +87,6 @@ namespace Gmk
 		}
 
 		delete objectStream;
+		exists = true;
 	}
 }

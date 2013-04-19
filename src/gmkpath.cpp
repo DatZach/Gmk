@@ -36,7 +36,10 @@ namespace Gmk
 		Stream* pathStream = stream->Deserialize();
 
 		if (!pathStream->ReadBoolean())
+		{
+			exists = false;
 			return;
+		}
 
 		name				= pathStream->ReadString();
 		pathStream->ReadTimestamp();
@@ -61,5 +64,6 @@ namespace Gmk
 		}
 
 		delete pathStream;
+		exists = true;
 	}
 }

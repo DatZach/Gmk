@@ -30,7 +30,10 @@ namespace Gmk
 		Stream* scriptStream = stream->Deserialize();
 
 		if (!scriptStream->ReadBoolean())
+		{
+			exists = false;
 			return;
+		}
 	
 		name = scriptStream->ReadString();
 		scriptStream->ReadTimestamp();
@@ -38,5 +41,6 @@ namespace Gmk
 		value = scriptStream->ReadString();
 
 		delete scriptStream;
+		exists = true;
 	}
 }

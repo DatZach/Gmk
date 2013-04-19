@@ -32,7 +32,31 @@ namespace Gmk
 
 	void Background::WriteVer81(Stream* stream)
 	{
+		Stream* backgroundStream = new Stream();
 
+		backgroundStream->WriteBoolean(exists);
+		if (exists)
+		{
+			backgroundStream->WriteString(name);
+			backgroundStream->WriteTimestamp();
+			backgroundStream->WriteDword(710);
+			backgroundStream->WriteBoolean(useAsTileset);
+			backgroundStream->WriteDword(tileWidth);
+			backgroundStream->WriteDword(tileHeight);
+			backgroundStream->WriteDword(tileHorizontalOffset);
+			backgroundStream->WriteDword(tileVerticalOffset);
+			backgroundStream->WriteDword(tileHorizontalSeperation);
+			backgroundStream->WriteDword(tileVerticalSeperation);
+			backgroundStream->WriteDword(800);
+			backgroundStream->WriteDword(width);
+			backgroundStream->WriteDword(height);
+
+			if (width != 0 && height != 0)
+				backgroundStream->Serialize(data, false);
+		}
+
+		stream->Serialize(backgroundStream);
+		delete backgroundStream;
 	}
 
 	void Background::ReadVer81(Stream* stream)
@@ -40,7 +64,10 @@ namespace Gmk
 		Stream* backgroundStream = stream->Deserialize();
 
 		if (!backgroundStream->ReadBoolean())
+		{
+			exists = false;
 			return;
+		}
 
 		name						= backgroundStream->ReadString();
 		backgroundStream->ReadTimestamp();
@@ -60,5 +87,6 @@ namespace Gmk
 			data = backgroundStream->Deserialize(false);
 
 		delete backgroundStream;
+		exists = true;
 	}
 }

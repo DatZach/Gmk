@@ -11,7 +11,7 @@ namespace Gmk
 		: GmkResource(gmk),
 		  contents()
 	{
-
+		exists = true;
 	}
 
 	Tree::~Tree()

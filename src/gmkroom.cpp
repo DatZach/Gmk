@@ -60,7 +60,10 @@ namespace Gmk
 		Stream* roomStream = stream->Deserialize();
 
 		if (!roomStream->ReadBoolean())
+		{
+			exists = false;
 			return;
+		}
 
 		name					= roomStream->ReadString();
 		roomStream->ReadTimestamp();
@@ -171,5 +174,6 @@ namespace Gmk
 		scrollbarY						= roomStream->ReadDword();
 
 		delete roomStream;
+		exists = true;
 	}
 }

@@ -55,7 +55,7 @@ namespace Gmk
 		  copyright(""),
 		  description("")
 	{
-
+		exists = true;
 	}
 
 	Settings::~Settings()

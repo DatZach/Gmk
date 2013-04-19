@@ -32,26 +32,29 @@ namespace Gmk
 	{
 		Stream* soundStream = new Stream();
 
-		soundStream->WriteBoolean(true);
-		soundStream->WriteString(name);
-		soundStream->WriteTimestamp();
-		soundStream->WriteDword(800);
-		soundStream->WriteDword(kind);
-		soundStream->WriteString(extension);
-		soundStream->WriteString(filename);
-		
-		if (data != NULL)
+		soundStream->WriteBoolean(exists);
+		if (exists)
 		{
-			soundStream->WriteBoolean(true);
-			soundStream->Serialize(data, false);
-		}
-		else
-			soundStream->WriteBoolean(false);
+			soundStream->WriteString(name);
+			soundStream->WriteTimestamp();
+			soundStream->WriteDword(800);
+			soundStream->WriteDword(kind);
+			soundStream->WriteString(extension);
+			soundStream->WriteString(filename);
+		
+			if (data != NULL)
+			{
+				soundStream->WriteBoolean(true);
+				soundStream->Serialize(data, false);
+			}
+			else
+				soundStream->WriteBoolean(false);
 
-		soundStream->WriteDword(effects);
-		soundStream->WriteDouble(volume);
-		soundStream->WriteDouble(pan);
-		soundStream->WriteBoolean(preload);
+			soundStream->WriteDword(effects);
+			soundStream->WriteDouble(volume);
+			soundStream->WriteDouble(pan);
+			soundStream->WriteBoolean(preload);
+		}
 
 		stream->Serialize(soundStream);
 		delete soundStream;
@@ -62,7 +65,10 @@ namespace Gmk
 		Stream* soundStream = stream->Deserialize();
 
 		if (!soundStream->ReadBoolean())
+		{
+			exists = false;
 			return;
+		}
 
 		name			= soundStream->ReadString();
 		soundStream->ReadTimestamp();
@@ -78,5 +84,6 @@ namespace Gmk
 		preload			= soundStream->ReadBoolean();
 
 		delete soundStream;
+		exists = true;
 	}
 }

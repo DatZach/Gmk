@@ -41,32 +41,35 @@ namespace Gmk
 	{
 		Stream* spriteStream = new Stream();
 
-		spriteStream->WriteBoolean(true);
-		spriteStream->WriteString(name);
-		spriteStream->WriteTimestamp();
-		spriteStream->WriteDword(800);
-		spriteStream->WriteDword(originX);
-		spriteStream->WriteDword(originY);
-		
-		spriteStream->WriteDword(subimages.size());
-		for(std::size_t i = 0; i < subimages.size(); ++i)
+		spriteStream->WriteBoolean(exists);
+		if (exists)
 		{
+			spriteStream->WriteString(name);
+			spriteStream->WriteTimestamp();
 			spriteStream->WriteDword(800);
-			spriteStream->WriteDword(subimages[i].width);
-			spriteStream->WriteDword(subimages[i].height);
+			spriteStream->WriteDword(originX);
+			spriteStream->WriteDword(originY);
+		
+			spriteStream->WriteDword(subimages.size());
+			for(std::size_t i = 0; i < subimages.size(); ++i)
+			{
+				spriteStream->WriteDword(800);
+				spriteStream->WriteDword(subimages[i].width);
+				spriteStream->WriteDword(subimages[i].height);
 
-			if (subimages[i].width != 0 && subimages[i].height != 0)
-				spriteStream->Serialize(subimages[i].data, false);
+				if (subimages[i].width != 0 && subimages[i].height != 0)
+					spriteStream->Serialize(subimages[i].data, false);
+			}
+
+			spriteStream->WriteDword(maskShape);
+			spriteStream->WriteDword(alphaTolerance);
+			spriteStream->WriteBoolean(seperateMasks);
+			spriteStream->WriteDword(boundingBox);
+			spriteStream->WriteDword(bboxLeft);
+			spriteStream->WriteDword(bboxRight);
+			spriteStream->WriteDword(bboxBottom);
+			spriteStream->WriteDword(bboxTop);
 		}
-
-		spriteStream->WriteDword(maskShape);
-		spriteStream->WriteDword(alphaTolerance);
-		spriteStream->WriteBoolean(seperateMasks);
-		spriteStream->WriteDword(boundingBox);
-		spriteStream->WriteDword(bboxLeft);
-		spriteStream->WriteDword(bboxRight);
-		spriteStream->WriteDword(bboxBottom);
-		spriteStream->WriteDword(bboxTop);
 
 		stream->Serialize(spriteStream);
 		delete spriteStream;
@@ -77,7 +80,10 @@ namespace Gmk
 		Stream* spriteStream = stream->Deserialize();
 
 		if (!spriteStream->ReadBoolean())
+		{
+			exists = false;
 			return;
+		}
 
 		name					= spriteStream->ReadString();
 		spriteStream->ReadTimestamp();
@@ -115,5 +121,6 @@ namespace Gmk
 		bboxTop					= spriteStream->ReadDword();
 
 		delete spriteStream;
+		exists = true;
 	}
 }
