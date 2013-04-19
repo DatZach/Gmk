@@ -236,6 +236,12 @@ namespace Gmk
 		stream->WriteDword(sounds.size());
 		for(std::size_t i = 0; i < sounds.size(); ++i)
 			sounds[i]->Write(stream);
+
+		// Write sprites
+		stream->WriteDword(800);
+		stream->WriteDword(sprites.size());
+		for(std::size_t i = 0; i < sprites.size(); ++i)
+			sprites[i]->Write(stream);
 	}
 
 	void Gmk::LoadVer81(Stream* stream)

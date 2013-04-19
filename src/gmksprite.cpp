@@ -39,7 +39,37 @@ namespace Gmk
 
 	void Sprite::WriteVer81(Stream* stream)
 	{
+		Stream* spriteStream = new Stream();
 
+		spriteStream->WriteBoolean(true);
+		spriteStream->WriteString(name);
+		spriteStream->WriteTimestamp();
+		spriteStream->WriteDword(800);
+		spriteStream->WriteDword(originX);
+		spriteStream->WriteDword(originY);
+		
+		spriteStream->WriteDword(subimages.size());
+		for(std::size_t i = 0; i < subimages.size(); ++i)
+		{
+			spriteStream->WriteDword(800);
+			spriteStream->WriteDword(subimages[i].width);
+			spriteStream->WriteDword(subimages[i].height);
+
+			if (subimages[i].width != 0 && subimages[i].height != 0)
+				spriteStream->Serialize(subimages[i].data, false);
+		}
+
+		spriteStream->WriteDword(maskShape);
+		spriteStream->WriteDword(alphaTolerance);
+		spriteStream->WriteBoolean(seperateMasks);
+		spriteStream->WriteDword(boundingBox);
+		spriteStream->WriteDword(bboxLeft);
+		spriteStream->WriteDword(bboxRight);
+		spriteStream->WriteDword(bboxBottom);
+		spriteStream->WriteDword(bboxTop);
+
+		stream->Serialize(spriteStream);
+		delete spriteStream;
 	}
 
 	void Sprite::ReadVer81(Stream* stream)
