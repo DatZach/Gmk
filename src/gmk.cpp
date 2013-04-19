@@ -232,7 +232,10 @@ namespace Gmk
 		stream->WriteTimestamp();
 
 		// Write sounds
-		
+		stream->WriteDword(800);
+		stream->WriteDword(sounds.size());
+		for(std::size_t i = 0; i < sounds.size(); ++i)
+			sounds[i]->Write(stream);
 	}
 
 	void Gmk::LoadVer81(Stream* stream)
