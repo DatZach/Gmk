@@ -211,6 +211,28 @@ namespace Gmk
 			throw new std::exception("Settings are not declared");
 
 		settings->Write(stream);
+
+		// Write triggers
+		stream->WriteDword(800);
+		stream->WriteDword(triggers.size());
+		for(std::size_t i = 0; i < triggers.size(); ++i)
+			triggers[i]->Write(stream);
+
+		stream->WriteTimestamp();
+
+		// Write constants
+		stream->WriteDword(800);
+		stream->WriteDword(constants.size());
+		for(std::size_t i = 0; i < constants.size(); ++i)
+		{
+			stream->WriteString(constants[i].first);
+			stream->WriteString(constants[i].second);
+		}
+
+		stream->WriteTimestamp();
+
+		// Write sounds
+		
 	}
 
 	void Gmk::LoadVer81(Stream* stream)
@@ -242,7 +264,7 @@ namespace Gmk
 			std::string name = stream->ReadString();
 			std::string value = stream->ReadString();
 
-			constants.insert(std::pair<std::string, std::string>(name, value));
+			constants.push_back(std::pair<std::string, std::string>(name, value));
 		}
 
 		stream->ReadTimestamp();

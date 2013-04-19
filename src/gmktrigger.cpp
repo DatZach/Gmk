@@ -27,6 +27,8 @@ namespace Gmk
 		Stream* writeStream = new Stream();
 
 		writeStream->WriteBoolean(true);
+		writeStream->WriteDword(800);
+
 		writeStream->WriteString(name);
 		writeStream->WriteString(condition);
 		writeStream->WriteDword(momentOfChecking);
