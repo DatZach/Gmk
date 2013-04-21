@@ -85,6 +85,7 @@ namespace Gmk
 		bool					persistent;
 		unsigned int			backgroundColor;
 		bool					drawBackgroundColor;
+		bool					clearBackgroundWithWindowColor;
 		std::string				creationCode;
 		std::vector<Background>	backgrounds;
 		bool					viewsEnabled;
