@@ -33,7 +33,44 @@ namespace Gmk
 
 	void Object::WriteVer81(Stream* stream)
 	{
+		Stream* objectStream = new Stream();
 
+		objectStream->WriteBoolean(exists);
+		if (exists)
+		{
+			objectStream->WriteString(name);
+			objectStream->WriteTimestamp();
+			objectStream->WriteDword(430);
+			objectStream->WriteDword(spriteIndex);
+			objectStream->WriteBoolean(solid);
+			objectStream->WriteBoolean(visible);
+			objectStream->WriteDword(depth);
+			objectStream->WriteBoolean(persistent);
+			objectStream->WriteDword(parent);
+			objectStream->WriteDword(mask);
+
+			objectStream->WriteDword(11);
+			for(std::size_t i = 0; i < 12; ++i)
+			{
+				for(std::size_t j = 0; j < events.size(); ++j)
+				{
+					if (events[j].eventNumber == i)
+					{
+						objectStream->WriteDword(events[j].eventKind);
+						objectStream->WriteDword(400);
+
+						objectStream->WriteDword(events[j].actions.size());
+						for(std::size_t k = 0; k < events[j].actions.size(); ++k)
+							events[j].actions[k]->Write(objectStream);
+					}
+				}
+
+				objectStream->WriteDword(-1);
+			}
+		}
+
+		stream->Serialize(objectStream);
+		delete objectStream;
 	}
 
 	void Object::ReadVer81(Stream* stream)
