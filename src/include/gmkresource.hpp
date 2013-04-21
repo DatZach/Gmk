@@ -9,6 +9,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <exception>
 #include <stream.hpp>
 
 namespace Gmk

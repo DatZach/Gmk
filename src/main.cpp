@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
 	gmk->Save("blank.gm81");
 	
 	std::cout << "Loading... ";
-	gmk->Load("spawnpoints.gm81");
+	gmk->Load("out.gm81");
 	std::cout << "Done!" << std::endl;
 
 	std::cout << "Saving... ";

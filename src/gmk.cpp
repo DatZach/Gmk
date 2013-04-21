@@ -279,7 +279,7 @@ namespace Gmk
 		for(std::size_t i = 0; i < libraryCreationCode.size(); ++i)
 			stream->WriteString(libraryCreationCode[i]);
 
-		// Write room execution order
+		// Write room execution order -- TODO This should be regenerated every save
 		stream->WriteDword(700);
 		stream->WriteDword(roomExecutionOrder.size());
 		for(std::size_t i = 0; i < roomExecutionOrder.size(); ++i)

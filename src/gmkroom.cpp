@@ -18,7 +18,7 @@ namespace Gmk
 		  isometricGrid(false),
 		  speed(30),
 		  persistent(false),
-		  backgroundColor(0xC0C0C000),
+		  backgroundColor(BuildColor(192, 192, 192)),
 		  drawBackgroundColor(true),
 		  clearBackgroundWithWindowColor(true),
 		  creationCode(""),

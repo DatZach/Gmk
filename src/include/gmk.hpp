@@ -24,8 +24,6 @@
 #include <gmkgameinfo.hpp>
 #include <gmktree.hpp>
 
-// TODO Use new Stream macros in place of old magic numbers
-
 namespace Gmk
 {
 	class Gmk
