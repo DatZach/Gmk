@@ -34,6 +34,7 @@ namespace Gmk
 		  showProgress(LpbtDefault),
 		  frontImage(NULL),
 		  backImage(NULL),
+		  loadImage(NULL),
 		  loadTransparent(false),
 		  loadAlpha(0xFF),
 		  scaleProgress(true),
@@ -56,6 +57,41 @@ namespace Gmk
 		  description("")
 	{
 		exists = true;
+
+		// Create new icon in memory stream
+		iconImage = new Stream();
+
+		// Icon Header
+		iconImage->WriteWord(0);						// Reserved (magic)
+		iconImage->WriteWord(1);						// 1 = Icon, 2 = Cursor
+		iconImage->WriteWord(1);						// 1 image in file
+
+		// Image Header
+		iconImage->WriteByte(32);						// 32px width
+		iconImage->WriteByte(32);						// 32px height
+		iconImage->WriteByte(0);						// Truecolor
+		iconImage->WriteByte(0);						// Reserved
+		iconImage->WriteWord(0);						// Color planes
+		iconImage->WriteWord(32);						// 32bits per pixel
+		iconImage->WriteDword(22486 - 16 - 6);			// Size of image
+		iconImage->WriteDword(16 + 6);					// Offset to image
+
+		// DIB header
+		iconImage->WriteDword(40);						// Size of this header
+		iconImage->WriteDword(32);						// Width
+		iconImage->WriteDword(64);						// Height * 2
+		iconImage->WriteWord(1);						// Color planes, must be 1
+		iconImage->WriteDword(32);						// 32 bit color
+		iconImage->WriteDword(0);						// No compression
+		iconImage->WriteDword(22486 - 40 - 16 - 6);
+		iconImage->WriteDword(1);						// Pixels per meter
+		iconImage->WriteDword(1);						// Pixels per meter
+		iconImage->WriteDword(0);						// Number of colors, set to 0 to default to 2 ^ n
+		iconImage->WriteDword(0);						// Number of important colors
+
+		// Make white pixels
+		for(unsigned int i = 0; i < 22486 - 40 - 16 - 6; i++)
+			iconImage->WriteByte(0xFF);
 	}
 
 	Settings::~Settings()

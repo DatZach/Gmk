@@ -158,10 +158,6 @@ namespace Gmk
 		unsigned int count;
 		Stream* roomStream = stream->Deserialize();
 
-		Stream* uwotm8 = new Stream("room.dat", Stream::SmWrite);
-		uwotm8->WriteData(roomStream->GetMemoryBuffer());
-		delete uwotm8;
-
 		if (!roomStream->ReadBoolean())
 		{
 			exists = false;

@@ -11,7 +11,51 @@ namespace Gmk
 		: GmkResource(gmk),
 		  contents()
 	{
+		static const std::string names[12] =
+		{
+			"Sprites",
+			"Sounds",
+			"Backgrounds",
+			"Paths",
+			"Scripts",
+			"Fonts",
+			"Time Lines",
+			"Objects",
+			"Rooms",
+			"Game Information",
+			"Global Game Settings",
+			"Extension Packages"
+		};
+
+		static const unsigned int order[12] =
+		{
+			GroupSprites,
+			GroupSounds,
+			GroupBackgrounds,
+			GroupPaths,
+			GroupScripts,
+			GroupFonts,
+			GroupTimelines,
+			GroupObjects,
+			GroupRooms,
+			GroupGameInformation,
+			GroupGlobalGameOptions,
+			GroupExtensionPackages
+		};
+
 		exists = true;
+
+		for(unsigned int i = 0; i < 12; ++i)
+		{
+			Node* node = new Node();
+
+			node->status = i >= 9 ? StatusSecondary : StatusPrimary;
+			node->group = order[i];
+			node->index = 0;
+			node->name = names[i];
+
+			contents.push_back(node);
+		}
 	}
 
 	Tree::~Tree()

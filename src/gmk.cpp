@@ -4,6 +4,7 @@
  */
 
 #include <iostream>
+#include <ctime>
 #include <stream.hpp>
 #include <gmk.hpp>
 
@@ -33,52 +34,17 @@ namespace Gmk
 		  roomExecutionOrder(),
 		  resourceTree(NULL)
 	{
-		
+		settings = new Settings(this);
+		gameInformation = new GameInformation(this);
+		resourceTree = new Tree(this);
+
+		std::srand(static_cast<unsigned int>(time(NULL)));
+		gameId = std::rand() % GMK_MAX_ID;
 	}
 
 	Gmk::~Gmk()
 	{
-		if (settings != NULL)
-			delete settings;
-
-		for(std::size_t i = 0; i < triggers.size(); ++i)
-			delete triggers[i];
-
-		for(std::size_t i = 0; i < sounds.size(); ++i)
-			delete sounds[i];
-
-		for(std::size_t i = 0; i < sprites.size(); ++i)
-			delete sprites[i];
-
-		for(std::size_t i = 0; i < backgrounds.size(); ++i)
-			delete backgrounds[i];
-
-		for(std::size_t i = 0; i < paths.size(); ++i)
-			delete paths[i];
-
-		for(std::size_t i = 0; i < scripts.size(); ++i)
-			delete scripts[i];
-
-		for(std::size_t i = 0; i < fonts.size(); ++i)
-			delete fonts[i];
-
-		for(std::size_t i = 0; i < timelines.size(); ++i)
-			delete timelines[i];
-
-		for(std::size_t i = 0; i < objects.size(); ++i)
-			delete objects[i];
-
-		for(std::size_t i = 0; i < rooms.size(); ++i)
-			delete rooms[i];
-
-		for(std::size_t i = 0; i < includeFiles.size(); ++i)
-			delete includeFiles[i];
-
-		if (gameInformation != NULL)
-			delete gameInformation;
-
-		if (resourceTree != NULL)
-			delete resourceTree;
+		CleanMemory();
 	}
 
 	bool Gmk::Save(const std::string& filename)
@@ -103,6 +69,8 @@ namespace Gmk
 
 	bool Gmk::Load(const std::string& filename)
 	{
+		CleanMemory();
+
 		try
 		{
 			Stream* stream = new Stream(filename, Stream::SmRead);
@@ -485,5 +453,59 @@ namespace Gmk
 		// Read resource tree
 		resourceTree = new Tree(this);
 		resourceTree->Read(stream);
+	}
+
+	void Gmk::CleanMemory()
+	{
+		if (settings != NULL)
+		{
+			delete settings;
+			settings = NULL;
+		}
+
+		for(std::size_t i = 0; i < triggers.size(); ++i)
+			delete triggers[i];
+
+		for(std::size_t i = 0; i < sounds.size(); ++i)
+			delete sounds[i];
+
+		for(std::size_t i = 0; i < sprites.size(); ++i)
+			delete sprites[i];
+
+		for(std::size_t i = 0; i < backgrounds.size(); ++i)
+			delete backgrounds[i];
+
+		for(std::size_t i = 0; i < paths.size(); ++i)
+			delete paths[i];
+
+		for(std::size_t i = 0; i < scripts.size(); ++i)
+			delete scripts[i];
+
+		for(std::size_t i = 0; i < fonts.size(); ++i)
+			delete fonts[i];
+
+		for(std::size_t i = 0; i < timelines.size(); ++i)
+			delete timelines[i];
+
+		for(std::size_t i = 0; i < objects.size(); ++i)
+			delete objects[i];
+
+		for(std::size_t i = 0; i < rooms.size(); ++i)
+			delete rooms[i];
+
+		for(std::size_t i = 0; i < includeFiles.size(); ++i)
+			delete includeFiles[i];
+
+		if (gameInformation != NULL)
+		{
+			delete gameInformation;
+			gameInformation = NULL;
+		}
+
+		if (resourceTree != NULL)
+		{
+			delete resourceTree;
+			resourceTree = NULL;
+		}
 	}
 }

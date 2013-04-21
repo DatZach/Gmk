@@ -500,10 +500,15 @@ namespace Gmk
 
 	void Stream::Serialize(Stream* stream, bool compress)
 	{
-		if (compress)
-			stream->Deflate();
+		if (stream != NULL)
+		{
+			if (compress)
+				stream->Deflate();
 
-		WriteDword(stream->GetLength());
-		WriteData(stream->GetMemoryBuffer());
+			WriteDword(stream->GetLength());
+			WriteData(stream->GetMemoryBuffer());
+		}
+		else
+			WriteDword(0);
 	}
 }

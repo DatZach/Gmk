@@ -11,6 +11,8 @@ int main(int argc, char* argv[])
 	std::cout << "GMK API Library Test" << std::endl;
 
 	Gmk::Gmk* gmk = new Gmk::Gmk();
+	gmk->version = Gmk::Ver81;
+	gmk->Save("blank.gm81");
 	
 	std::cout << "Loading... ";
 	gmk->Load("spawnpoints.gm81");

@@ -28,9 +28,6 @@ namespace Gmk
 
 	class GmkResource
 	{
-	private:
-		Version version;
-
 	protected:
 		Gmk* gmkHandle;
 		bool exists;

@@ -9,8 +9,7 @@
 namespace Gmk
 {
 	GmkResource::GmkResource(Gmk* gmk)
-		: version(gmk->version),
-		  gmkHandle(gmk),
+		: gmkHandle(gmk),
 		  exists(false)
 	{
 
@@ -18,7 +17,7 @@ namespace Gmk
 
 	void GmkResource::Write(Stream* stream)
 	{
-		switch(version)
+		switch(gmkHandle->version)
 		{
 			case Ver81:
 				WriteVer81(stream);
@@ -28,7 +27,7 @@ namespace Gmk
 
 	void GmkResource::Read(Stream* stream)
 	{
-		switch(version)
+		switch(gmkHandle->version)
 		{
 			case Ver81:
 				ReadVer81(stream);

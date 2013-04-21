@@ -33,8 +33,11 @@ namespace Gmk
 	public:
 		static const unsigned int GMK_MAGIC			= 1234321;
 		static const unsigned int GMK_GUID_LENGTH	= 16;
+		static const unsigned int GMK_MAX_ID		= 100000000;
 
 	private:
+		void CleanMemory();
+
 		void SaveVer81(Stream* stream);
 		void LoadVer81(Stream* stream);
 
