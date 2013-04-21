@@ -32,7 +32,24 @@ namespace Gmk
 
 	void GameInformation::WriteVer81(Stream* stream)
 	{
+		Stream* gameInfoStream = new Stream();
 
+		gameInfoStream->WriteDword(backgroundColor);
+		gameInfoStream->WriteBoolean(showInSeperateWindow);
+		gameInfoStream->WriteString(caption);
+		gameInfoStream->WriteDword(left);
+		gameInfoStream->WriteDword(top);
+		gameInfoStream->WriteDword(width);
+		gameInfoStream->WriteDword(height);
+		gameInfoStream->WriteBoolean(showBorder);
+		gameInfoStream->WriteBoolean(sizeable);
+		gameInfoStream->WriteBoolean(alwaysOnTop);
+		gameInfoStream->WriteBoolean(freeze);
+		gameInfoStream->WriteTimestamp();
+		gameInfoStream->WriteString(information);
+
+		stream->Serialize(gameInfoStream);
+		delete gameInfoStream;
 	}
 
 	void GameInformation::ReadVer81(Stream* stream)

@@ -325,7 +325,7 @@ namespace Gmk
 
 	time_t Stream::ReadTimestamp()
 	{
-		return (time_t)(8640000000000.0 * ReadDouble() + GmTimestampEpoch);
+		return (time_t)(86400.0 * ReadDouble() + GmTimestampEpoch);
 	}
 
 	Stream* Stream::ReadBitmap()
@@ -435,7 +435,7 @@ namespace Gmk
 
 	void Stream::WriteTimestamp()
 	{
-		WriteDouble((double)(time(NULL) - GmTimestampEpoch) / 8640000000000.0);
+		WriteDouble((double)(time(NULL) - GmTimestampEpoch) / 86400.0);
 	}
 
 	void Stream::WriteBitmap(Stream* value)

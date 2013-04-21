@@ -24,8 +24,6 @@ int main(int argc, char* argv[])
 	std::cout << "Version \t\t: " << gmk->version << std::endl;
 	std::cout << "Game ID \t\t: " << gmk->gameId << std::endl;
 
-	std::getchar();
-
 	delete gmk;
 
 	return 0;

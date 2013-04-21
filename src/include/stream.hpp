@@ -45,7 +45,7 @@ namespace Gmk
 		} StreamMode;
 
 	private:
-		static const time_t GmTimestampEpoch = 0xFFFFFFFF7C2B517FULL;
+		static const time_t GmTimestampEpoch = 0xFFFFFFFF7C5324CFULL;
 		std::fstream fileStream;
 		StreamBuffer buffer;
 		StreamMode streamMode;

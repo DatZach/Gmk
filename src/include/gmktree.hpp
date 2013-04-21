@@ -49,6 +49,7 @@ namespace Gmk
 	
 	private:
 		void ReadRecursiveTree(Stream* stream, Node* parent, unsigned int count);
+		void WriteRecursiveTree(Stream* stream, Node* parent, unsigned int count);
 
 	protected:
 		void WriteVer81(Stream* stream);

@@ -295,6 +295,30 @@ namespace Gmk
 		for(std::size_t i = 0; i < includeFiles.size(); ++i)
 			includeFiles[i]->Write(stream);
 		
+		// Write packages
+		stream->WriteDword(700);
+		stream->WriteDword(packages.size());
+		for(std::size_t i = 0; i < packages.size(); ++i)
+			stream->WriteString(packages[i]);
+
+		// Write game information
+		stream->WriteDword(800);
+		gameInformation->Write(stream);
+
+		// Write library creation code
+		stream->WriteDword(500);
+		stream->WriteDword(libraryCreationCode.size());
+		for(std::size_t i = 0; i < libraryCreationCode.size(); ++i)
+			stream->WriteString(libraryCreationCode[i]);
+
+		// Write room execution order
+		stream->WriteDword(700);
+		stream->WriteDword(roomExecutionOrder.size());
+		for(std::size_t i = 0; i < roomExecutionOrder.size(); ++i)
+			stream->WriteDword(roomExecutionOrder[i]);
+
+		// Write resource tree
+		resourceTree->Write(stream);
 	}
 
 	void Gmk::LoadVer81(Stream* stream)
