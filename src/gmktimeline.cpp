@@ -26,7 +26,29 @@ namespace Gmk
 
 	void Timeline::WriteVer81(Stream* stream)
 	{
+		Stream* timelineStream = new Stream();
 
+		timelineStream->WriteBoolean(exists);
+		if (exists)
+		{
+			timelineStream->WriteString(name);
+			timelineStream->WriteTimestamp();
+			timelineStream->WriteDword(500);
+
+			timelineStream->WriteDword(moments.size());
+			for(std::size_t i = 0; i < moments.size(); ++i)
+			{
+				timelineStream->WriteDword(moments[i].position);
+
+				timelineStream->WriteDword(400);
+				timelineStream->WriteDword(moments[i].actions.size());
+				for(std::size_t j = 0; j < moments[i].actions.size(); ++j)
+					moments[i].actions[j]->Write(timelineStream);
+			}
+		}
+
+		stream->Serialize(timelineStream);
+		delete timelineStream;
 	}
 
 	void Timeline::ReadVer81(Stream* stream)

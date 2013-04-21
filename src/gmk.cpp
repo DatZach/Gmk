@@ -274,7 +274,7 @@ namespace Gmk
 			timelines[i]->Write(stream);
 
 		// Write objects
-		stream->WriteDword(800);
+		/*stream->WriteDword(800);
 		stream->WriteDword(objects.size());
 		for(std::size_t i = 0; i < objects.size(); ++i)
 			objects[i]->Write(stream);
@@ -294,6 +294,7 @@ namespace Gmk
 		stream->WriteDword(includeFiles.size());
 		for(std::size_t i = 0; i < includeFiles.size(); ++i)
 			includeFiles[i]->Write(stream);
+		*/
 	}
 
 	void Gmk::LoadVer81(Stream* stream)

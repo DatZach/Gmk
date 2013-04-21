@@ -8,9 +8,22 @@
 namespace Gmk
 {
 	Action::Action(Gmk* gmk)
-		: GmkResource(gmk)
+		: GmkResource(gmk),
+		  functionName(""),
+		  functionCode(""),
+		  libraryId(0),
+		  actionId(0),
+		  kind(0),
+		  type(0),
+		  argumentsUsed(0),
+		  appliesToObject(false),
+		  relative(false),
+		  appliesToSomething(false),
+		  question(false),
+		  mayBeRelative(false),
+		  not(false)
 	{
-		// TODO Default values
+		
 	}
 
 	Action::~Action()
@@ -20,7 +33,31 @@ namespace Gmk
 
 	void Action::WriteVer81(Stream* stream)
 	{
+		stream->WriteDword(440);
 
+		stream->WriteDword(libraryId);
+		stream->WriteDword(actionId);
+		stream->WriteDword(kind);
+		stream->WriteBoolean(mayBeRelative);
+		stream->WriteBoolean(question);
+		stream->WriteBoolean(appliesToSomething);
+		stream->WriteDword(type);
+		stream->WriteString(functionName);
+		stream->WriteString(functionCode);
+		stream->WriteDword(argumentsUsed);
+
+		stream->WriteDword(ARGUMENT_COUNT);
+		for(unsigned int i = 0; i < ARGUMENT_COUNT; ++i)
+			stream->WriteDword(argumentKind[i]);
+
+		stream->WriteDword(appliesToObject);
+		stream->WriteBoolean(relative);
+
+		stream->WriteDword(ARGUMENT_COUNT);
+		for(unsigned int i = 0; i < ARGUMENT_COUNT; ++i)
+			stream->WriteString(argumentValue[i]);
+
+		stream->WriteBoolean(not);
 	}
 
 	void Action::ReadVer81(Stream* stream)
