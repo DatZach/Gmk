@@ -40,6 +40,7 @@ namespace Gmk
 
 		typedef struct _Node
 		{
+			GmkResource*			link;
 			unsigned int			status;
 			unsigned int			group;
 			unsigned int			index;
@@ -48,6 +49,8 @@ namespace Gmk
 		} Node;
 	
 	private:
+		void CleanMemory();
+
 		void ReadRecursiveTree(Stream* stream, Node* parent, unsigned int count);
 		void WriteRecursiveTree(Stream* stream, Node* parent, unsigned int count);
 

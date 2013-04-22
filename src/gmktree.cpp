@@ -4,6 +4,7 @@
  */
 
 #include <gmktree.hpp>
+#include <gmk.hpp>
 
 namespace Gmk
 {
@@ -60,8 +61,16 @@ namespace Gmk
 
 	Tree::~Tree()
 	{
+		CleanMemory();
+	}
+
+	void Tree::CleanMemory()
+	{
+		// TODO You orphan nodes on the heap by doing this -- fix leaked memory
 		for(std::size_t i = 0; i < contents.size(); ++i)
 			delete contents[i];
+
+		contents.clear();
 	}
 
 	void Tree::WriteVer81(Stream* stream)
@@ -80,6 +89,8 @@ namespace Gmk
 
 	void Tree::ReadVer81(Stream* stream)
 	{
+		CleanMemory();
+
 		for(unsigned int i = 0; i < 12; ++i)
 		{
 			Node* node = new Node();
@@ -106,6 +117,11 @@ namespace Gmk
 			node->index = stream->ReadDword();
 			node->name = stream->ReadString();
 
+			if (node->group == GroupBackgrounds)
+				node->link = gmkHandle->backgrounds[node->index];
+			else
+				node->link = NULL;
+
 			ReadRecursiveTree(stream, node, stream->ReadDword());
 
 			parent->contents.push_back(node);
@@ -118,7 +134,11 @@ namespace Gmk
 		{
 			stream->WriteDword(parent->contents[i]->status);
 			stream->WriteDword(parent->contents[i]->group);
-			stream->WriteDword(parent->contents[i]->index);
+			//stream->WriteDword(parent->contents[i]->index);
+			if (parent->contents[i]->link == NULL)
+				stream->WriteDword(parent->contents[i]->index);
+			else
+				stream->WriteDword(parent->contents[i]->link->GetId());
 			stream->WriteString(parent->contents[i]->name);
 
 			stream->WriteDword(parent->contents[i]->contents.size());

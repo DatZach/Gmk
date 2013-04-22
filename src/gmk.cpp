@@ -91,7 +91,19 @@ namespace Gmk
 
 	void Gmk::DefragmentResources()
 	{
+		// Defragment backgrounds
+		std::vector<Background*>::iterator itr = backgrounds.begin();
+		while(itr != backgrounds.end())
+		{
+			if (!(*itr)->GetExists())
+			{
+				delete *itr;
+				itr = backgrounds.erase(itr);
+				continue;
+			}
 
+			++itr;
+		}
 	}
 
 	bool Gmk::IsLoaded() const

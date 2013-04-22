@@ -40,4 +40,14 @@ namespace Gmk
 				throw new std::exception("No rule to Read resource");
 		}
 	}
+
+	int GmkResource::GetId() const
+	{
+		return -1;
+	}
+
+	bool GmkResource::GetExists() const
+	{
+		return exists;
+	}
 }

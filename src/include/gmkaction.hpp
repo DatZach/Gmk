@@ -15,14 +15,36 @@ namespace Gmk
 	public:
 		static const unsigned int ARGUMENT_COUNT = 8;
 
-		enum ActionId
-		{
-			// TODO See Lib Builder?
-		};
-
 		enum ActionKind
 		{
-			// TODO See Lib Builder
+			ActionKindNormal,
+			ActionKindBeginGroup,
+			ActionKindEndGroup,
+			ActionKindElse,
+			ActionKindExit,
+			ActionKindRepeat,
+			ActionKindVariable,
+			ActionKindCode
+		};
+
+		enum ArgumentKind
+		{
+			ArgumentKindExpression,
+			ArgumentKindString,
+			ArgumentKindBoth,
+			ArgumentKindBoolean,
+			ArgumentKindMenu,
+			ArgumentKindSprite,
+			ArgumentKindSound,
+			ArgumentKindBackground,
+			ArgumentKindPath,
+			ArgumentKindScript,
+			ArgumentKindObject,
+			ArgumentKindRoom,
+			ArgumentKindFont,
+			ArgumentKindColor,
+			ArgumentKindTimeline,
+			ArgumentKindFontString
 		};
 
 		enum ActionType
@@ -38,29 +60,36 @@ namespace Gmk
 			ApOther			= -2
 		};
 
+		GmkResource* argumentLink[ARGUMENT_COUNT];								// Logical link to objects, for runtime manipulation
+
 	protected:
 		void WriteVer81(Stream* stream);
 		void ReadVer81(Stream* stream);
 
 	public:
-		std::string				functionName;
-		std::string				functionCode;
-		std::string				argumentValue[ARGUMENT_COUNT];
-  		unsigned int			libraryId;
-		unsigned int			actionId;
-		unsigned int			kind;
-		unsigned int			type;
-		unsigned int			argumentsUsed;
-		unsigned int			argumentKind[ARGUMENT_COUNT];
-		unsigned int			appliesToObject;
-		bool					relative;
-		bool					appliesToSomething;
-		bool					question;
-		bool					mayBeRelative;
-		bool					not;
+		std::string				functionName;									// Function to execute (action_if_variable)
+		std::string				functionCode;									// Code to execute (show_message(argument0))
+		std::string				argumentValue[ARGUMENT_COUNT];					// Argument values
+  		unsigned int			libraryId;										// Library ID (All official have ID 1)
+		unsigned int			actionId;										// Action ID (Identifies D&D action)
+		unsigned int			kind;											// Normal, Begin, End, Else, Exit, etc
+		unsigned int			type;											// ?
+		unsigned int			argumentsUsed;									// Arguments actually passed
+		unsigned int			argumentKind[ARGUMENT_COUNT];					// Argument types (expression, sprite, background, object, etc)
+		unsigned int			appliesToObject;								// "Applies to: self/other/object id"
+		bool					relative;										// Relative flag
+		bool					appliesToSomething;								// "Applies to" visible?
+		bool					question;										// Question flag
+		bool					mayBeRelative;									// "Relative" visible?
+		bool					not;											// Not flag
 
 		Action(Gmk* gmk);
 		~Action();
+
+		void SetCode(const std::string& value);
+		std::string GetCode() const;
+
+		GmkResource* GetArgumentReference(unsigned int index) const;
 	};
 }
 

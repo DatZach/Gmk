@@ -41,6 +41,9 @@ namespace Gmk
 
 		void Write(Stream* stream);
 		void Read(Stream* stream);
+
+		virtual int GetId() const;
+		bool GetExists() const;
 	};
 }
 

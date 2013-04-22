@@ -31,6 +31,8 @@ namespace Gmk
 
 		Background(Gmk* gmk);
 		~Background();
+
+		int GetId() const;
 	};
 }
 

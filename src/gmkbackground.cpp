@@ -4,6 +4,7 @@
  */
 
 #include <gmkbackground.hpp>
+#include <gmk.hpp>
 
 namespace Gmk
 {
@@ -28,6 +29,15 @@ namespace Gmk
 	{
 		if (data != NULL)
 			delete data;
+	}
+
+	int Background::GetId() const
+	{
+		for(int i = 0; i < gmkHandle->backgrounds.size(); ++i)
+			if (gmkHandle->backgrounds[i] == this)
+				return i;
+
+		return -1;
 	}
 
 	void Background::WriteVer81(Stream* stream)

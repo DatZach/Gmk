@@ -3,7 +3,9 @@
  *	GMK Action
  */
 
+#include <sstream>
 #include <gmkaction.hpp>
+#include <gmk.hpp>
 
 namespace Gmk
 {
@@ -31,6 +33,59 @@ namespace Gmk
 
 	}
 
+	void Action::SetCode(const std::string& value)
+	{
+		if (kind != ActionKindCode)
+			return;
+
+		argumentValue[0] = value;
+	}
+
+	std::string Action::GetCode() const
+	{
+		return kind == ActionKindCode ? argumentValue[0] : "";
+	}
+
+	GmkResource* Action::GetArgumentReference(unsigned int index) const
+	{
+		if (index >= ARGUMENT_COUNT)
+			return NULL;
+
+		unsigned int id = std::atoi(argumentValue[index].c_str());
+
+		switch(argumentKind[index])
+		{
+			case ArgumentKindSprite:
+				return id < gmkHandle->sprites.size() ? gmkHandle->sprites[id] : NULL;
+
+			case ArgumentKindSound:
+				return id < gmkHandle->sounds.size() ? gmkHandle->sounds[id] : NULL;
+
+			case ArgumentKindBackground:
+				return id < gmkHandle->backgrounds.size() ? gmkHandle->backgrounds[id] : NULL;
+
+			case ArgumentKindPath:
+				return id < gmkHandle->paths.size() ? gmkHandle->paths[id] : NULL;
+
+			case ArgumentKindScript:
+				return id < gmkHandle->scripts.size() ? gmkHandle->scripts[id] : NULL;
+
+			case ArgumentKindObject:
+				return id < gmkHandle->objects.size() ? gmkHandle->objects[id] : NULL;
+
+			case ArgumentKindRoom:
+				return id < gmkHandle->rooms.size() ? gmkHandle->rooms[id] : NULL;
+
+			case ArgumentKindFont:
+				return id < gmkHandle->fonts.size() ? gmkHandle->fonts[id] : NULL;
+
+			case ArgumentKindTimeline:
+				return id < gmkHandle->timelines.size() ? gmkHandle->timelines[id] : NULL;
+		}
+
+		return NULL;
+	}
+
 	void Action::WriteVer81(Stream* stream)
 	{
 		stream->WriteDword(440);
@@ -55,7 +110,17 @@ namespace Gmk
 
 		stream->WriteDword(ARGUMENT_COUNT);
 		for(unsigned int i = 0; i < ARGUMENT_COUNT; ++i)
-			stream->WriteString(argumentValue[i]);
+		{
+			if (argumentLink[i] != NULL)
+			{
+				std::stringstream ss; ss << std::dec << argumentLink[i]->GetId();
+				stream->WriteString(ss.str());
+			}
+			else
+				stream->WriteString(argumentValue[i]);
+
+			//stream->WriteString(argumentValue[i]);
+		}
 
 		stream->WriteBoolean(not);
 	}
@@ -90,5 +155,9 @@ namespace Gmk
 			argumentValue[i] = stream->ReadString();
 
 		not						= stream->ReadBoolean();
+
+		// Populate memory links -- TODO Move
+		for(int i = 0; i < ARGUMENT_COUNT; ++i)
+			argumentLink[i] = GetArgumentReference(i);
 	}
 }
