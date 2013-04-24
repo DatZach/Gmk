@@ -48,7 +48,17 @@ namespace Gmk
 
 	Room::~Room()
 	{
-		// TODO Clean memory when pointers are in vectors in next commit
+		for(std::size_t i = 0; i < backgrounds.size(); ++i)
+			delete backgrounds[i];
+
+		for(std::size_t i = 0; i < views.size(); ++i)
+			delete views[i];
+
+		for(std::size_t i = 0; i < instances.size(); ++i)
+			delete instances[i];
+
+		for(std::size_t i = 0; i < tiles.size(); ++i)
+			delete tiles[i];
 	}
 
 	int Room::GetId() const
@@ -84,20 +94,20 @@ namespace Gmk
 
 			roomStream->WriteDword(backgrounds.size());
 			for(std::size_t i = 0; i < backgrounds.size(); ++i)
-				backgrounds[i].Write(roomStream);
+				backgrounds[i]->Write(roomStream);
 
 			roomStream->WriteBoolean(viewsEnabled);
 			roomStream->WriteDword(views.size());
 			for(std::size_t i = 0; i < views.size(); ++i)
-				views[i].Write(roomStream);
+				views[i]->Write(roomStream);
 
 			roomStream->WriteDword(instances.size());
 			for(std::size_t i = 0; i < instances.size(); ++i)
-				instances[i].Write(roomStream);
+				instances[i]->Write(roomStream);
 
 			roomStream->WriteDword(tiles.size());
 			for(std::size_t i = 0; i < tiles.size(); ++i)
-				tiles[i].Write(roomStream);
+				tiles[i]->Write(roomStream);
 
 			roomStream->WriteBoolean(rememberRoomEditorInfo);
 			roomStream->WriteDword(roomEditorWidth);
@@ -152,8 +162,8 @@ namespace Gmk
 		count = roomStream->ReadDword();
 		while(count--)
 		{
-			Background background(gmkHandle);
-			background.Read(roomStream);
+			Background* background = new Background(gmkHandle);
+			background->Read(roomStream);
 			backgrounds.push_back(background);
 		}
 
@@ -162,24 +172,24 @@ namespace Gmk
 		count = roomStream->ReadDword();
 		while(count--)
 		{
-			View view(gmkHandle);
-			view.Read(roomStream);
+			View* view = new View(gmkHandle);
+			view->Read(roomStream);
 			views.push_back(view);
 		}
 
 		count = roomStream->ReadDword();
 		while(count--)
 		{
-			Instance instance(gmkHandle);
-			instance.Read(roomStream);
+			Instance* instance = new Instance(gmkHandle);
+			instance->Read(roomStream);
 			instances.push_back(instance);
 		}
 
 		count = roomStream->ReadDword();
 		while(count--)
 		{
-			Tile tile(gmkHandle);
-			tile.Read(roomStream);
+			Tile* tile = new Tile(gmkHandle);
+			tile->Read(roomStream);
 			tiles.push_back(tile);
 		}
 
@@ -205,16 +215,16 @@ namespace Gmk
 	void Room::Finalize()
 	{
 		for(std::size_t i = 0; i < backgrounds.size(); ++i)
-			backgrounds[i].Finalize();
+			backgrounds[i]->Finalize();
 
 		for(std::size_t i = 0; i < views.size(); ++i)
-			views[i].Finalize();
+			views[i]->Finalize();
 
 		for(std::size_t i = 0; i < instances.size(); ++i)
-			instances[i].Finalize();
+			instances[i]->Finalize();
 
 		for(std::size_t i = 0; i < tiles.size(); ++i)
-			tiles[i].Finalize();
+			tiles[i]->Finalize();
 	}
 
 	Room::Background::Background(Gmk* gmk)
@@ -392,7 +402,7 @@ namespace Gmk
 		  tileY(0),
 		  width(0),
 		  height(0),
-		  layer(1000000),					// XXX Change to 0?
+		  layer(1000000),
 		  id(0),
 		  locked(false)
 	{

@@ -10,6 +10,8 @@
 
 namespace Gmk
 {
+	class Object;
+
 	class Action : public GmkResource
 	{
 	public:
@@ -78,7 +80,7 @@ namespace Gmk
 		unsigned int			argumentsUsed;									// Arguments actually passed
 		unsigned int			argumentKind[ARGUMENT_COUNT];					// Argument types (expression, sprite, background, object, etc)
 		int						appliesToObject;								// "Applies to: self/other/object id"
-		GmkResource*			appliesObject;									// Object reference if appliesToObject >= ApObject
+		Object*					appliesObject;									// Object reference if appliesToObject >= ApObject
 		bool					relative;										// Relative flag
 		bool					appliesToSomething;								// "Applies to" visible?
 		bool					question;										// Question flag

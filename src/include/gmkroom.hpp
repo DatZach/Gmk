@@ -12,8 +12,6 @@
 
 namespace Gmk
 {
-	// TODO Pointers for subobjects
-
 	class Room : public GmkResource
 	{
 	public:
@@ -130,38 +128,38 @@ namespace Gmk
 		void ReadVer81(Stream* stream);
 
 	public:
-		std::string				name;
-		std::string				caption;
-		unsigned int			width;
-		unsigned int			height;
-		unsigned int			snapY;
-		unsigned int			snapX;
-		bool					isometricGrid;
-		unsigned int			speed;
-		bool					persistent;
-		unsigned int			backgroundColor;
-		bool					drawBackgroundColor;
-		bool					clearBackgroundWithWindowColor;
-		std::string				creationCode;
-		std::vector<Background>	backgrounds;
-		bool					viewsEnabled;
-		std::vector<View>		views;
-		std::vector<Instance>	instances;
-		std::vector<Tile>		tiles;
-		bool					rememberRoomEditorInfo;
-		unsigned int			roomEditorWidth;
-		unsigned int			roomEditorHeight;
-		bool					showGrid;
-		bool					showObjects;
-		bool					showTiles;
-		bool					showBackgrounds;
-		bool					showForegrounds;
-		bool					showViews;
-		bool					deleteUnderlyingObjects;
-		bool					deleteUnderlyingTiles;
-		unsigned int			tabIndex;
-		unsigned int			scrollbarX;
-		unsigned int			scrollbarY;
+		std::string					name;
+		std::string					caption;
+		unsigned int				width;
+		unsigned int				height;
+		unsigned int				snapY;
+		unsigned int				snapX;
+		bool						isometricGrid;
+		unsigned int				speed;
+		bool						persistent;
+		unsigned int				backgroundColor;
+		bool						drawBackgroundColor;
+		bool						clearBackgroundWithWindowColor;
+		std::string					creationCode;
+		std::vector<Background*>	backgrounds;
+		bool						viewsEnabled;
+		std::vector<View*>			views;
+		std::vector<Instance*>		instances;
+		std::vector<Tile*>			tiles;
+		bool						rememberRoomEditorInfo;
+		unsigned int				roomEditorWidth;
+		unsigned int				roomEditorHeight;
+		bool						showGrid;
+		bool						showObjects;
+		bool						showTiles;
+		bool						showBackgrounds;
+		bool						showForegrounds;
+		bool						showViews;
+		bool						deleteUnderlyingObjects;
+		bool						deleteUnderlyingTiles;
+		unsigned int				tabIndex;
+		unsigned int				scrollbarX;
+		unsigned int				scrollbarY;
 		
 		Room(Gmk* gmk);
 		~Room();

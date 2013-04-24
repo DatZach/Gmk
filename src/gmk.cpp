@@ -126,10 +126,10 @@ namespace Gmk
 			Room* room = rooms[i];
 
 			for(std::size_t j = 0; j < room->instances.size(); ++j)
-				room->instances[j].id = lastInstancePlacedId++;
+				room->instances[j]->id = lastInstancePlacedId++;
 
 			for(std::size_t j = 0; j < room->tiles.size(); ++j)
-				room->tiles[j].id = lastTilePlacedId++;
+				room->tiles[j]->id = lastTilePlacedId++;
 		}
 	}
 

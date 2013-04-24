@@ -13,7 +13,6 @@ namespace Gmk
 		: GmkResource(gmk),
 		  functionName(""),
 		  functionCode(""),
-		  argumentLink(),
 		  argumentValue(),
 		  libraryId(0),
 		  actionId(0),
@@ -155,7 +154,7 @@ namespace Gmk
 
 	void Action::Finalize()
 	{
-		appliesObject = (appliesToObject >= ApObject) ? GetResource(RtObject, appliesToObject) : NULL;
+		appliesObject = (appliesToObject >= ApObject) ? static_cast<Object*>(GetResource(RtObject, appliesToObject)) : NULL;
 
 		for(int i = 0; i < ARGUMENT_COUNT; ++i)
 			argumentLink[i] = GetArgumentReference(i);
