@@ -13,7 +13,6 @@ namespace Gmk
 	Gmk::Gmk()
 		: version(VerUnknown),
 		  gameId(0),
-		  guid(),
 		  settings(NULL),
 		  triggers(),
 		  constants(),
@@ -26,8 +25,8 @@ namespace Gmk
 		  timelines(),
 		  objects(),
 		  rooms(),
-		  lastInstancePlacedId(100000),
-		  lastTilePlacedId(1000000),
+		  lastInstancePlacedId(GMK_MIN_INSTANCE_LAST_ID),
+		  lastTilePlacedId(GMK_MIN_TILE_LAST_ID),
 		  includeFiles(),
 		  gameInformation(NULL),
 		  libraryCreationCode(),
@@ -89,21 +88,83 @@ namespace Gmk
 		return true;
 	}
 
-	void Gmk::DefragmentResources()
+//#define Defragment(t, v)							\
+//	for(std::vector<t ## *>::iterator itr = v ## .begin(); itr != v ## .end(); )	\
+//	{												\
+//		if (!(*itr)->GetExists())					\
+//		{											\
+//			delete *itr;							\
+//			itr = v ## .erase(itr);					\
+//			continue;								\
+//		}											\
+//		++itr;										\
+//	}
+
+	inline void Gmk::Defragment(std::vector<GmkResource*>& vector)
 	{
-		// Defragment backgrounds
-		std::vector<Background*>::iterator itr = backgrounds.begin();
-		while(itr != backgrounds.end())
+		std::vector<GmkResource*>::iterator itr = vector.begin();
+		while(itr != vector.end())
 		{
 			if (!(*itr)->GetExists())
 			{
 				delete *itr;
-				itr = backgrounds.erase(itr);
+				itr = vector.erase(itr);
 				continue;
 			}
 
 			++itr;
 		}
+	}
+
+	void Gmk::DefragmentResources()
+	{
+		// This is so ugly, please kill me
+
+		// Step 1: Delete non-existant resources
+		Defragment(reinterpret_cast<std::vector<GmkResource*>&>(sprites));
+		Defragment(reinterpret_cast<std::vector<GmkResource*>&>(sounds));
+		Defragment(reinterpret_cast<std::vector<GmkResource*>&>(backgrounds));
+		Defragment(reinterpret_cast<std::vector<GmkResource*>&>(paths));
+		Defragment(reinterpret_cast<std::vector<GmkResource*>&>(scripts));
+		Defragment(reinterpret_cast<std::vector<GmkResource*>&>(fonts));
+		Defragment(reinterpret_cast<std::vector<GmkResource*>&>(timelines));
+		Defragment(reinterpret_cast<std::vector<GmkResource*>&>(objects));
+		Defragment(reinterpret_cast<std::vector<GmkResource*>&>(rooms));
+
+		// Step 2: Defragment last placed IDs
+		lastInstancePlacedId = GMK_MIN_INSTANCE_LAST_ID;
+		lastTilePlacedId = GMK_MIN_TILE_LAST_ID;
+
+		// TODO Maybe this should be GmkRoom::Defragment()?
+		for(std::size_t i = 0; i < rooms.size(); ++i)
+		{
+			Room* room = rooms[i];
+
+			for(std::size_t j = 0; j < room->instances.size(); ++j)
+				room->instances[j].id = lastInstancePlacedId++;
+
+			for(std::size_t j = 0; j < room->tiles.size(); ++j)
+				room->tiles[j].id = lastTilePlacedId++;
+		}
+	}
+
+	void Gmk::Finalize()
+	{
+		// Finalize paths
+		for(std::size_t i = 0; i < paths.size(); ++i)
+			paths[i]->Finalize();
+
+		// Finalize timelines
+		for(std::size_t i = 0; i < timelines.size(); ++i)
+			timelines[i]->Finalize();
+
+		// Finalize objects
+		for(std::size_t i = 0; i < objects.size(); ++i)
+			objects[i]->Finalize();
+
+		// Finalize rooms
+		for(std::size_t i = 0; i < rooms.size(); ++i)
+			rooms[i]->Finalize();
 	}
 
 	bool Gmk::IsLoaded() const
@@ -181,6 +242,8 @@ namespace Gmk
 				LoadVer81(stream);
 				break;
 		}
+
+		Finalize();
 	}
 
 	void Gmk::SaveVer81(Stream* stream)

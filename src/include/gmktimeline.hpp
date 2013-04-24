@@ -30,6 +30,8 @@ namespace Gmk
 
 		Timeline(Gmk* gmk);
 		~Timeline();
+
+		void Finalize();
 	};
 }
 

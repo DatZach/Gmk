@@ -10,6 +10,8 @@
 
 namespace Gmk
 {
+	// TODO Fix all of this
+
 	class Room : public GmkResource
 	{
 	public:

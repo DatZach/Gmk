@@ -23,9 +23,9 @@ namespace Gmk
 
 		enum Effect
 		{
-			EffectNone			= 0x00,
+			EffectNone				= 0x00,
 			EffectChorus			= 0x01,
-			EffectEcho			= 0x02,
+			EffectEcho				= 0x02,
 			EffectFlanger			= 0x04,
 			EffectGargle			= 0x08,
 			EffectReverb			= 0x10

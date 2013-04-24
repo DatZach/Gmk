@@ -41,6 +41,11 @@ namespace Gmk
 		}
 	}
 
+	void GmkResource::Finalize()
+	{
+
+	}
+
 	int GmkResource::GetId() const
 	{
 		return -1;

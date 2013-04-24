@@ -25,7 +25,7 @@ namespace Gmk
 		  mayBeRelative(false),
 		  not(false)
 	{
-		
+		// TODO Null argumentLink
 	}
 
 	Action::~Action()
@@ -46,6 +46,7 @@ namespace Gmk
 		return kind == ActionKindCode ? argumentValue[0] : "";
 	}
 
+	// TODO Move?
 	GmkResource* Action::GetArgumentReference(unsigned int index) const
 	{
 		if (index >= ARGUMENT_COUNT)
@@ -155,8 +156,10 @@ namespace Gmk
 			argumentValue[i] = stream->ReadString();
 
 		not						= stream->ReadBoolean();
+	}
 
-		// Populate memory links -- TODO Move
+	void Action::Finalize()
+	{
 		for(int i = 0; i < ARGUMENT_COUNT; ++i)
 			argumentLink[i] = GetArgumentReference(i);
 	}

@@ -4,6 +4,7 @@
  */
 
 #include <gmkpath.hpp>
+#include <gmk.hpp>
 
 namespace Gmk
 {
@@ -16,7 +17,8 @@ namespace Gmk
 		  roomIndex(-1),
 		  snapX(16),
 		  snapY(16),
-		  points()
+		  points(),
+		  room(NULL)
 	{
 		
 	}
@@ -39,7 +41,7 @@ namespace Gmk
 			pathStream->WriteDword(connectionKind);
 			pathStream->WriteBoolean(closed);
 			pathStream->WriteDword(precision);
-			pathStream->WriteDword(roomIndex);
+			pathStream->WriteDword(room != NULL ? room->GetId() : RoomIndexNone);
 			pathStream->WriteDword(snapX);
 			pathStream->WriteDword(snapY);
 
@@ -90,5 +92,10 @@ namespace Gmk
 
 		delete pathStream;
 		exists = true;
+	}
+
+	void Path::Finalize()
+	{
+		room = (roomIndex != RoomIndexNone) ? gmkHandle->rooms[roomIndex] : NULL;
 	}
 }

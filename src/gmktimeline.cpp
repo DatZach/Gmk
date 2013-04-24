@@ -87,4 +87,13 @@ namespace Gmk
 		delete timelineStream;
 		exists = true;
 	}
+
+	void Timeline::Finalize()
+	{
+		for(std::size_t i = 0; i < moments.size(); ++i)
+		{
+			for(std::size_t j = 0; j < moments[i].actions.size(); ++j)
+				moments[i].actions[j]->Finalize();
+		}
+	}
 }

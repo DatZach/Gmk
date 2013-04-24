@@ -89,7 +89,7 @@ namespace Gmk
 		bool			closeSecondary;
 		unsigned int	priority;
 		bool			freeze;
-		int				showProgress;
+		unsigned int	showProgress;
 		Stream*			frontImage;
 		Stream*			backImage;
 		Stream*			loadImage;

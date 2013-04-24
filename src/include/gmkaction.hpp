@@ -60,8 +60,6 @@ namespace Gmk
 			ApOther			= -2
 		};
 
-		GmkResource* argumentLink[ARGUMENT_COUNT];								// Logical link to objects, for runtime manipulation
-
 	protected:
 		void WriteVer81(Stream* stream);
 		void ReadVer81(Stream* stream);
@@ -69,6 +67,7 @@ namespace Gmk
 	public:
 		std::string				functionName;									// Function to execute (action_if_variable)
 		std::string				functionCode;									// Code to execute (show_message(argument0))
+		GmkResource*			argumentLink[ARGUMENT_COUNT];					// Logical link to objects, for runtime manipulation
 		std::string				argumentValue[ARGUMENT_COUNT];					// Argument values
   		unsigned int			libraryId;										// Library ID (All official have ID 1)
 		unsigned int			actionId;										// Action ID (Identifies D&D action)
@@ -85,6 +84,8 @@ namespace Gmk
 
 		Action(Gmk* gmk);
 		~Action();
+
+		void Finalize();
 
 		void SetCode(const std::string& value);
 		std::string GetCode() const;

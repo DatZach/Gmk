@@ -8,6 +8,7 @@
 
 #include <gmkresource.hpp>
 #include <gmkaction.hpp>
+#include <gmksprite.hpp>
 
 namespace Gmk
 {
@@ -15,7 +16,7 @@ namespace Gmk
 	{
 	public:
 		static const int SpriteIndexNone		= -1;
-		static const int ParentObjectNone		= -100;
+		static const int ParentIndexNone		= -100;
 		static const int MaskIndexNone			= -1;
 
 		typedef struct _Event
@@ -179,23 +180,31 @@ namespace Gmk
             EkUnknown
 		};
 
+	private:
+		int							spriteIndex;
+		int							parentIndex;
+		int							maskIndex;
+
 	protected:
 		void WriteVer81(Stream* stream);
 		void ReadVer81(Stream* stream);
 
 	public:
 		std::string					name;
-		int							spriteIndex;
 		bool						solid;
 		bool						visible;
 		int							depth;
 		bool						persistent;
-		int							parent;
-		int							mask;
 		std::vector<Event>			events;
+
+		Sprite* sprite;
+		Sprite* mask;
+		Object* parent;
 
 		Object(Gmk* gmk);
 		~Object();
+
+		void Finalize();
 	};
 }
 

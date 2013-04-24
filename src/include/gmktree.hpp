@@ -38,6 +38,7 @@ namespace Gmk
 			GroupExtensionPackages
 		};
 
+		// TODO Class this
 		typedef struct _Node
 		{
 			GmkResource*			link;

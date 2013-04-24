@@ -24,17 +24,23 @@
 #include <gmkgameinfo.hpp>
 #include <gmktree.hpp>
 
+// TODO Typedef all enums
+
 namespace Gmk
 {
 	class Gmk
 	{
 	public:
-		static const unsigned int GMK_MAGIC			= 1234321;
-		static const unsigned int GMK_GUID_LENGTH	= 16;
-		static const unsigned int GMK_MAX_ID		= 100000000;
+		static const unsigned int GMK_MAGIC					= 1234321;
+		static const unsigned int GMK_GUID_LENGTH			= 16;
+		static const unsigned int GMK_MAX_ID				= 100000000;
+		static const unsigned int GMK_MIN_INSTANCE_LAST_ID	= 100000;
+		static const unsigned int GMK_MIN_TILE_LAST_ID		= 1000000;
 
 	private:
 		void CleanMemory();
+		void Finalize();
+		void Defragment(std::vector<GmkResource*>& vector);
 
 		void SaveVer81(Stream* stream);
 		void LoadVer81(Stream* stream);

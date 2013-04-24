@@ -4,6 +4,7 @@
  */
 
 #include <gmkobject.hpp>
+#include <gmk.hpp>
 
 namespace Gmk
 {
@@ -15,9 +16,12 @@ namespace Gmk
 		  visible(true),
 		  depth(0),
 		  persistent(false),
-		  parent(ParentObjectNone),
-		  mask(MaskIndexNone),
-		  events()
+		  parentIndex(ParentIndexNone),
+		  maskIndex(MaskIndexNone),
+		  events(),
+		  sprite(NULL),
+		  mask(NULL),
+		  parent(NULL)
 	{
 		
 	}
@@ -41,13 +45,13 @@ namespace Gmk
 			objectStream->WriteString(name);
 			objectStream->WriteTimestamp();
 			objectStream->WriteDword(430);
-			objectStream->WriteDword(spriteIndex);
+			objectStream->WriteDword(sprite != NULL ? sprite->GetId() : SpriteIndexNone);
 			objectStream->WriteBoolean(solid);
 			objectStream->WriteBoolean(visible);
 			objectStream->WriteDword(depth);
 			objectStream->WriteBoolean(persistent);
-			objectStream->WriteDword(parent);
-			objectStream->WriteDword(mask);
+			objectStream->WriteDword(parent != NULL ? parent->GetId() : ParentObjectNone);
+			objectStream->WriteDword(mask != NULL ? mask->GetId() : MaskIndexNone);
 
 			objectStream->WriteDword(11);
 			for(std::size_t i = 0; i < 12; ++i)
@@ -91,8 +95,8 @@ namespace Gmk
 		visible				= objectStream->ReadBoolean();
 		depth				= objectStream->ReadDword();
 		persistent			= objectStream->ReadBoolean();
-		parent				= objectStream->ReadDword();
-		mask				= objectStream->ReadDword();
+		parentIndex			= objectStream->ReadDword();
+		maskIndex			= objectStream->ReadDword();
 
 		unsigned int count = objectStream->ReadDword() + 1;
 		for(unsigned int i = 0; i < count; ++i)
@@ -125,5 +129,18 @@ namespace Gmk
 
 		delete objectStream;
 		exists = true;
+	}
+
+	void Object::Finalize()
+	{
+		sprite = (spriteIndex != SpriteIndexNone) ? gmkHandle->sprites[spriteIndex] : NULL;
+		parent = (parentIndex != ParentIndexNone) ? gmkHandle->objects[parentIndex] : NULL;
+		mask = (maskIndex != MaskIndexNone) ? gmkHandle->sprites[maskIndex] : NULL;
+
+		for(std::size_t i = 0; i < events.size(); ++i)
+		{
+			for(std::size_t j = 0; j < events[i].actions.size(); ++j)
+				events[i].actions[j]->Finalize();
+		}
 	}
 }
