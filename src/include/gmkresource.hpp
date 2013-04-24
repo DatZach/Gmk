@@ -41,6 +41,7 @@ namespace Gmk
 			RtTimeline,
 			RtObject,
 			RtRoom,
+			RtUnknown,
 			RtCount
 		};
 

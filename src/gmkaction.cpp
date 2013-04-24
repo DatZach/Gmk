@@ -13,19 +13,27 @@ namespace Gmk
 		: GmkResource(gmk),
 		  functionName(""),
 		  functionCode(""),
+		  argumentLink(),
+		  argumentValue(),
 		  libraryId(0),
 		  actionId(0),
 		  kind(0),
 		  type(0),
 		  argumentsUsed(0),
-		  appliesToObject(false),
+		  appliesToObject(ApSelf),
+		  appliesObject(NULL),
 		  relative(false),
 		  appliesToSomething(false),
 		  question(false),
 		  mayBeRelative(false),
 		  not(false)
 	{
-		// TODO Null argumentLink
+		for(unsigned int i = 0; i < ARGUMENT_COUNT; ++i)
+		{
+			argumentValue[i] = "";
+			argumentLink[i] = NULL;
+			argumentKind[i] = ArgumentKindExpression;
+		}
 	}
 
 	Action::~Action()
@@ -51,7 +59,11 @@ namespace Gmk
 		// More magic!
 		static const unsigned int akKinds[ArgumentKindCount] =
 		{
-			0, 0, 0, 0, 0,
+			RtUnknown,
+			RtUnknown,
+			RtUnknown,
+			RtUnknown,
+			RtUnknown,
 			RtSprite,
 			RtSound,
 			RtBackground,
@@ -60,7 +72,7 @@ namespace Gmk
 			RtObject,
 			RtRoom,
 			RtFont,
-			0,
+			RtUnknown,
 			RtTimeline
 		};
 
@@ -86,7 +98,11 @@ namespace Gmk
 		for(unsigned int i = 0; i < ARGUMENT_COUNT; ++i)
 			stream->WriteDword(argumentKind[i]);
 
-		stream->WriteDword(appliesToObject);
+		if (appliesObject == NULL)
+			stream->WriteDword(appliesToObject);
+		else
+			stream->WriteDword(appliesObject->GetId());
+
 		stream->WriteBoolean(relative);
 
 		stream->WriteDword(ARGUMENT_COUNT);
@@ -94,13 +110,12 @@ namespace Gmk
 		{
 			if (argumentLink[i] != NULL)
 			{
-				std::stringstream ss; ss << std::dec << argumentLink[i]->GetId();
+				std::stringstream ss;
+				ss << std::dec << argumentLink[i]->GetId();
 				stream->WriteString(ss.str());
 			}
 			else
 				stream->WriteString(argumentValue[i]);
-
-			//stream->WriteString(argumentValue[i]);
 		}
 
 		stream->WriteBoolean(not);
@@ -140,6 +155,8 @@ namespace Gmk
 
 	void Action::Finalize()
 	{
+		appliesObject = (appliesToObject >= ApObject) ? GetResource(RtObject, appliesToObject) : NULL;
+
 		for(int i = 0; i < ARGUMENT_COUNT; ++i)
 			argumentLink[i] = GetArgumentReference(i);
 	}

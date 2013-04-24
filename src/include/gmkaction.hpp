@@ -57,6 +57,7 @@ namespace Gmk
 
 		enum AppliesTo
 		{
+			ApObject		= 0,												// >= 0 refers to an object index
 			ApSelf			= -1,
 			ApOther			= -2
 		};
@@ -76,7 +77,8 @@ namespace Gmk
 		unsigned int			type;											// ?
 		unsigned int			argumentsUsed;									// Arguments actually passed
 		unsigned int			argumentKind[ARGUMENT_COUNT];					// Argument types (expression, sprite, background, object, etc)
-		unsigned int			appliesToObject;								// "Applies to: self/other/object id"
+		int						appliesToObject;								// "Applies to: self/other/object id"
+		GmkResource*			appliesObject;									// Object reference if appliesToObject >= ApObject
 		bool					relative;										// Relative flag
 		bool					appliesToSomething;								// "Applies to" visible?
 		bool					question;										// Question flag

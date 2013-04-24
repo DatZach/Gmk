@@ -158,20 +158,20 @@ namespace Gmk
 		// Magic
 		static const unsigned int groupKind[GroupCount] =
 		{
-			0,
+			RtUnknown,
 			RtObject,
 			RtSprite,
 			RtSound,
 			RtRoom,
-			0,
+			RtUnknown,
 			RtBackground,
 			RtScript,
 			RtPath,
 			RtFont,
-			0,
-			0,
+			RtUnknown,
+			RtUnknown,
 			RtTimeline,
-			0
+			RtUnknown
 		};
 
 		resource = parent->GetResource(groupKind[group], index);
