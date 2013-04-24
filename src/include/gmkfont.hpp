@@ -61,6 +61,8 @@ namespace Gmk
 
 		Font(Gmk* gmk);
 		~Font();
+
+		int GetId() const;
 	};
 }
 

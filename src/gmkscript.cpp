@@ -4,6 +4,7 @@
  */
 
 #include <gmkscript.hpp>
+#include <gmk.hpp>
 
 namespace Gmk
 {
@@ -18,6 +19,15 @@ namespace Gmk
 	Script::~Script()
 	{
 
+	}
+
+	int Script::GetId() const
+	{
+		for(std::size_t i = 0; i < gmkHandle->scripts.size(); ++i)
+			if (gmkHandle->scripts[i] == this)
+				return i;
+
+		return -1;
 	}
 
 	void Script::WriteVer81(Stream* stream)

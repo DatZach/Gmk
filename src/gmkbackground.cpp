@@ -33,7 +33,7 @@ namespace Gmk
 
 	int Background::GetId() const
 	{
-		for(int i = 0; i < gmkHandle->backgrounds.size(); ++i)
+		for(std::size_t i = 0; i < gmkHandle->backgrounds.size(); ++i)
 			if (gmkHandle->backgrounds[i] == this)
 				return i;
 

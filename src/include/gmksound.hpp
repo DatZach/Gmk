@@ -48,6 +48,8 @@ namespace Gmk
 
 		Sound(Gmk* gmk);
 		~Sound();
+
+		int GetId() const;
 	};
 }
 

@@ -28,6 +28,15 @@ namespace Gmk
 		
 	}
 
+	int Path::GetId() const
+	{
+		for(std::size_t i = 0; i < gmkHandle->paths.size(); ++i)
+			if (gmkHandle->paths[i] == this)
+				return i;
+
+		return -1;
+	}
+
 	void Path::WriteVer81(Stream* stream)
 	{
 		Stream* pathStream = new Stream();

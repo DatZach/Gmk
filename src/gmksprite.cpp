@@ -4,6 +4,7 @@
  */
 
 #include <gmksprite.hpp>
+#include <gmk.hpp>
 
 namespace Gmk
 {
@@ -35,6 +36,15 @@ namespace Gmk
 
 			delete subimages[i].data;
 		}
+	}
+
+	int Sprite::GetId() const
+	{
+		for(std::size_t i = 0; i < gmkHandle->sprites.size(); ++i)
+			if (gmkHandle->sprites[i] == this)
+				return i;
+
+		return -1;
 	}
 
 	void Sprite::WriteVer81(Stream* stream)

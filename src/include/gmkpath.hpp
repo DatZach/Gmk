@@ -49,6 +49,7 @@ namespace Gmk
 		Path(Gmk* gmk);
 		~Path();
 
+		int GetId() const;
 		void Finalize();
 	};
 }

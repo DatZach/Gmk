@@ -4,6 +4,7 @@
  */
 
 #include <gmkroom.hpp>
+#include <gmk.hpp>
 
 namespace Gmk
 {
@@ -47,7 +48,16 @@ namespace Gmk
 
 	Room::~Room()
 	{
+		// TODO Clean memory when pointers are in vectors in next commit
+	}
 
+	int Room::GetId() const
+	{
+		for(std::size_t i = 0; i < gmkHandle->rooms.size(); ++i)
+			if (gmkHandle->rooms[i] == this)
+				return i;
+
+		return -1;
 	}
 
 	void Room::WriteVer81(Stream* stream)
@@ -74,64 +84,20 @@ namespace Gmk
 
 			roomStream->WriteDword(backgrounds.size());
 			for(std::size_t i = 0; i < backgrounds.size(); ++i)
-			{
-				roomStream->WriteBoolean(backgrounds[i].visible);
-				roomStream->WriteBoolean(backgrounds[i].foreground);
-				roomStream->WriteDword(backgrounds[i].imageIndex);
-				roomStream->WriteDword(backgrounds[i].x);
-				roomStream->WriteDword(backgrounds[i].y);
-				roomStream->WriteBoolean(backgrounds[i].tileHorizontal);
-				roomStream->WriteBoolean(backgrounds[i].tileVertical);
-				roomStream->WriteDword(backgrounds[i].speedHorizontal);
-				roomStream->WriteDword(backgrounds[i].speedVertical);
-				roomStream->WriteBoolean(backgrounds[i].stretch);
-			}
+				backgrounds[i].Write(roomStream);
 
 			roomStream->WriteBoolean(viewsEnabled);
 			roomStream->WriteDword(views.size());
 			for(std::size_t i = 0; i < views.size(); ++i)
-			{
-				roomStream->WriteBoolean(views[i].visible);
-				roomStream->WriteDword(views[i].viewX);
-				roomStream->WriteDword(views[i].viewY);
-				roomStream->WriteDword(views[i].viewW);
-				roomStream->WriteDword(views[i].viewH);
-				roomStream->WriteDword(views[i].portX);
-				roomStream->WriteDword(views[i].portY);
-				roomStream->WriteDword(views[i].portW);
-				roomStream->WriteDword(views[i].portH);
-				roomStream->WriteDword(views[i].horizontalBorder);
-				roomStream->WriteDword(views[i].verticalBorder);
-				roomStream->WriteDword(views[i].horizontalSpeed);
-				roomStream->WriteDword(views[i].verticalSpeed);
-				roomStream->WriteDword(views[i].objectFollowing);
-			}
+				views[i].Write(roomStream);
 
 			roomStream->WriteDword(instances.size());
 			for(std::size_t i = 0; i < instances.size(); ++i)
-			{
-				roomStream->WriteDword(instances[i].x);
-				roomStream->WriteDword(instances[i].y);
-				roomStream->WriteDword(instances[i].objectIndex);
-				roomStream->WriteDword(instances[i].id);
-				roomStream->WriteString(instances[i].creationCode);
-				roomStream->WriteBoolean(instances[i].locked);
-			}
+				instances[i].Write(roomStream);
 
 			roomStream->WriteDword(tiles.size());
 			for(std::size_t i = 0; i < tiles.size(); ++i)
-			{
-				roomStream->WriteDword(tiles[i].x);
-				roomStream->WriteDword(tiles[i].y);
-				roomStream->WriteDword(tiles[i].backgroundIndex);
-				roomStream->WriteDword(tiles[i].tileX);
-				roomStream->WriteDword(tiles[i].tileY);
-				roomStream->WriteDword(tiles[i].width);
-				roomStream->WriteDword(tiles[i].height);
-				roomStream->WriteDword(tiles[i].layer);
-				roomStream->WriteDword(tiles[i].id);
-				roomStream->WriteBoolean(tiles[i].locked);
-			}
+				tiles[i].Write(roomStream);
 
 			roomStream->WriteBoolean(rememberRoomEditorInfo);
 			roomStream->WriteDword(roomEditorWidth);
@@ -178,86 +144,42 @@ namespace Gmk
 		backgroundColor			= roomStream->ReadDword();
 
 		unsigned int bgFlags = roomStream->ReadDword();
-		drawBackgroundColor		= GetBit(bgFlags, 0);
+		drawBackgroundColor = GetBit(bgFlags, 0);
 		clearBackgroundWithWindowColor = !GetBit(bgFlags, 1);
 
-		creationCode			= roomStream->ReadString();
+		creationCode = roomStream->ReadString();
 
 		count = roomStream->ReadDword();
 		while(count--)
 		{
-			Background background;
-
-			background.visible			= roomStream->ReadBoolean();
-			background.foreground		= roomStream->ReadBoolean();
-			background.imageIndex		= roomStream->ReadDword();
-			background.x				= roomStream->ReadDword();
-			background.y				= roomStream->ReadDword();
-			background.tileHorizontal	= roomStream->ReadBoolean();
-			background.tileVertical		= roomStream->ReadBoolean();
-			background.speedHorizontal	= roomStream->ReadDword();
-			background.speedVertical	= roomStream->ReadDword();
-			background.stretch			= roomStream->ReadBoolean();
-
+			Background background(gmkHandle);
+			background.Read(roomStream);
 			backgrounds.push_back(background);
 		}
 
-		viewsEnabled			= roomStream->ReadBoolean();
+		viewsEnabled = roomStream->ReadBoolean();
 
 		count = roomStream->ReadDword();
 		while(count--)
 		{
-			View view;
-
-			view.visible				= roomStream->ReadBoolean();
-			view.viewX					= roomStream->ReadDword();
-			view.viewY					= roomStream->ReadDword();
-			view.viewW					= roomStream->ReadDword();
-			view.viewH					= roomStream->ReadDword();
-			view.portX					= roomStream->ReadDword();
-			view.portY					= roomStream->ReadDword();
-			view.portW					= roomStream->ReadDword();
-			view.portH					= roomStream->ReadDword();
-			view.horizontalBorder		= roomStream->ReadDword();
-			view.verticalBorder			= roomStream->ReadDword();
-			view.horizontalSpeed		= roomStream->ReadDword();
-			view.verticalSpeed			= roomStream->ReadDword();
-			view.objectFollowing		= roomStream->ReadDword();
-
+			View view(gmkHandle);
+			view.Read(roomStream);
 			views.push_back(view);
 		}
 
 		count = roomStream->ReadDword();
 		while(count--)
 		{
-			Instance instance;
-
-			instance.x					= roomStream->ReadDword();
-			instance.y					= roomStream->ReadDword();
-			instance.objectIndex		= roomStream->ReadDword();
-			instance.id					= roomStream->ReadDword();
-			instance.creationCode		= roomStream->ReadString();
-			instance.locked				= roomStream->ReadBoolean();
-
+			Instance instance(gmkHandle);
+			instance.Read(roomStream);
 			instances.push_back(instance);
 		}
 
 		count = roomStream->ReadDword();
 		while(count--)
 		{
-			Tile tile;
-
-			tile.x						= roomStream->ReadDword();
-			tile.y						= roomStream->ReadDword();
-			tile.backgroundIndex		= roomStream->ReadDword();
-			tile.tileX					= roomStream->ReadDword();
-			tile.tileY					= roomStream->ReadDword();
-			tile.width					= roomStream->ReadDword();
-			tile.height					= roomStream->ReadDword();
-			tile.layer					= roomStream->ReadDword();
-			tile.id						= roomStream->ReadDword();
-			tile.locked					= roomStream->ReadBoolean();
-
+			Tile tile(gmkHandle);
+			tile.Read(roomStream);
 			tiles.push_back(tile);
 		}
 
@@ -278,5 +200,240 @@ namespace Gmk
 
 		delete roomStream;
 		exists = true;
+	}
+
+	void Room::Finalize()
+	{
+		for(std::size_t i = 0; i < backgrounds.size(); ++i)
+			backgrounds[i].Finalize();
+
+		for(std::size_t i = 0; i < views.size(); ++i)
+			views[i].Finalize();
+
+		for(std::size_t i = 0; i < instances.size(); ++i)
+			instances[i].Finalize();
+
+		for(std::size_t i = 0; i < tiles.size(); ++i)
+			tiles[i].Finalize();
+	}
+
+	Room::Background::Background(Gmk* gmk)
+		: GmkResource(gmk),
+		  visible(false),
+		  foreground(false),
+		  image(NULL),
+		  imageIndex(-1),
+		  x(0),
+		  y(0),
+		  tileHorizontal(true),
+		  tileVertical(true),
+		  speedHorizontal(0),
+		  speedVertical(0),
+		  stretch(false)
+	{
+
+	}
+
+	Room::Background::~Background()
+	{
+
+	}
+
+	void Room::Background::WriteVer81(Stream* stream)
+	{
+		stream->WriteBoolean(visible);
+		stream->WriteBoolean(foreground);
+		stream->WriteDword(image != NULL ? image->GetId() : -1);
+		stream->WriteDword(x);
+		stream->WriteDword(y);
+		stream->WriteBoolean(tileHorizontal);
+		stream->WriteBoolean(tileVertical);
+		stream->WriteDword(speedHorizontal);
+		stream->WriteDword(speedVertical);
+		stream->WriteBoolean(stretch);
+	}
+
+	void Room::Background::ReadVer81(Stream* stream)
+	{
+		visible			= stream->ReadBoolean();
+		foreground		= stream->ReadBoolean();
+		imageIndex		= stream->ReadDword();
+		x				= stream->ReadDword();
+		y				= stream->ReadDword();
+		tileHorizontal	= stream->ReadBoolean();
+		tileVertical	= stream->ReadBoolean();
+		speedHorizontal	= stream->ReadDword();
+		speedVertical	= stream->ReadDword();
+		stretch			= stream->ReadBoolean();
+	}
+
+	void Room::Background::Finalize()
+	{
+		image = (imageIndex != -1) ? gmkHandle->backgrounds[imageIndex] : NULL;
+	}
+
+	Room::View::View(Gmk* gmk)
+		: GmkResource(gmk),
+		  visible(false),
+		  viewX(0),
+		  viewY(0),
+		  viewW(640),
+		  viewH(480),
+		  portX(0),
+		  portY(0),
+		  portW(640),
+		  portH(640),
+		  horizontalBorder(32),
+		  verticalBorder(32),
+		  horizontalSpeed(-1),
+		  verticalSpeed(-1),
+		  objectFollowing(NULL),
+		  objectFollowingIndex(-1)
+	{
+
+	}
+
+	Room::View::~View()
+	{
+
+	}
+
+	void Room::View::WriteVer81(Stream* stream)
+	{
+		stream->WriteBoolean(visible);
+		stream->WriteDword(viewX);
+		stream->WriteDword(viewY);
+		stream->WriteDword(viewW);
+		stream->WriteDword(viewH);
+		stream->WriteDword(portX);
+		stream->WriteDword(portY);
+		stream->WriteDword(portW);
+		stream->WriteDword(portH);
+		stream->WriteDword(horizontalBorder);
+		stream->WriteDword(verticalBorder);
+		stream->WriteDword(horizontalSpeed);
+		stream->WriteDword(verticalSpeed);
+		stream->WriteDword(objectFollowing != NULL ? objectFollowing->GetId() : -1); // -100?
+	}
+
+	void Room::View::ReadVer81(Stream* stream)
+	{
+		visible					= stream->ReadBoolean();
+		viewX					= stream->ReadDword();
+		viewY					= stream->ReadDword();
+		viewW					= stream->ReadDword();
+		viewH					= stream->ReadDword();
+		portX					= stream->ReadDword();
+		portY					= stream->ReadDword();
+		portW					= stream->ReadDword();
+		portH					= stream->ReadDword();
+		horizontalBorder		= stream->ReadDword();
+		verticalBorder			= stream->ReadDword();
+		horizontalSpeed			= stream->ReadDword();
+		verticalSpeed			= stream->ReadDword();
+		objectFollowingIndex	= stream->ReadDword();
+	}
+
+	void Room::View::Finalize()
+	{
+		objectFollowing = (objectFollowingIndex != -1) ? gmkHandle->objects[objectFollowingIndex] : NULL;
+	}
+
+	Room::Instance::Instance(Gmk* gmk)
+		: GmkResource(gmk),
+		  x(0),
+		  y(0),
+		  object(NULL),
+		  objectIndex(-1),
+		  id(0),
+		  creationCode(""),
+		  locked(false)
+	{
+
+	}
+
+	Room::Instance::~Instance()
+	{
+
+	}
+
+	void Room::Instance::WriteVer81(Stream* stream)
+	{
+		stream->WriteDword(x);
+		stream->WriteDword(y);
+		stream->WriteDword(object != NULL ? object->GetId() : -1);
+		stream->WriteDword(id);
+		stream->WriteString(creationCode);
+		stream->WriteBoolean(locked);
+	}
+
+	void Room::Instance::ReadVer81(Stream* stream)
+	{
+		x				= stream->ReadDword();
+		y				= stream->ReadDword();
+		objectIndex		= stream->ReadDword();
+		id				= stream->ReadDword();
+		creationCode	= stream->ReadString();
+		locked			= stream->ReadBoolean();
+	}
+
+	void Room::Instance::Finalize()
+	{
+		object = (objectIndex != -1) ? gmkHandle->objects[objectIndex] : NULL;
+	}
+
+	Room::Tile::Tile(Gmk* gmk)
+		: GmkResource(gmk),
+		  x(0),
+		  y(0),
+		  background(NULL),
+		  backgroundIndex(-1),
+		  tileX(0),
+		  tileY(0),
+		  width(0),
+		  height(0),
+		  layer(1000000),					// XXX Change to 0?
+		  id(0),
+		  locked(false)
+	{
+
+	}
+
+	Room::Tile::~Tile()
+	{
+
+	}
+
+	void Room::Tile::WriteVer81(Stream* stream)
+	{
+		stream->WriteDword(x);
+		stream->WriteDword(y);
+		stream->WriteDword(background != NULL ? background->GetId() : -1);
+		stream->WriteDword(tileX);
+		stream->WriteDword(tileY);
+		stream->WriteDword(width);
+		stream->WriteDword(height);
+		stream->WriteDword(layer);
+		stream->WriteDword(id);
+		stream->WriteBoolean(locked);
+	}
+
+	void Room::Tile::ReadVer81(Stream* stream)
+	{
+		x					= stream->ReadDword();
+		y					= stream->ReadDword();
+		backgroundIndex		= stream->ReadDword();
+		tileX				= stream->ReadDword();
+		tileY				= stream->ReadDword();
+		width				= stream->ReadDword();
+		height				= stream->ReadDword();
+		layer				= stream->ReadDword();
+		id					= stream->ReadDword();
+		locked				= stream->ReadBoolean();
+	}
+
+	void Room::Tile::Finalize()
+	{
+		background = (backgroundIndex != -1) ? gmkHandle->backgrounds[backgroundIndex] : NULL;
 	}
 }

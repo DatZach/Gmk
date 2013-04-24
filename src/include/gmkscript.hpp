@@ -22,6 +22,8 @@ namespace Gmk
 
 		Script(Gmk* gmk);
 		~Script();
+
+		int GetId() const;
 	};
 }
 

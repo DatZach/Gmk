@@ -4,6 +4,7 @@
  */
 
 #include <gmktimeline.hpp>
+#include <gmk.hpp>
 
 namespace Gmk
 {
@@ -22,6 +23,15 @@ namespace Gmk
 			for(std::size_t j = 0; j < moments[i].actions.size(); ++j)
 				delete moments[i].actions[j];
 		}
+	}
+
+	int Timeline::GetId() const
+	{
+		for(std::size_t i = 0; i < gmkHandle->timelines.size(); ++i)
+			if (gmkHandle->timelines[i] == this)
+				return i;
+
+		return -1;
 	}
 
 	void Timeline::WriteVer81(Stream* stream)

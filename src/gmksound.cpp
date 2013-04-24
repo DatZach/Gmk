@@ -4,6 +4,7 @@
  */
 
 #include <gmksound.hpp>
+#include <gmk.hpp>
 
 namespace Gmk
 {
@@ -26,6 +27,15 @@ namespace Gmk
 	{
 		if (data != NULL)
 			delete data;
+	}
+
+	int Sound::GetId() const
+	{
+		for(std::size_t i = 0; i < gmkHandle->sounds.size(); ++i)
+			if (gmkHandle->sounds[i] == this)
+				return i;
+
+		return -1;
 	}
 
 	void Sound::WriteVer81(Stream* stream)

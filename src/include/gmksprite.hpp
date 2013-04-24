@@ -56,6 +56,8 @@ namespace Gmk
 
 		Sprite(Gmk* gmk);
 		~Sprite();
+
+		int GetId() const;
 	};
 }
 

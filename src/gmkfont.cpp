@@ -4,6 +4,7 @@
  */
 
 #include <gmkfont.hpp>
+#include <gmk.hpp>
 
 namespace Gmk
 {
@@ -25,6 +26,15 @@ namespace Gmk
 	Font::~Font()
 	{
 
+	}
+
+	int Font::GetId() const
+	{
+		for(std::size_t i = 0; i < gmkHandle->fonts.size(); ++i)
+			if (gmkHandle->fonts[i] == this)
+				return i;
+
+		return -1;
 	}
 
 	void Font::WriteVer81(Stream* stream)

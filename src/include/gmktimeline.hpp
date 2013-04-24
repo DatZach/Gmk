@@ -31,6 +31,7 @@ namespace Gmk
 		Timeline(Gmk* gmk);
 		~Timeline();
 
+		int GetId() const;
 		void Finalize();
 	};
 }

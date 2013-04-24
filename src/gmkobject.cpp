@@ -29,10 +29,16 @@ namespace Gmk
 	Object::~Object()
 	{
 		for(std::size_t i = 0; i < events.size(); ++i)
-		{
-			for(std::size_t j = 0; j < events[i].actions.size(); ++j)
-				delete events[i].actions[j];
-		}
+			delete events[i];
+	}
+
+	int Object::GetId() const
+	{
+		for(std::size_t i = 0; i < gmkHandle->objects.size(); ++i)
+			if (gmkHandle->objects[i] == this)
+				return i;
+
+		return -1;
 	}
 
 	void Object::WriteVer81(Stream* stream)
@@ -50,7 +56,7 @@ namespace Gmk
 			objectStream->WriteBoolean(visible);
 			objectStream->WriteDword(depth);
 			objectStream->WriteBoolean(persistent);
-			objectStream->WriteDword(parent != NULL ? parent->GetId() : ParentObjectNone);
+			objectStream->WriteDword(parent != NULL ? parent->GetId() : ParentIndexNone);
 			objectStream->WriteDword(mask != NULL ? mask->GetId() : MaskIndexNone);
 
 			objectStream->WriteDword(11);
@@ -58,14 +64,14 @@ namespace Gmk
 			{
 				for(std::size_t j = 0; j < events.size(); ++j)
 				{
-					if (events[j].eventNumber == i)
+					if (events[j]->eventNumber == i)
 					{
-						objectStream->WriteDword(events[j].eventKind);
+						objectStream->WriteDword(events[j]->eventKind);
 						objectStream->WriteDword(400);
 
-						objectStream->WriteDword(events[j].actions.size());
-						for(std::size_t k = 0; k < events[j].actions.size(); ++k)
-							events[j].actions[k]->Write(objectStream);
+						objectStream->WriteDword(events[j]->actions.size());
+						for(std::size_t k = 0; k < events[j]->actions.size(); ++k)
+							events[j]->actions[k]->Write(objectStream);
 					}
 				}
 
@@ -103,14 +109,14 @@ namespace Gmk
 		{
 			for(;;)
 			{
-				Event event;
+				Event* event = new Event();
 
 				int first = objectStream->ReadDword();
 				if (first == -1)
 					break;
 
-				event.eventNumber = i;
-				event.eventKind = first;
+				event->eventNumber = i;
+				event->eventKind = first;
 
 				objectStream->ReadDword();
 
@@ -120,7 +126,7 @@ namespace Gmk
 					Action* action = new Action(gmkHandle);
 					action->Read(objectStream);
 
-					event.actions.push_back(action);
+					event->actions.push_back(action);
 				}
 
 				events.push_back(event);
@@ -139,8 +145,22 @@ namespace Gmk
 
 		for(std::size_t i = 0; i < events.size(); ++i)
 		{
-			for(std::size_t j = 0; j < events[i].actions.size(); ++j)
-				events[i].actions[j]->Finalize();
+			for(std::size_t j = 0; j < events[i]->actions.size(); ++j)
+				events[i]->actions[j]->Finalize();
 		}
+	}
+
+	Object::Event::Event()
+		: eventNumber(0),
+		  eventKind(0),
+		  actions()
+	{
+
+	}
+
+	Object::Event::~Event()
+	{
+		for(std::size_t i = 0; i < actions.size(); ++i)
+			delete actions[i];
 	}
 }

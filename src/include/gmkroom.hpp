@@ -7,6 +7,8 @@
 #define __GMK_ROOM_HPP
 
 #include <gmkresource.hpp>
+#include <gmkbackground.hpp>
+#include <gmkobject.hpp>
 
 namespace Gmk
 {
@@ -15,11 +17,19 @@ namespace Gmk
 	class Room : public GmkResource
 	{
 	public:
-		typedef struct _Background
+		class Background : public GmkResource
 		{
+		private:
+			int					imageIndex;
+
+		protected:
+			void WriteVer81(Stream* stream);
+			void ReadVer81(Stream* stream);
+
+		public:
 			bool				visible;
 			bool				foreground;
-			int					imageIndex;
+			::Gmk::Background*	image;
 			unsigned int		x;
 			unsigned int		y;
 			bool				tileHorizontal;
@@ -27,10 +37,23 @@ namespace Gmk
 			int					speedHorizontal;
 			int					speedVertical;
 			bool				stretch;
-		} Background;
 
-		typedef struct _View
+			Background(Gmk* gmk);
+			~Background();
+
+			void Finalize();
+		};
+
+		class View : public GmkResource
 		{
+		private:
+			int					objectFollowingIndex;
+
+		protected:
+			void WriteVer81(Stream* stream);
+			void ReadVer81(Stream* stream);
+
+		public:
 			bool				visible;
 			unsigned int		viewX;
 			unsigned int		viewY;
@@ -44,24 +67,50 @@ namespace Gmk
 			unsigned int		verticalBorder;
 			int					horizontalSpeed;
 			int					verticalSpeed;
-			int					objectFollowing;
-	 	} View;
+			Object*				objectFollowing;
 
-		typedef struct _Instance
+			View(Gmk* gmk);
+			~View();
+
+			void Finalize();
+		};
+
+		class Instance : public GmkResource
 		{
+		private:
+			unsigned int		objectIndex;
+
+		protected:
+			void WriteVer81(Stream* stream);
+			void ReadVer81(Stream* stream);
+
+		public:
 			unsigned int		x;
 			unsigned int		y;
-			unsigned int		objectIndex;
+			Object*				object;
 			unsigned int		id;
 			std::string			creationCode;
 			bool				locked;
-	 	} Instance;
 
-		typedef struct _Tile
+			Instance(Gmk* gmk);
+			~Instance();
+
+			void Finalize();
+		};
+
+		class Tile : public GmkResource
 		{
+		private:
+			int					backgroundIndex;
+
+		protected:
+			void WriteVer81(Stream* stream);
+			void ReadVer81(Stream* stream);
+
+		public:
 			unsigned int		x;
 			unsigned int		y;
-			int					backgroundIndex;
+			::Gmk::Background*	background;
 			unsigned int		tileX;
 			unsigned int		tileY;
 			unsigned int		width;
@@ -69,7 +118,12 @@ namespace Gmk
 			unsigned int		layer;
 			unsigned int		id;
 			bool				locked;
-	 	} Tile;
+
+			Tile(Gmk* gmk);
+			~Tile();
+
+			void Finalize();
+		};
 
 	protected:
 		void WriteVer81(Stream* stream);
@@ -111,6 +165,9 @@ namespace Gmk
 		
 		Room(Gmk* gmk);
 		~Room();
+
+		int GetId() const;
+		void Finalize();
 	};
 }
 
