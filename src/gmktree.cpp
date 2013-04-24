@@ -73,6 +73,41 @@ namespace Gmk
 		contents.clear();
 	}
 
+	GmkResource* Tree::GetResource(unsigned int id, unsigned int kind) const
+	{
+		switch(kind)
+		{
+			case GroupSprites:
+				return id < gmkHandle->sprites.size() ? gmkHandle->sprites[id] : NULL;
+
+			case GroupSounds:
+				return id < gmkHandle->sounds.size() ? gmkHandle->sounds[id] : NULL;
+
+			case GroupBackgrounds:
+				return id < gmkHandle->backgrounds.size() ? gmkHandle->backgrounds[id] : NULL;
+
+			case GroupPaths:
+				return id < gmkHandle->paths.size() ? gmkHandle->paths[id] : NULL;
+
+			case GroupScripts:
+				return id < gmkHandle->scripts.size() ? gmkHandle->scripts[id] : NULL;
+
+			case GroupObjects:
+				return id < gmkHandle->objects.size() ? gmkHandle->objects[id] : NULL;
+
+			case GroupRooms:
+				return id < gmkHandle->rooms.size() ? gmkHandle->rooms[id] : NULL;
+
+			case GroupFonts:
+				return id < gmkHandle->fonts.size() ? gmkHandle->fonts[id] : NULL;
+
+			case GroupTimelines:
+				return id < gmkHandle->timelines.size() ? gmkHandle->timelines[id] : NULL;
+		}
+
+		return NULL;
+	}
+
 	void Tree::WriteVer81(Stream* stream)
 	{
 		for(unsigned int i = 0; i < 12; ++i)
@@ -117,10 +152,13 @@ namespace Gmk
 			node->index = stream->ReadDword();
 			node->name = stream->ReadString();
 
-			if (node->group == GroupBackgrounds)
+			// TODO This should be moved into finalize for consistency
+			node->link = GetResource(node->index, node->group);
+
+			/*if (node->group == GroupBackgrounds)
 				node->link = gmkHandle->backgrounds[node->index];
 			else
-				node->link = NULL;
+				node->link = NULL;*/
 
 			ReadRecursiveTree(stream, node, stream->ReadDword());
 
@@ -144,5 +182,10 @@ namespace Gmk
 			stream->WriteDword(parent->contents[i]->contents.size());
 			WriteRecursiveTree(stream, parent->contents[i], parent->contents[i]->contents.size());
 		}
+	}
+
+	void Tree::Finalize()
+	{
+		
 	}
 }

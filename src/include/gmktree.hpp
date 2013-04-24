@@ -51,6 +51,7 @@ namespace Gmk
 	
 	private:
 		void CleanMemory();
+		GmkResource* GetResource(unsigned int id, unsigned int kind) const;
 
 		void ReadRecursiveTree(Stream* stream, Node* parent, unsigned int count);
 		void WriteRecursiveTree(Stream* stream, Node* parent, unsigned int count);
@@ -64,6 +65,8 @@ namespace Gmk
 
 		Tree(Gmk* gmk);
 		~Tree();
+
+		void Finalize();
 	};
 }
 

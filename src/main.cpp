@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
 	Gmk::Gmk* gmk = new Gmk::Gmk();
 
 	std::cout << "Loading... ";
-	gmk->Load("spawnpoints.gm81");
+	gmk->Load("Vivant.gm81");
 	std::cout << "Done!" << std::endl;
 
 	std::cout << "Pre defragmentation Background IDs:" << std::endl;
