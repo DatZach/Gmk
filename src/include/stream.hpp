@@ -25,14 +25,14 @@ namespace Gmk
 
 	#define GetBit(a, b)								(((a) & (1 << (b))) != 0)
 
-	#define BuildColor(r, g, b)							(((r) << 24) | \
-														 ((g) << 16) | \
-														 ((b) << 8)  | \
-														  0x00)
+	#define BuildColor(r, g, b)							(0x00000000 | \
+														  ((b) << 16) | \
+														  ((g) << 8)  | \
+														  (r))
 
-	#define ColorGetRed(x)								(((x) >> 24) & 0xFF)
-	#define ColorGetGreen(x)							(((x) >> 16) & 0xFF)
-	#define ColorGetBlue(x)								(((x) >> 8) & 0xFF)
+	#define ColorGetRed(x)								((x) & 0xFF)
+	#define ColorGetGreen(x)							(((x) >> 8) & 0xFF)
+	#define ColorGetBlue(x)								(((x) >> 16) & 0xFF)
 
 	class Stream
 	{
@@ -45,7 +45,7 @@ namespace Gmk
 		} StreamMode;
 
 	private:
-		static const time_t GmTimestampEpoch = 0xFFFFFFFF7C5324CFULL;
+		static const time_t GmTimestampEpoch = 0xFFFFFFFF7C5316BFULL;
 		std::fstream fileStream;
 		StreamBuffer buffer;
 		StreamMode streamMode;

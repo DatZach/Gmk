@@ -88,18 +88,6 @@ namespace Gmk
 		return true;
 	}
 
-//#define Defragment(t, v)							\
-//	for(std::vector<t ## *>::iterator itr = v ## .begin(); itr != v ## .end(); )	\
-//	{												\
-//		if (!(*itr)->GetExists())					\
-//		{											\
-//			delete *itr;							\
-//			itr = v ## .erase(itr);					\
-//			continue;								\
-//		}											\
-//		++itr;										\
-//	}
-
 	inline void Gmk::Defragment(std::vector<GmkResource*>& vector)
 	{
 		std::vector<GmkResource*>::iterator itr = vector.begin();
@@ -118,8 +106,6 @@ namespace Gmk
 
 	void Gmk::DefragmentResources()
 	{
-		// This is so ugly, please kill me
-
 		// Step 1: Delete non-existant resources
 		Defragment(reinterpret_cast<std::vector<GmkResource*>&>(sprites));
 		Defragment(reinterpret_cast<std::vector<GmkResource*>&>(sounds));
@@ -135,7 +121,6 @@ namespace Gmk
 		lastInstancePlacedId = GMK_MIN_INSTANCE_LAST_ID;
 		lastTilePlacedId = GMK_MIN_TILE_LAST_ID;
 
-		// TODO Maybe this should be GmkRoom::Defragment()?
 		for(std::size_t i = 0; i < rooms.size(); ++i)
 		{
 			Room* room = rooms[i];
@@ -165,6 +150,9 @@ namespace Gmk
 		// Finalize rooms
 		for(std::size_t i = 0; i < rooms.size(); ++i)
 			rooms[i]->Finalize();
+
+		// Finalize resource tree
+		resourceTree->Finalize();
 	}
 
 	bool Gmk::IsLoaded() const

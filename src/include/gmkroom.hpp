@@ -12,7 +12,7 @@
 
 namespace Gmk
 {
-	// TODO Fix all of this
+	// TODO Pointers for subobjects
 
 	class Room : public GmkResource
 	{

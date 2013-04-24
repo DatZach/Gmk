@@ -46,45 +46,25 @@ namespace Gmk
 		return kind == ActionKindCode ? argumentValue[0] : "";
 	}
 
-	// TODO Move?
 	GmkResource* Action::GetArgumentReference(unsigned int index) const
 	{
-		if (index >= ARGUMENT_COUNT)
-			return NULL;
-
-		unsigned int id = std::atoi(argumentValue[index].c_str());
-
-		switch(argumentKind[index])
+		// More magic!
+		static const unsigned int akKinds[ArgumentKindCount] =
 		{
-			case ArgumentKindSprite:
-				return id < gmkHandle->sprites.size() ? gmkHandle->sprites[id] : NULL;
+			0, 0, 0, 0, 0,
+			RtSprite,
+			RtSound,
+			RtBackground,
+			RtPath,
+			RtScript,
+			RtObject,
+			RtRoom,
+			RtFont,
+			0,
+			RtTimeline
+		};
 
-			case ArgumentKindSound:
-				return id < gmkHandle->sounds.size() ? gmkHandle->sounds[id] : NULL;
-
-			case ArgumentKindBackground:
-				return id < gmkHandle->backgrounds.size() ? gmkHandle->backgrounds[id] : NULL;
-
-			case ArgumentKindPath:
-				return id < gmkHandle->paths.size() ? gmkHandle->paths[id] : NULL;
-
-			case ArgumentKindScript:
-				return id < gmkHandle->scripts.size() ? gmkHandle->scripts[id] : NULL;
-
-			case ArgumentKindObject:
-				return id < gmkHandle->objects.size() ? gmkHandle->objects[id] : NULL;
-
-			case ArgumentKindRoom:
-				return id < gmkHandle->rooms.size() ? gmkHandle->rooms[id] : NULL;
-
-			case ArgumentKindFont:
-				return id < gmkHandle->fonts.size() ? gmkHandle->fonts[id] : NULL;
-
-			case ArgumentKindTimeline:
-				return id < gmkHandle->timelines.size() ? gmkHandle->timelines[id] : NULL;
-		}
-
-		return NULL;
+		return (index < ARGUMENT_COUNT) ? GetResource(akKinds[argumentKind[index]], std::atoi(argumentValue[index].c_str())) : NULL;
 	}
 
 	void Action::WriteVer81(Stream* stream)

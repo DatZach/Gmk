@@ -28,13 +28,13 @@ namespace Gmk
 
 		enum Resolution
 		{
+			ResolutionNoChange,
+			Resolution320x240,
 			Resolution640x480,
 			Resolution800x600,
 			Resolution1024x768,
 			Resolution1280x1024,
-			Resolution1600x1200,
-			Resolution320x240,
-			ResolutionNoChange
+			Resolution1600x1200
 		};
 
 		enum Frequency

@@ -30,33 +30,24 @@ namespace Gmk
 
 		static const unsigned int order[12] =
 		{
-			GroupSprites,
-			GroupSounds,
-			GroupBackgrounds,
-			GroupPaths,
-			GroupScripts,
-			GroupFonts,
-			GroupTimelines,
-			GroupObjects,
-			GroupRooms,
-			GroupGameInformation,
-			GroupGlobalGameOptions,
-			GroupExtensionPackages
+			Node::GroupSprites,
+			Node::GroupSounds,
+			Node::GroupBackgrounds,
+			Node::GroupPaths,
+			Node::GroupScripts,
+			Node::GroupFonts,
+			Node::GroupTimelines,
+			Node::GroupObjects,
+			Node::GroupRooms,
+			Node::GroupGameInformation,
+			Node::GroupGlobalGameOptions,
+			Node::GroupExtensionPackages
 		};
 
 		exists = true;
 
 		for(unsigned int i = 0; i < 12; ++i)
-		{
-			Node* node = new Node();
-
-			node->status = i >= 9 ? StatusSecondary : StatusPrimary;
-			node->group = order[i];
-			node->index = 0;
-			node->name = names[i];
-
-			contents.push_back(node);
-		}
+			contents.push_back(new Node(i >= 9 ? Node::StatusSecondary : Node::StatusPrimary, order[i], 0, names[i]));
 	}
 
 	Tree::~Tree()
@@ -66,46 +57,10 @@ namespace Gmk
 
 	void Tree::CleanMemory()
 	{
-		// TODO You orphan nodes on the heap by doing this -- fix leaked memory
 		for(std::size_t i = 0; i < contents.size(); ++i)
 			delete contents[i];
 
 		contents.clear();
-	}
-
-	GmkResource* Tree::GetResource(unsigned int id, unsigned int kind) const
-	{
-		switch(kind)
-		{
-			case GroupSprites:
-				return id < gmkHandle->sprites.size() ? gmkHandle->sprites[id] : NULL;
-
-			case GroupSounds:
-				return id < gmkHandle->sounds.size() ? gmkHandle->sounds[id] : NULL;
-
-			case GroupBackgrounds:
-				return id < gmkHandle->backgrounds.size() ? gmkHandle->backgrounds[id] : NULL;
-
-			case GroupPaths:
-				return id < gmkHandle->paths.size() ? gmkHandle->paths[id] : NULL;
-
-			case GroupScripts:
-				return id < gmkHandle->scripts.size() ? gmkHandle->scripts[id] : NULL;
-
-			case GroupObjects:
-				return id < gmkHandle->objects.size() ? gmkHandle->objects[id] : NULL;
-
-			case GroupRooms:
-				return id < gmkHandle->rooms.size() ? gmkHandle->rooms[id] : NULL;
-
-			case GroupFonts:
-				return id < gmkHandle->fonts.size() ? gmkHandle->fonts[id] : NULL;
-
-			case GroupTimelines:
-				return id < gmkHandle->timelines.size() ? gmkHandle->timelines[id] : NULL;
-		}
-
-		return NULL;
 	}
 
 	void Tree::WriteVer81(Stream* stream)
@@ -114,7 +69,7 @@ namespace Gmk
 		{
 			stream->WriteDword(contents[i]->status);
 			stream->WriteDword(contents[i]->group);
-			stream->WriteDword(contents[i]->index);
+			stream->WriteDword(0);
 			stream->WriteString(contents[i]->name);
 
 			stream->WriteDword(contents[i]->contents.size());
@@ -128,12 +83,12 @@ namespace Gmk
 
 		for(unsigned int i = 0; i < 12; ++i)
 		{
-			Node* node = new Node();
+			unsigned int status = stream->ReadDword();
+			unsigned int group = stream->ReadDword();
+			stream->ReadDword();
+			std::string name = stream->ReadString();
 
-			node->status = stream->ReadDword();
-			node->group = stream->ReadDword();
-			node->index = stream->ReadDword();
-			node->name = stream->ReadString();
+			Node* node = new Node(status, group, -1, name);
 
 			ReadRecursiveTree(stream, node, stream->ReadDword());
 
@@ -145,20 +100,12 @@ namespace Gmk
 	{
 		while(count--)
 		{
-			Node* node = new Node();
+			unsigned int status = stream->ReadDword();
+			unsigned int group = stream->ReadDword();
+			unsigned int index = stream->ReadDword();
+			std::string name = stream->ReadString();
 
-			node->status = stream->ReadDword();
-			node->group = stream->ReadDword();
-			node->index = stream->ReadDword();
-			node->name = stream->ReadString();
-
-			// TODO This should be moved into finalize for consistency
-			node->link = GetResource(node->index, node->group);
-
-			/*if (node->group == GroupBackgrounds)
-				node->link = gmkHandle->backgrounds[node->index];
-			else
-				node->link = NULL;*/
+			Node* node = new Node(status, group, index, name);
 
 			ReadRecursiveTree(stream, node, stream->ReadDword());
 
@@ -170,13 +117,12 @@ namespace Gmk
 	{
 		for(unsigned int i = 0; i < count; ++i)
 		{
+			if (parent->contents[i]->resource == NULL)
+				throw new std::exception(("NULL resource \"" + parent->contents[i]->name + "\" in resource tree").c_str());
+
 			stream->WriteDword(parent->contents[i]->status);
 			stream->WriteDword(parent->contents[i]->group);
-			//stream->WriteDword(parent->contents[i]->index);
-			if (parent->contents[i]->link == NULL)
-				stream->WriteDword(parent->contents[i]->index);
-			else
-				stream->WriteDword(parent->contents[i]->link->GetId());
+			stream->WriteDword(parent->contents[i]->resource->GetId());
 			stream->WriteString(parent->contents[i]->name);
 
 			stream->WriteDword(parent->contents[i]->contents.size());
@@ -186,6 +132,51 @@ namespace Gmk
 
 	void Tree::Finalize()
 	{
-		
+		for(std::size_t i = 0; i < contents.size(); ++i)
+			contents[i]->Finalize(this);
+	}
+
+	Tree::Node::Node(unsigned int _status, unsigned int _group, unsigned int _index, const std::string& _name)
+		: index(_index),
+		  name(_name),
+		  status(_status),
+		  group(_group),
+		  resource(NULL),
+		  contents()
+	{
+
+	}
+
+	Tree::Node::~Node()
+	{
+		for(std::size_t i = 0; i < contents.size(); ++i)
+			delete contents[i];
+	}
+
+	void Tree::Node::Finalize(GmkResource* parent)
+	{
+		// Magic
+		static const unsigned int groupKind[GroupCount] =
+		{
+			0,
+			RtObject,
+			RtSprite,
+			RtSound,
+			RtRoom,
+			0,
+			RtBackground,
+			RtScript,
+			RtPath,
+			RtFont,
+			0,
+			0,
+			RtTimeline,
+			0
+		};
+
+		resource = parent->GetResource(groupKind[group], index);
+
+		for(std::size_t i = 0; i < contents.size(); ++i)
+			contents[i]->Finalize(parent);
 	}
 }

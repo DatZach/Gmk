@@ -44,7 +44,8 @@ namespace Gmk
 			ArgumentKindFont,
 			ArgumentKindColor,
 			ArgumentKindTimeline,
-			ArgumentKindFontString
+			ArgumentKindFontString,
+			ArgumentKindCount
 		};
 
 		enum ActionType

@@ -18,7 +18,7 @@ namespace Gmk
 		  stayOnTop(false),
 		  windowColor(BuildColor(0, 0, 0)),
 		  changeResolution(false),
-		  colorDepth(Cd16Bit),
+		  colorDepth(CdNoChange),
 		  resolution(ResolutionNoChange),
 		  frequency(FrequencyNoChange),
 		  noButtons(false),

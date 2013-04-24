@@ -9,7 +9,7 @@ namespace Gmk
 {
 	GameInformation::GameInformation(Gmk* gmk)
 		: GmkResource(gmk),
-		  backgroundColor(0x180000FF),
+		  backgroundColor(BuildColor(255, 255, 225)),
 		  showInSeperateWindow(true),
 		  caption("Game Information"),
 		  left(-1),
@@ -20,7 +20,9 @@ namespace Gmk
 		  sizeable(true),
 		  alwaysOnTop(false),
 		  freeze(true),
-		  information("{\\rtf1\\ansi\\ansicpg1252\\deff0\\deflang1033{\\fonttbl{\\f0\\fnil\\fcharset0 Calibri;}}{\\*\\generator Msftedit 5.41.21.2509;}\\viewkind4\\uc1\\pard\\sa200\\sl276\\slmult1\\lang9\\f0\\fs22\\par}\0")
+		  information("{\\rtf1\\ansi\\ansicpg1252\\deff0\\deflang1033"
+					  "{\\fonttbl{\\f0\\fnil Arial;}}{\\colortbl ;\\red0\\green0\\blue0;}"
+					  "\\viewkind4\\uc1\\pard\\cf1\\f0\\fs24}")
 	{
 		exists = true;
 	}

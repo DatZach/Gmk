@@ -13,41 +13,50 @@ namespace Gmk
 	class Tree : public GmkResource
 	{
 	public:
-		enum Status
+		class Node
 		{
-			StatusPrimary = 1,
-			StatusGroup,
-			StatusSecondary
-		};
+		public:
+			enum Status
+			{
+				StatusPrimary = 1,
+				StatusGroup,
+				StatusSecondary
+			};
 
-		enum Group
-		{
-			GroupObjects = 1,
-			GroupSprites,
-			GroupSounds,
-			GroupRooms,
-			GroupBackgrounds = 6,
-			GroupScripts,
-			GroupPaths,
-			GroupDataFiles,
-			GroupFonts = GroupDataFiles,
-			GroupGameInformation,
-			GroupGameOptions,
-			GroupGlobalGameOptions = GroupGameOptions,
-			GroupTimelines,
-			GroupExtensionPackages
-		};
+			enum Group
+			{
+				GroupObjects = 1,
+				GroupSprites,
+				GroupSounds,
+				GroupRooms,
+				GroupBackgrounds = 6,
+				GroupScripts,
+				GroupPaths,
+				GroupDataFiles,
+				GroupFonts = GroupDataFiles,
+				GroupGameInformation,
+				GroupGameOptions,
+				GroupGlobalGameOptions = GroupGameOptions,
+				GroupTimelines,
+				GroupExtensionPackages,
+				GroupCount
+			};
 
-		// TODO Class this
-		typedef struct _Node
-		{
-			GmkResource*			link;
-			unsigned int			status;
-			unsigned int			group;
-			unsigned int			index;
-			std::string				name;
-			std::vector<_Node*>		contents;
-		} Node;
+		private:
+			unsigned int index;
+
+		public:
+			std::string			name;
+			unsigned int		status;
+			unsigned int		group;
+			GmkResource*		resource;
+			std::vector<Node*>	contents;
+
+			Node(unsigned int _status, unsigned int _group, unsigned int _index, const std::string& _name);
+			~Node();
+
+			void Finalize(GmkResource* parent);
+		};
 	
 	private:
 		void CleanMemory();

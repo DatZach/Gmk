@@ -29,6 +29,23 @@ namespace Gmk
 
 	class GmkResource
 	{
+	public:
+		enum ResourceType
+		{
+			RtSprite,
+			RtSound,
+			RtBackground,
+			RtPath,
+			RtScript,
+			RtFont,
+			RtTimeline,
+			RtObject,
+			RtRoom,
+			RtCount
+		};
+
+		GmkResource* GetResource(unsigned int type, unsigned int index) const;
+
 	protected:
 		Gmk* gmkHandle;
 		bool exists;
