@@ -10,7 +10,6 @@ namespace Gmk
 {
 	Timeline::Timeline(Gmk* gmk)
 		: GmkResource(gmk),
-		  name(""),
 		  moments()
 	{
 

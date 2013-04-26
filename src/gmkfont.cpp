@@ -10,7 +10,6 @@ namespace Gmk
 {
 	Font::Font(Gmk* gmk)
 		: GmkResource(gmk),
-		  name(""),
 		  fontName(""),
 		  size(12),
 		  bold(false),

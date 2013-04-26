@@ -10,7 +10,6 @@ namespace Gmk
 {
 	Object::Object(Gmk* gmk)
 		: GmkResource(gmk),
-		  name(""),
 		  spriteIndex(SpriteIndexNone),
 		  solid(false),
 		  visible(true),

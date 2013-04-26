@@ -10,7 +10,6 @@ namespace Gmk
 {
 	Path::Path(Gmk* gmk)
 		: GmkResource(gmk),
-		  name(""),
 		  connectionKind(KindStraight),
 		  closed(true),
 		  precision(4),

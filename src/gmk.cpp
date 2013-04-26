@@ -29,8 +29,6 @@ namespace Gmk
 		  lastTilePlacedId(GMK_MIN_TILE_LAST_ID),
 		  includeFiles(),
 		  gameInformation(NULL),
-		  libraryCreationCode(),
-		  roomExecutionOrder(),
 		  resourceTree(NULL)
 	{
 		settings = new Settings(this);
@@ -336,17 +334,27 @@ namespace Gmk
 		stream->WriteDword(800);
 		gameInformation->Write(stream);
 
-		// Write library creation code
+		// Write library creation code -- we should be able to safely ignore this
 		stream->WriteDword(500);
-		stream->WriteDword(libraryCreationCode.size());
-		for(std::size_t i = 0; i < libraryCreationCode.size(); ++i)
-			stream->WriteString(libraryCreationCode[i]);
+		stream->WriteDword(0);
 
-		// Write room execution order -- TODO This should be regenerated every save
+		// Write room execution order
+		/*Tree::Node* roomNode = resourceTree->GetBranch(Tree::Node::GroupRooms);
+		if (roomNode == NULL)
+			throw new std::exception("Rooms not defined");
+
 		stream->WriteDword(700);
-		stream->WriteDword(roomExecutionOrder.size());
-		for(std::size_t i = 0; i < roomExecutionOrder.size(); ++i)
-			stream->WriteDword(roomExecutionOrder[i]);
+		stream->WriteDword(roomNode->contents.size());
+		for(std::size_t i = 0; i < roomNode->contents.size(); ++i)
+		{
+			// BUG Doesn't decend into the tree, I think GM ignores this anyway so it doesn't matter
+			if (roomNode->contents[i]->resource != NULL)
+				stream->WriteDword(roomNode->contents[i]->resource->GetId());
+		}*/
+
+		// Fuck it
+		stream->WriteDword(700);
+		stream->WriteDword(0);
 
 		// Write resource tree
 		resourceTree->Write(stream);
@@ -501,17 +509,17 @@ namespace Gmk
 		gameInformation = new GameInformation(this);
 		gameInformation->Read(stream);
 
-		// Read library creation code
+		// Read library creation code -- we should be able to safely ignore this
 		stream->ReadDword();
 		count = stream->ReadDword();
 		while(count--)
-			libraryCreationCode.push_back(stream->ReadString());
+			stream->ReadString();
 
 		// Read room execution order
 		stream->ReadDword();
 		count = stream->ReadDword();
 		while(count--)
-			roomExecutionOrder.push_back(stream->ReadDword());
+			stream->ReadDword();
 
 		// Read resource tree
 		resourceTree = new Tree(this);

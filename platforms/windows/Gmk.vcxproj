@@ -90,6 +90,7 @@
     <ClInclude Include="..\..\src\include\gmk.hpp" />
     <ClInclude Include="..\..\src\include\gmkaction.hpp" />
     <ClInclude Include="..\..\src\include\gmkbackground.hpp" />
+    <ClInclude Include="..\..\src\include\gmkcommon.hpp" />
     <ClInclude Include="..\..\src\include\gmkfont.hpp" />
     <ClInclude Include="..\..\src\include\gmkgameinfo.hpp" />
     <ClInclude Include="..\..\src\include\gmkincludefile.hpp" />

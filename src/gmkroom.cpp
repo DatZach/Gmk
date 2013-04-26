@@ -10,7 +10,6 @@ namespace Gmk
 {
 	Room::Room(Gmk* gmk)
 		: GmkResource(gmk),
-		  name(""),
 		  caption(""),
 		  width(640),
 		  height(480),

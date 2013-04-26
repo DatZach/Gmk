@@ -11,21 +11,11 @@
 #include <string>
 #include <exception>
 #include <stream.hpp>
+#include <gmkcommon.hpp>
 
 namespace Gmk
 {
 	class Gmk;
-
-	// TODO Move this
-	typedef enum _Version
-	{
-		VerUnknown,
-		Ver53a,
-		Ver61,
-		Ver7,
-		Ver8,
-		Ver81								// GM 8.1.141 (r11549)
-	} Version;
 
 	class GmkResource
 	{
@@ -55,6 +45,8 @@ namespace Gmk
 		virtual void ReadVer81(Stream* stream) = 0;
 
 	public:
+		std::string name;
+
 		GmkResource(Gmk* gmk);
 
 		void Write(Stream* stream);

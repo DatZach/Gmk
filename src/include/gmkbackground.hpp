@@ -17,7 +17,6 @@ namespace Gmk
 		void ReadVer81(Stream* stream);
 
 	public:
-		std::string				name;
 		bool					useAsTileset;
 		unsigned int			tileWidth;
 		unsigned int			tileHeight;

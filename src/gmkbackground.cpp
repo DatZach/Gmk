@@ -10,7 +10,6 @@ namespace Gmk
 {
 	Background::Background(Gmk* gmk)
 		: GmkResource(gmk),
-		  name(""),
 		  useAsTileset(false),
 		  tileWidth(16),
 		  tileHeight(16),

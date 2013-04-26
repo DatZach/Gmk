@@ -25,7 +25,6 @@ namespace Gmk
 		void ReadVer81(Stream* stream);
 
 	public:
-		std::string			name;
 		std::string			condition;
 		unsigned int		momentOfChecking;
 		std::string			constantName;

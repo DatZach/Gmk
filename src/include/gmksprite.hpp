@@ -39,7 +39,6 @@ namespace Gmk
 		void ReadVer81(Stream* stream);
 
 	public:
-		std::string				name;
 		unsigned int			width;
 		unsigned int			height;
 		int						bboxLeft;

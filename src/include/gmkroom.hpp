@@ -128,7 +128,6 @@ namespace Gmk
 		void ReadVer81(Stream* stream);
 
 	public:
-		std::string					name;
 		std::string					caption;
 		unsigned int				width;
 		unsigned int				height;

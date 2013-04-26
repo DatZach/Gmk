@@ -76,7 +76,7 @@ namespace Gmk
   		unsigned int			libraryId;										// Library ID (All official have ID 1)
 		unsigned int			actionId;										// Action ID (Identifies D&D action)
 		unsigned int			kind;											// Normal, Begin, End, Else, Exit, etc
-		unsigned int			type;											// ?
+		unsigned int			type;											// Executes function or code
 		unsigned int			argumentsUsed;									// Arguments actually passed
 		unsigned int			argumentKind[ARGUMENT_COUNT];					// Argument types (expression, sprite, background, object, etc)
 		int						appliesToObject;								// "Applies to: self/other/object id"

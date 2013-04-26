@@ -119,5 +119,8 @@
     <ClInclude Include="..\..\src\include\gmkincludefile.hpp">
       <Filter>include\resources</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\include\gmkcommon.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

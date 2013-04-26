@@ -37,7 +37,6 @@ namespace Gmk
 		void ReadVer81(Stream* stream);
 
 	public:
-		std::string				name;
 		unsigned int			connectionKind;
 		bool					closed;
 		unsigned int			precision;

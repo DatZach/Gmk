@@ -10,7 +10,6 @@ namespace Gmk
 {
 	Script::Script(Gmk* gmk)
 		: GmkResource(gmk),
-		  name(""),
 		  value("")
 	{
 		

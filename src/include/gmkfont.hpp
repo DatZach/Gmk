@@ -49,7 +49,6 @@ namespace Gmk
 		void ReadVer81(Stream* stream);
 
 	public:
-		std::string			name;
 		std::string			fontName;
 		unsigned int		size;
 		bool				bold;

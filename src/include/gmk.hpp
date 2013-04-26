@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <vector>
+#include <gmkcommon.hpp>
 #include <gmkresource.hpp>
 #include <gmksettings.hpp>
 #include <gmktrigger.hpp>
@@ -23,8 +24,6 @@
 #include <gmkincludefile.hpp>
 #include <gmkgameinfo.hpp>
 #include <gmktree.hpp>
-
-// TODO Typedef all enums
 
 namespace Gmk
 {
@@ -70,8 +69,6 @@ namespace Gmk
 		std::vector<IncludeFile*>			includeFiles;
 		std::vector<std::string>			packages;
 		GameInformation*					gameInformation;
-		std::vector<std::string>			libraryCreationCode;
-		std::vector<unsigned int>			roomExecutionOrder;
 		Tree*								resourceTree;
 
 		Gmk();

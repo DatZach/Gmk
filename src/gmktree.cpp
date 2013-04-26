@@ -47,7 +47,7 @@ namespace Gmk
 		exists = true;
 
 		for(unsigned int i = 0; i < 12; ++i)
-			contents.push_back(new Node(i >= 9 ? Node::StatusSecondary : Node::StatusPrimary, order[i], 0, names[i]));
+			contents.push_back(new Node(i >= 9 ? Node::StatusSecondary : Node::StatusPrimary, order[i], -1, names[i]));
 	}
 
 	Tree::~Tree()
@@ -117,13 +117,22 @@ namespace Gmk
 	{
 		for(unsigned int i = 0; i < count; ++i)
 		{
-			if (parent->contents[i]->resource == NULL)
+			if (parent->contents[i]->resource == NULL && parent->contents[i]->status != Node::StatusGroup)
 				throw new std::exception(("NULL resource \"" + parent->contents[i]->name + "\" in resource tree").c_str());
 
 			stream->WriteDword(parent->contents[i]->status);
 			stream->WriteDword(parent->contents[i]->group);
-			stream->WriteDword(parent->contents[i]->resource->GetId());
-			stream->WriteString(parent->contents[i]->name);
+
+			if (parent->contents[i]->status == Node::StatusGroup)
+			{
+				stream->WriteDword(0);
+				stream->WriteString(parent->contents[i]->name);
+			}
+			else
+			{
+					stream->WriteDword(parent->contents[i]->resource->GetId());
+				stream->WriteString(parent->contents[i]->resource->name);
+			}
 
 			stream->WriteDword(parent->contents[i]->contents.size());
 			WriteRecursiveTree(stream, parent->contents[i], parent->contents[i]->contents.size());
@@ -134,6 +143,17 @@ namespace Gmk
 	{
 		for(std::size_t i = 0; i < contents.size(); ++i)
 			contents[i]->Finalize(this);
+	}
+
+	Tree::Node* Tree::GetBranch(Node::Group group) const
+	{
+		for(std::size_t i = 0; i < contents.size(); ++i)
+		{
+			if (contents[i]->group == group)
+				return contents[i];
+		}
+
+		return NULL;
 	}
 
 	Tree::Node::Node(unsigned int _status, unsigned int _group, unsigned int _index, const std::string& _name)
@@ -178,5 +198,64 @@ namespace Gmk
 
 		for(std::size_t i = 0; i < contents.size(); ++i)
 			contents[i]->Finalize(parent);
+	}
+
+	void Tree::Node::AddResource(GmkResource* resource)
+	{
+		unsigned int index = 0;
+
+		switch(group)
+		{
+			case GroupSprites:
+				index = reinterpret_cast<Sprite*>(resource)->GetId();
+				break;
+
+			case GroupSounds:
+				index = reinterpret_cast<Sound*>(resource)->GetId();
+				break;
+
+			case GroupBackgrounds:
+				index = reinterpret_cast<Background*>(resource)->GetId();
+				break;
+
+			case GroupPaths:
+				index = reinterpret_cast<Path*>(resource)->GetId();
+				break;
+
+			case GroupScripts:
+				index = reinterpret_cast<Script*>(resource)->GetId();
+				break;
+
+			case GroupFonts:
+				index = reinterpret_cast<Font*>(resource)->GetId();
+				break;
+
+			case GroupTimelines:
+				index = reinterpret_cast<Timeline*>(resource)->GetId();
+				break;
+
+			case GroupObjects:
+				index = reinterpret_cast<Object*>(resource)->GetId();
+				break;
+
+			case GroupRooms:
+				index = reinterpret_cast<Room*>(resource)->GetId();
+				break;
+
+			default:
+				return;
+		}
+
+		Node* node = new Node(StatusSecondary, group, index, resource->name);
+		node->resource = resource;
+		contents.push_back(node);
+	}
+
+	Tree::Node* Tree::Node::AddFilter(const std::string& value)
+	{
+		Node* node = new Node(StatusGroup, group, -1, value);
+		contents.push_back(node);
+
+		return node;
 	}
 }

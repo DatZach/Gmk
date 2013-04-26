@@ -10,7 +10,8 @@ namespace Gmk
 {
 	GmkResource::GmkResource(Gmk* gmk)
 		: gmkHandle(gmk),
-		  exists(false)
+		  exists(true),
+		  name("")
 	{
 
 	}

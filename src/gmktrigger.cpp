@@ -9,7 +9,6 @@ namespace Gmk
 {
 	Trigger::Trigger(Gmk* gmk)
 		: GmkResource(gmk),
-		  name(""),
 		  condition(""),
 		  momentOfChecking(MomentBegin),
 		  constantName("")

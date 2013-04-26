@@ -56,6 +56,9 @@ namespace Gmk
 			~Node();
 
 			void Finalize(GmkResource* parent);
+
+			void AddResource(GmkResource* resource);
+			Node* AddFilter(const std::string& value);
 		};
 	
 	private:
@@ -76,6 +79,8 @@ namespace Gmk
 		~Tree();
 
 		void Finalize();
+
+		Node* GetBranch(Node::Group group) const;
 	};
 }
 

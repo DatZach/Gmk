@@ -10,7 +10,6 @@ namespace Gmk
 {
 	Sprite::Sprite(Gmk* gmk)
 		: GmkResource(gmk),
-		  name(""),
 		  width(0),
 		  height(0),
 		  bboxLeft(0),

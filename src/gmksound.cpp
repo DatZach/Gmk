@@ -10,7 +10,6 @@ namespace Gmk
 {
 	Sound::Sound(Gmk* gmk)
 		: GmkResource(gmk),
-		  name(""),
 		  kind(KindNormal),
 		  extension(""),
 		  filename(""),

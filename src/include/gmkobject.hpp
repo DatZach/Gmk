@@ -195,7 +195,6 @@ namespace Gmk
 		void ReadVer81(Stream* stream);
 
 	public:
-		std::string					name;
 		bool						solid;
 		bool						visible;
 		int							depth;
