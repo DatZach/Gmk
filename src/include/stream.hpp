@@ -82,6 +82,7 @@ namespace Gmk
 		std::string ReadString();
 		time_t ReadTimestamp();
 		Stream* ReadBitmap();
+		Stream* ReadBitmapOld();
 
 		// Writing
 		void WriteData(const StreamBuffer& value);
@@ -95,6 +96,7 @@ namespace Gmk
 		void WriteString(const std::string& value);
 		void WriteTimestamp();
 		void WriteBitmap(Stream* value);
+		void WriteBitmapOld(Stream* value);
  
 		// Compression
 		void Deflate();

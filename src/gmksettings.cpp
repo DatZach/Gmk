@@ -4,6 +4,7 @@
  */
 
 #include <gmksettings.hpp>
+#include <gmk.hpp>
 
 namespace Gmk
 {
@@ -245,6 +246,7 @@ namespace Gmk
 		versionString			= settingsStream->ReadString();
 		settingsStream->ReadTimestamp();
 		information				= settingsStream->ReadString();
+
 		major					= settingsStream->ReadDword();
 		minor					= settingsStream->ReadDword();
 		release					= settingsStream->ReadDword();
@@ -265,6 +267,74 @@ namespace Gmk
 
 	void Settings::ReadVer7(Stream* stream)
 	{
+		CleanMemory();
 
+		fullscreen				= stream->ReadBoolean();
+		interpolatePixels		= stream->ReadBoolean();
+		noBorder				= stream->ReadBoolean();
+		showCursor				= stream->ReadBoolean();
+		scale					= stream->ReadDword();
+		sizeable				= stream->ReadBoolean();
+		stayOnTop				= stream->ReadBoolean();
+		windowColor				= stream->ReadDword();
+		changeResolution		= stream->ReadBoolean();
+		colorDepth				= stream->ReadDword();
+		resolution				= stream->ReadDword();
+		frequency				= stream->ReadDword();
+		noButtons				= stream->ReadBoolean();
+		vsync					= stream->ReadBoolean();
+		fullscreenKey			= stream->ReadBoolean();
+		helpKey					= stream->ReadBoolean();
+		quitKey					= stream->ReadBoolean();
+		saveKey					= stream->ReadBoolean();
+		screenshotKey			= stream->ReadBoolean();
+		closeSecondary			= stream->ReadBoolean();
+		priority				= stream->ReadDword();
+		freeze					= stream->ReadBoolean();
+		showProgress			= stream->ReadDword();
+
+		if (showProgress == LpbtCustom)
+		{
+			backImage = stream->ReadBitmapOld();
+			frontImage = stream->ReadBitmapOld();
+		}
+
+		if (stream->ReadBoolean())
+			loadImage = stream->ReadBitmapOld();
+
+		loadTransparent			= stream->ReadBoolean();
+		loadAlpha				= stream->ReadDword();
+		scaleProgress			= stream->ReadBoolean();
+
+		iconImage				= stream->Deserialize(false);
+
+		displayErrors			= stream->ReadBoolean();
+		writeErrors				= stream->ReadBoolean();
+		abortErrors				= stream->ReadBoolean();
+		treatUninitializedVariablesAsZero = stream->ReadBoolean();
+
+		author					= stream->ReadString();
+		versionString			= stream->ReadString();
+		stream->ReadTimestamp();
+		information				= stream->ReadString();
+
+		unsigned int count = stream->ReadDword();
+		while(count--)
+		{
+			std::string name = stream->ReadString();
+			std::string value = stream->ReadString();
+
+			gmkHandle->constants.push_back(std::pair<std::string, std::string>(name, value));
+		}
+
+		major					= stream->ReadDword();
+		minor					= stream->ReadDword();
+		release					= stream->ReadDword();
+		build					= stream->ReadDword();
+		company					= stream->ReadString();
+		product					= stream->ReadString();
+		copyright				= stream->ReadString();
+		description				= stream->ReadString();
+		stream->ReadTimestamp();
 	}
 }

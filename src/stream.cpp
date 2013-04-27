@@ -22,7 +22,7 @@ namespace Gmk
 
 		fileStream.open(filename.c_str(), openMode);
 		if (!fileStream)
-			throw new std::exception("Cannot open file for streaming!");
+			throw std::exception("Cannot open file for streaming!");
 	}
 
 	Stream::Stream()
@@ -94,6 +94,7 @@ namespace Gmk
 			retval = inflate(&stream, 1);
 		}
 
+		// TODO This shouldn't be verbose
 		if (!retval)
 			std::cerr << "[Warning] Unfinished compression?" << std::endl;
 		else if (retval != 1)
@@ -337,6 +338,14 @@ namespace Gmk
 		return Deserialize();
 	}
 
+	Stream* Stream::ReadBitmapOld()
+	{
+		if (ReadDword() == -1)
+			return NULL;
+
+		return Deserialize(false);
+	}
+
 	void Stream::WriteData(const StreamBuffer& value)
 	{
 		if (streamMode == SmMemory)
@@ -445,6 +454,14 @@ namespace Gmk
 		
 		if (value != NULL)
 			Serialize(value);
+	}
+
+	void Stream::WriteBitmapOld(Stream* value)
+	{
+		WriteDword(value == NULL ? -1 : 0x10);
+		
+		if (value != NULL)
+			Serialize(value, false);
 	}
 
 	void Stream::Deflate()

@@ -149,6 +149,7 @@ namespace Gmk
 
 	bool GmkFile::Save(const std::string& filename)
 	{
+		Stream* stream = NULL;
 		itemsProcessed = 0.0f;
 		itemsToProcess = triggers.size() +
 							constants.size() +
@@ -167,16 +168,20 @@ namespace Gmk
 
 		try
 		{
-			Stream* stream = new Stream(filename, Stream::SmWrite);
+			stream = new Stream(filename, Stream::SmWrite);
 
 			SaveGmk(stream);
 
 			delete stream;
 		}
-		catch(std::exception* e)
+		catch(std::exception e)
 		{
-			std::cerr << "Gmk::Save Error: " << e->what() << std::endl;
+			std::cerr << "Gmk::Save Error: " << e.what() << std::endl;
 			version = VerUnknown;
+
+			if (stream != NULL)
+				delete stream;
+
 			return false;
 		}
 
@@ -185,21 +190,27 @@ namespace Gmk
 
 	bool GmkFile::Load(const std::string& filename)
 	{
+		Stream* stream = NULL;
 		itemsProcessed = itemsToProcess = 0.0f;
+
 		CleanMemory();
 
 		try
 		{
-			Stream* stream = new Stream(filename, Stream::SmRead);
+			stream = new Stream(filename, Stream::SmRead);
 
 			LoadGmk(stream);
 
 			delete stream;
 		}
-		catch(std::exception* e)
+		catch(std::exception e)
 		{
-			std::cerr << "Gmk::Load Error: " << e->what() << std::endl;
+			std::cerr << "Gmk::Load Error: " << e.what() << std::endl;
 			version = VerUnknown;
+
+			if (stream != NULL)
+				delete stream;
+
 			return false;
 		}
 
@@ -276,7 +287,7 @@ namespace Gmk
 				break;
 
 			default:
-				throw new std::exception("Unsupported version");
+				throw std::exception("Unsupported version");
 		}
 	}
 
@@ -284,7 +295,7 @@ namespace Gmk
 	{
 		// Read header
 		if (stream->ReadDword() != GMK_MAGIC)
-			throw new std::exception("Invalid magic!");
+			throw std::exception("Invalid magic!");
 
 		switch(stream->ReadDword())
 		{
@@ -309,7 +320,7 @@ namespace Gmk
 				break;
 
 			default:
-				throw new std::exception("Unknown or unsupported version!");
+				throw std::exception("Unknown or unsupported version!");
 		}
 
 		switch(version)
@@ -344,7 +355,7 @@ namespace Gmk
 		// Write settings
 		stream->WriteDword(800);
 		if (settings == NULL)
-			throw new std::exception("Settings are not declared");
+			throw std::exception("Settings are not declared");
 
 		settings->Write(stream);
 
