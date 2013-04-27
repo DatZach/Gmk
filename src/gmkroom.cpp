@@ -135,6 +135,7 @@ namespace Gmk
 
 		if (!roomStream->ReadBoolean())
 		{
+			delete roomStream;
 			exists = false;
 			return;
 		}
@@ -211,6 +212,16 @@ namespace Gmk
 		exists = true;
 	}
 
+	void Room::WriteVer7(Stream* stream)
+	{
+
+	}
+
+	void Room::ReadVer7(Stream* stream)
+	{
+
+	}
+
 	void Room::Finalize()
 	{
 		for(std::size_t i = 0; i < backgrounds.size(); ++i)
@@ -274,6 +285,16 @@ namespace Gmk
 		speedHorizontal	= stream->ReadDword();
 		speedVertical	= stream->ReadDword();
 		stretch			= stream->ReadBoolean();
+	}
+
+	void Room::Background::WriteVer7(Stream* stream)
+	{
+
+	}
+
+	void Room::Background::ReadVer7(Stream* stream)
+	{
+
 	}
 
 	void Room::Background::Finalize()
@@ -343,6 +364,16 @@ namespace Gmk
 		objectFollowingIndex	= stream->ReadDword();
 	}
 
+	void Room::View::WriteVer7(Stream* stream)
+	{
+
+	}
+
+	void Room::View::ReadVer7(Stream* stream)
+	{
+
+	}
+
 	void Room::View::Finalize()
 	{
 		objectFollowing = (objectFollowingIndex != -1) ? gmkHandle->objects[objectFollowingIndex] : NULL;
@@ -384,6 +415,16 @@ namespace Gmk
 		id				= stream->ReadDword();
 		creationCode	= stream->ReadString();
 		locked			= stream->ReadBoolean();
+	}
+
+	void Room::Instance::WriteVer7(Stream* stream)
+	{
+
+	}
+
+	void Room::Instance::ReadVer7(Stream* stream)
+	{
+
 	}
 
 	void Room::Instance::Finalize()
@@ -439,6 +480,16 @@ namespace Gmk
 		layer				= stream->ReadDword();
 		id					= stream->ReadDword();
 		locked				= stream->ReadBoolean();
+	}
+
+	void Room::Tile::WriteVer7(Stream* stream)
+	{
+
+	}
+
+	void Room::Tile::ReadVer7(Stream* stream)
+	{
+
 	}
 
 	void Room::Tile::Finalize()

@@ -12,7 +12,9 @@
 namespace Gmk
 {
 	GmkFile::GmkFile()
-		: version(VerUnknown),
+		: itemsProcessed(0.0f),
+		  itemsToProcess(0.0f),
+		  version(VerUnknown),
 		  gameId(0),
 		  settings(NULL),
 		  triggers(),
@@ -147,6 +149,22 @@ namespace Gmk
 
 	bool GmkFile::Save(const std::string& filename)
 	{
+		itemsProcessed = 0.0f;
+		itemsToProcess = triggers.size() +
+							constants.size() +
+							sounds.size() +
+							sprites.size() +
+							backgrounds.size() +
+							paths.size() +
+							scripts.size() +
+							fonts.size() +
+							timelines.size() +
+							objects.size() +
+							rooms.size() +
+							includeFiles.size() +
+							packages.size() +
+							5.0f;
+
 		try
 		{
 			Stream* stream = new Stream(filename, Stream::SmWrite);
@@ -167,6 +185,7 @@ namespace Gmk
 
 	bool GmkFile::Load(const std::string& filename)
 	{
+		itemsProcessed = itemsToProcess = 0.0f;
 		CleanMemory();
 
 		try
@@ -187,34 +206,32 @@ namespace Gmk
 		return true;
 	}
 
-	inline void GmkFile::Defragment(std::vector<GmkResource*>& vector)
-	{
-		std::vector<GmkResource*>::iterator itr = vector.begin();
-		while(itr != vector.end())
-		{
-			if (!(*itr)->GetExists())
-			{
-				delete *itr;
-				itr = vector.erase(itr);
-				continue;
-			}
-
-			++itr;
-		}
+#define Defragment(t, v)					\
+	for(std::vector<t ## *>::iterator itr = v ## .begin(); itr != v ## .end(); )  \
+	{										\
+		if (!(*itr)->GetExists())			\
+		{									\
+			delete *itr;					\
+			itr = v ## .erase(itr);			\
+			continue;						\
+		}									\
+		++itr;								\
 	}
 
 	void GmkFile::DefragmentResources()
 	{
+		itemsProcessed = itemsToProcess = 0.0f;
+
 		// Step 1: Delete non-existant resources
-		Defragment(reinterpret_cast<std::vector<GmkResource*>&>(sprites));
-		Defragment(reinterpret_cast<std::vector<GmkResource*>&>(sounds));
-		Defragment(reinterpret_cast<std::vector<GmkResource*>&>(backgrounds));
-		Defragment(reinterpret_cast<std::vector<GmkResource*>&>(paths));
-		Defragment(reinterpret_cast<std::vector<GmkResource*>&>(scripts));
-		Defragment(reinterpret_cast<std::vector<GmkResource*>&>(fonts));
-		Defragment(reinterpret_cast<std::vector<GmkResource*>&>(timelines));
-		Defragment(reinterpret_cast<std::vector<GmkResource*>&>(objects));
-		Defragment(reinterpret_cast<std::vector<GmkResource*>&>(rooms));
+		Defragment(Sprite,		sprites);
+		Defragment(Sound,		sounds);
+		Defragment(Background,	backgrounds);
+		Defragment(Path,		paths);
+		Defragment(Script,		scripts);
+		Defragment(Font,		fonts);
+		Defragment(Timeline,	timelines);
+		Defragment(Object,		objects);
+		Defragment(Room,		rooms);
 
 		// Step 2: Defragment last placed IDs
 		lastInstancePlacedId = GMK_MIN_INSTANCE_LAST_ID;
@@ -232,9 +249,16 @@ namespace Gmk
 		}
 	}
 
+#undef Defragment
+
 	bool GmkFile::IsLoaded() const
 	{
 		return version != VerUnknown;
+	}
+
+	float GmkFile::GetProgress() const
+	{
+		return (itemsProcessed / itemsToProcess) * 100.0f;
 	}
 
 	void GmkFile::SaveGmk(Stream* stream)
@@ -315,6 +339,8 @@ namespace Gmk
 			stream->WriteByte(guidByte);
 		}
 
+		++itemsProcessed;
+
 		// Write settings
 		stream->WriteDword(800);
 		if (settings == NULL)
@@ -322,10 +348,12 @@ namespace Gmk
 
 		settings->Write(stream);
 
+		++itemsProcessed;
+
 		// Write triggers
 		stream->WriteDword(800);
 		stream->WriteDword(triggers.size());
-		for(std::size_t i = 0; i < triggers.size(); ++i)
+		for(std::size_t i = 0; i < triggers.size(); ++i, ++itemsProcessed)
 			triggers[i]->Write(stream);
 
 		stream->WriteTimestamp();
@@ -333,7 +361,7 @@ namespace Gmk
 		// Write constants
 		stream->WriteDword(800);
 		stream->WriteDword(constants.size());
-		for(std::size_t i = 0; i < constants.size(); ++i)
+		for(std::size_t i = 0; i < constants.size(); ++i, ++itemsProcessed)
 		{
 			stream->WriteString(constants[i].first);
 			stream->WriteString(constants[i].second);
@@ -344,76 +372,78 @@ namespace Gmk
 		// Write sounds
 		stream->WriteDword(800);
 		stream->WriteDword(sounds.size());
-		for(std::size_t i = 0; i < sounds.size(); ++i)
+		for(std::size_t i = 0; i < sounds.size(); ++i, ++itemsProcessed)
 			sounds[i]->Write(stream);
 
 		// Write sprites
 		stream->WriteDword(800);
 		stream->WriteDword(sprites.size());
-		for(std::size_t i = 0; i < sprites.size(); ++i)
+		for(std::size_t i = 0; i < sprites.size(); ++i, ++itemsProcessed)
 			sprites[i]->Write(stream);
 
 		// Write backgrounds
 		stream->WriteDword(800);
 		stream->WriteDword(backgrounds.size());
-		for(std::size_t i = 0; i < backgrounds.size(); ++i)
+		for(std::size_t i = 0; i < backgrounds.size(); ++i, ++itemsProcessed)
 			backgrounds[i]->Write(stream);
 
 		// Write paths
 		stream->WriteDword(800);
 		stream->WriteDword(paths.size());
-		for(std::size_t i = 0; i < paths.size(); ++i)
+		for(std::size_t i = 0; i < paths.size(); ++i, ++itemsProcessed)
 			paths[i]->Write(stream);
 
 		// Write scripts
 		stream->WriteDword(800);
 		stream->WriteDword(scripts.size());
-		for(std::size_t i = 0; i < scripts.size(); ++i)
+		for(std::size_t i = 0; i < scripts.size(); ++i, ++itemsProcessed)
 			scripts[i]->Write(stream);
 
 		// Write fonts
 		stream->WriteDword(800);
 		stream->WriteDword(fonts.size());
-		for(std::size_t i = 0; i < fonts.size(); ++i)
+		for(std::size_t i = 0; i < fonts.size(); ++i, ++itemsProcessed)
 			fonts[i]->Write(stream);
 
 		// Write timelines
 		stream->WriteDword(800);
 		stream->WriteDword(timelines.size());
-		for(std::size_t i = 0; i < timelines.size(); ++i)
+		for(std::size_t i = 0; i < timelines.size(); ++i, ++itemsProcessed)
 			timelines[i]->Write(stream);
 
 		// Write objects
 		stream->WriteDword(800);
 		stream->WriteDword(objects.size());
-		for(std::size_t i = 0; i < objects.size(); ++i)
+		for(std::size_t i = 0; i < objects.size(); ++i, ++itemsProcessed)
 			objects[i]->Write(stream);
 
 		// Write rooms
 		stream->WriteDword(800);
 		stream->WriteDword(rooms.size());
-		for(std::size_t i = 0; i < rooms.size(); ++i)
+		for(std::size_t i = 0; i < rooms.size(); ++i, ++itemsProcessed)
 			rooms[i]->Write(stream);
 
 		// Write last ids
 		stream->WriteDword(lastInstancePlacedId);
 		stream->WriteDword(lastTilePlacedId);
+		++itemsProcessed;
 
 		// Write include files
 		stream->WriteDword(800);
 		stream->WriteDword(includeFiles.size());
-		for(std::size_t i = 0; i < includeFiles.size(); ++i)
+		for(std::size_t i = 0; i < includeFiles.size(); ++i, ++itemsProcessed)
 			includeFiles[i]->Write(stream);
 		
 		// Write packages
 		stream->WriteDword(700);
 		stream->WriteDword(packages.size());
-		for(std::size_t i = 0; i < packages.size(); ++i)
+		for(std::size_t i = 0; i < packages.size(); ++i, ++itemsProcessed)
 			stream->WriteString(packages[i]);
 
 		// Write game information
 		stream->WriteDword(800);
 		gameInformation->Write(stream);
+		++itemsProcessed;
 
 		// Ignore library creation code (safe)
 		stream->WriteDword(500);
@@ -425,6 +455,7 @@ namespace Gmk
 
 		// Write resource tree
 		resourceTree->Write(stream);
+		++itemsProcessed;
 	}
 
 	void GmkFile::LoadVer81(Stream* stream)
@@ -435,7 +466,7 @@ namespace Gmk
 		gameId = stream->ReadDword();
 		for(unsigned int i = 0; i < GMK_GUID_LENGTH; ++i)
 			guid[i] = stream->ReadByte();
-
+		
 		// Load settings
 		stream->ReadDword();
 		settings = new Settings(this);
@@ -608,7 +639,6 @@ namespace Gmk
 		// Decrypt GMK
 		Gmkrypt gmkrypt(Gmkrypt::ReadSeedFromJunkyard(stream));
 		Stream* decryptedStream = gmkrypt.Decrypt(stream);
-		delete stream;
 
 		// New stream
 		stream = decryptedStream;
@@ -617,5 +647,12 @@ namespace Gmk
 		gameId = stream->ReadDword();
 		for(unsigned int i = 0; i < GMK_GUID_LENGTH; ++i)
 			guid[i] = stream->ReadByte();
+
+		// Load settings
+		stream->ReadDword();
+		settings = new Settings(this);
+		settings->Read(stream);
+
+		delete decryptedStream;
 	}
 }

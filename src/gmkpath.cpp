@@ -72,6 +72,7 @@ namespace Gmk
 
 		if (!pathStream->ReadBoolean())
 		{
+			delete pathStream;
 			exists = false;
 			return;
 		}
@@ -100,6 +101,16 @@ namespace Gmk
 
 		delete pathStream;
 		exists = true;
+	}
+
+	void Path::WriteVer7(Stream* stream)
+	{
+
+	}
+
+	void Path::ReadVer7(Stream* stream)
+	{
+
 	}
 
 	void Path::Finalize()

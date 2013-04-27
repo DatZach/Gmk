@@ -96,6 +96,11 @@ namespace Gmk
 
 	Settings::~Settings()
 	{
+		CleanMemory();
+	}
+
+	void Settings::CleanMemory()
+	{
 		if (frontImage != NULL)
 			delete frontImage;
 
@@ -183,6 +188,8 @@ namespace Gmk
 
 	void Settings::ReadVer81(Stream* stream)
 	{
+		CleanMemory();
+
 		Stream* settingsStream = stream->Deserialize();
 
 		fullscreen				= settingsStream->ReadBoolean();
@@ -249,5 +256,15 @@ namespace Gmk
 		settingsStream->ReadTimestamp();
 
 		delete settingsStream;
+	}
+
+	void Settings::WriteVer7(Stream* stream)
+	{
+
+	}
+
+	void Settings::ReadVer7(Stream* stream)
+	{
+
 	}
 }

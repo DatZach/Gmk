@@ -37,9 +37,10 @@ namespace Gmk
 		static const unsigned int GMK_MIN_TILE_LAST_ID		= 1000000;
 
 	private:
+		float itemsProcessed, itemsToProcess;
+
 		void CleanMemory();
 		void Finalize();
-		void Defragment(std::vector<GmkResource*>& vector);
 
 		void SaveVer81(Stream* stream);
 		void LoadVer81(Stream* stream);
@@ -82,6 +83,7 @@ namespace Gmk
 		void DefragmentResources();
 
  		bool IsLoaded() const;
+		float GetProgress() const;
 	};
 }
 

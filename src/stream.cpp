@@ -199,7 +199,8 @@ namespace Gmk
 	{
 		if (streamMode == SmMemory)
 		{
-			std::memcpy((void*)value.data(), buffer.data() + position, std::max(value.size(), value.size() - buffer.size()));
+			unsigned int size = std::max(static_cast<int>(value.size()), static_cast<int>(value.size() - buffer.size()));
+			std::memcpy((void*)value.data(), buffer.data() + position, size);
 			position += value.size();
 		}
 		else

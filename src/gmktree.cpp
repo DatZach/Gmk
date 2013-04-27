@@ -12,7 +12,7 @@ namespace Gmk
 		: GmkResource(gmk),
 		  contents()
 	{
-		static const std::string names[12] =
+		const std::string names[12] =
 		{
 			"Sprites",
 			"Sounds",
@@ -94,6 +94,16 @@ namespace Gmk
 
 			contents.push_back(node);
 		}
+	}
+
+	void Tree::WriteVer7(Stream* stream)
+	{
+
+	}
+
+	void Tree::ReadVer7(Stream* stream)
+	{
+
 	}
 
 	void Tree::ReadRecursiveTree(Stream* stream, Node* parent, unsigned int count)

@@ -46,6 +46,7 @@ namespace Gmk
 
 		if (!triggerStream->ReadBoolean())
 		{
+			delete triggerStream;
 			exists = false;
 			return;
 		}
@@ -58,5 +59,15 @@ namespace Gmk
 
 		delete triggerStream;
 		exists = true;
+	}
+
+	void Trigger::WriteVer7(Stream* stream)
+	{
+
+	}
+
+	void Trigger::ReadVer7(Stream* stream)
+	{
+
 	}
 }

@@ -75,6 +75,7 @@ namespace Gmk
 
 		if (!soundStream->ReadBoolean())
 		{
+			delete soundStream;
 			exists = false;
 			return;
 		}
@@ -94,5 +95,15 @@ namespace Gmk
 
 		delete soundStream;
 		exists = true;
+	}
+
+	void Sound::WriteVer7(Stream* stream)
+	{
+
+	}
+
+	void Sound::ReadVer7(Stream* stream)
+	{
+
 	}
 }

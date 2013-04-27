@@ -152,6 +152,16 @@ namespace Gmk
 		not						= stream->ReadBoolean();
 	}
 
+	void Action::WriteVer7(Stream* stream)
+	{
+
+	}
+
+	void Action::ReadVer7(Stream* stream)
+	{
+
+	}
+
 	void Action::Finalize()
 	{
 		appliesObject = (appliesToObject >= ApObject) ? static_cast<Object*>(GetResource(RtObject, appliesToObject)) : NULL;

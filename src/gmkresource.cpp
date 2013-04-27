@@ -59,6 +59,10 @@ namespace Gmk
 				WriteVer81(stream);
 				break;
 
+			case Ver7:
+				WriteVer7(stream);
+				break;
+
 			default:
 				throw new std::exception("No rule to Write resource");
 		}
@@ -70,6 +74,10 @@ namespace Gmk
 		{
 			case Ver81:
 				ReadVer81(stream);
+				break;
+
+			case Ver7:
+				ReadVer7(stream);
 				break;
 
 			default:

@@ -52,6 +52,7 @@ namespace Gmk
 
 		if (!scriptStream->ReadBoolean())
 		{
+			delete scriptStream;
 			exists = false;
 			return;
 		}
@@ -63,5 +64,15 @@ namespace Gmk
 
 		delete scriptStream;
 		exists = true;
+	}
+
+	void Script::WriteVer7(Stream* stream)
+	{
+
+	}
+
+	void Script::ReadVer7(Stream* stream)
+	{
+
 	}
 }

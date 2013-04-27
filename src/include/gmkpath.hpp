@@ -36,6 +36,9 @@ namespace Gmk
 		void WriteVer81(Stream* stream);
 		void ReadVer81(Stream* stream);
 
+		void WriteVer7(Stream* stream);
+		void ReadVer7(Stream* stream);
+
 	public:
 		unsigned int			connectionKind;
 		bool					closed;

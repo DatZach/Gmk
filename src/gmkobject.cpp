@@ -88,6 +88,7 @@ namespace Gmk
 
 		if (!objectStream->ReadBoolean())
 		{
+			delete objectStream;
 			exists = false;
 			return;
 		}
@@ -108,12 +109,11 @@ namespace Gmk
 		{
 			for(;;)
 			{
-				Event* event = new Event();
-
 				int first = objectStream->ReadDword();
 				if (first == -1)
 					break;
 
+				Event* event = new Event();
 				event->eventNumber = i;
 				event->eventKind = first;
 
@@ -134,6 +134,16 @@ namespace Gmk
 
 		delete objectStream;
 		exists = true;
+	}
+
+	void Object::WriteVer7(Stream* stream)
+	{
+
+	}
+
+	void Object::ReadVer7(Stream* stream)
+	{
+
 	}
 
 	void Object::Finalize()

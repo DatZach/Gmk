@@ -74,4 +74,14 @@ namespace Gmk
 
 		delete gameInfoStream;
 	}
+
+	void GameInformation::WriteVer7(Stream* stream)
+	{
+
+	}
+
+	void GameInformation::ReadVer7(Stream* stream)
+	{
+
+	}
 }

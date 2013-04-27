@@ -82,4 +82,14 @@ namespace Gmk
 
 		delete includeFileStream;
 	}
+
+	void IncludeFile::WriteVer7(Stream* stream)
+	{
+
+	}
+
+	void IncludeFile::ReadVer7(Stream* stream)
+	{
+
+	}
 }

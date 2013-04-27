@@ -61,9 +61,14 @@ namespace Gmk
 			LpbtCustom
 		};
 
+		void CleanMemory();
+
 	protected:
 		void WriteVer81(Stream* stream);
 		void ReadVer81(Stream* stream);
+
+		void WriteVer7(Stream* stream);
+		void ReadVer7(Stream* stream);
 
 	public:
 		bool			fullscreen;

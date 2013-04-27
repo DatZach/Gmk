@@ -70,6 +70,7 @@ namespace Gmk
 
 		if (!fontStream->ReadBoolean())
 		{
+			delete fontStream;
 			exists = false;
 			return;
 		}
@@ -91,5 +92,15 @@ namespace Gmk
 
 		delete fontStream;
 		exists = true;
+	}
+
+	void Font::WriteVer7(Stream* stream)
+	{
+
+	}
+
+	void Font::ReadVer7(Stream* stream)
+	{
+
 	}
 }

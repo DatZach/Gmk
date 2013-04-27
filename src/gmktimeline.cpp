@@ -66,6 +66,7 @@ namespace Gmk
 
 		if (!timelineStream->ReadBoolean())
 		{
+			delete timelineStream;
 			exists = false;
 			return;
 		}
@@ -95,6 +96,16 @@ namespace Gmk
 
 		delete timelineStream;
 		exists = true;
+	}
+
+	void Timeline::WriteVer7(Stream* stream)
+	{
+
+	}
+
+	void Timeline::ReadVer7(Stream* stream)
+	{
+
 	}
 
 	void Timeline::Finalize()

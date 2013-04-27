@@ -74,6 +74,7 @@ namespace Gmk
 
 		if (!backgroundStream->ReadBoolean())
 		{
+			delete backgroundStream;
 			exists = false;
 			return;
 		}
@@ -97,5 +98,15 @@ namespace Gmk
 
 		delete backgroundStream;
 		exists = true;
+	}
+
+	void Background::WriteVer7(Stream* stream)
+	{
+
+	}
+
+	void Background::ReadVer7(Stream* stream)
+	{
+
 	}
 }

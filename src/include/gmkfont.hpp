@@ -21,6 +21,8 @@ namespace Gmk
 			Aa3
 		};
 
+		// TODO Sort of a hack
+#ifndef ANSI_CHARSET
 		enum CharacterSet
 		{
 			ANSI_CHARSET		= 0x00,
@@ -43,10 +45,14 @@ namespace Gmk
 			BALTIC_CHARSET		= 0xBA,
 			OEM_CHARSET			= 0xFF
 		};
+#endif
 
 	protected:
 		void WriteVer81(Stream* stream);
 		void ReadVer81(Stream* stream);
+
+		void WriteVer7(Stream* stream);
+		void ReadVer7(Stream* stream);
 
 	public:
 		std::string			fontName;

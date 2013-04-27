@@ -90,6 +90,7 @@ namespace Gmk
 
 		if (!spriteStream->ReadBoolean())
 		{
+			delete spriteStream;
 			exists = false;
 			return;
 		}
@@ -131,5 +132,15 @@ namespace Gmk
 
 		delete spriteStream;
 		exists = true;
+	}
+
+	void Sprite::WriteVer7(Stream* stream)
+	{
+
+	}
+
+	void Sprite::ReadVer7(Stream* stream)
+	{
+
 	}
 }
