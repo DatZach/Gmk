@@ -8,7 +8,7 @@
 
 namespace Gmk
 {
-	Timeline::Timeline(Gmk* gmk)
+	Timeline::Timeline(GmkFile* gmk)
 		: GmkResource(gmk),
 		  moments()
 	{

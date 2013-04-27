@@ -28,7 +28,7 @@ namespace Gmk
 		unsigned int			height;
 		Stream*					data;
 
-		Background(Gmk* gmk);
+		Background(GmkFile* gmk);
 		~Background();
 
 		int GetId() const;

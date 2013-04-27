@@ -7,7 +7,7 @@
 
 namespace Gmk
 {
-	Settings::Settings(Gmk* gmk)
+	Settings::Settings(GmkFile* gmk)
 		: GmkResource(gmk),
 		  fullscreen(false),
 		  interpolatePixels(false),

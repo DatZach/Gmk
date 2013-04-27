@@ -8,7 +8,7 @@
 
 namespace Gmk
 {
-	Sound::Sound(Gmk* gmk)
+	Sound::Sound(GmkFile* gmk)
 		: GmkResource(gmk),
 		  kind(KindNormal),
 		  extension(""),

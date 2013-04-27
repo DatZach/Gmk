@@ -8,7 +8,7 @@
 
 namespace Gmk
 {
-	Sprite::Sprite(Gmk* gmk)
+	Sprite::Sprite(GmkFile* gmk)
 		: GmkResource(gmk),
 		  width(0),
 		  height(0),

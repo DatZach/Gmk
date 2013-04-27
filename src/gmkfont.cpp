@@ -8,7 +8,7 @@
 
 namespace Gmk
 {
-	Font::Font(Gmk* gmk)
+	Font::Font(GmkFile* gmk)
 		: GmkResource(gmk),
 		  fontName(""),
 		  size(12),

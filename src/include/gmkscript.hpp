@@ -19,7 +19,7 @@ namespace Gmk
 	public:
 		std::string			value;
 
-		Script(Gmk* gmk);
+		Script(GmkFile* gmk);
 		~Script();
 
 		int GetId() const;

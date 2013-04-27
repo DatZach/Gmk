@@ -205,7 +205,7 @@ namespace Gmk
 		Sprite* mask;
 		Object* parent;
 
-		Object(Gmk* gmk);
+		Object(GmkFile* gmk);
 		~Object();
 
 		int GetId() const;

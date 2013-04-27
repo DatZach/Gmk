@@ -8,7 +8,7 @@
 
 namespace Gmk
 {
-	Script::Script(Gmk* gmk)
+	Script::Script(GmkFile* gmk)
 		: GmkResource(gmk),
 		  value("")
 	{

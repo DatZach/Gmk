@@ -7,7 +7,7 @@
 
 namespace Gmk
 {
-	GameInformation::GameInformation(Gmk* gmk)
+	GameInformation::GameInformation(GmkFile* gmk)
 		: GmkResource(gmk),
 		  backgroundColor(BuildColor(255, 255, 225)),
 		  showInSeperateWindow(true),

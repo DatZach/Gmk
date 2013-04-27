@@ -8,7 +8,7 @@
 
 namespace Gmk
 {
-	Background::Background(Gmk* gmk)
+	Background::Background(GmkFile* gmk)
 		: GmkResource(gmk),
 		  useAsTileset(false),
 		  tileWidth(16),

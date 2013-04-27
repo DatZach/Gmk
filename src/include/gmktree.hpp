@@ -75,7 +75,7 @@ namespace Gmk
 	public:
 		std::vector<Node*>			contents;
 
-		Tree(Gmk* gmk);
+		Tree(GmkFile* gmk);
 		~Tree();
 
 		void Finalize();

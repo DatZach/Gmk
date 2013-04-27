@@ -7,7 +7,7 @@
 
 namespace Gmk
 {
-	Trigger::Trigger(Gmk* gmk)
+	Trigger::Trigger(GmkFile* gmk)
 		: GmkResource(gmk),
 		  condition(""),
 		  momentOfChecking(MomentBegin),

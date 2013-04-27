@@ -9,7 +9,7 @@
 
 namespace Gmk
 {
-	Action::Action(Gmk* gmk)
+	Action::Action(GmkFile* gmk)
 		: GmkResource(gmk),
 		  functionName(""),
 		  functionCode(""),

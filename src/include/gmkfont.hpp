@@ -58,7 +58,7 @@ namespace Gmk
 		unsigned int		characterSet;
 		unsigned int		antiAliasing;
 
-		Font(Gmk* gmk);
+		Font(GmkFile* gmk);
 		~Font();
 
 		int GetId() const;

@@ -10,7 +10,7 @@
 
 namespace Gmk
 {
-	Gmk::Gmk()
+	GmkFile::GmkFile()
 		: version(VerUnknown),
 		  gameId(0),
 		  settings(NULL),
@@ -39,12 +39,12 @@ namespace Gmk
 		gameId = std::rand() % GMK_MAX_ID;
 	}
 
-	Gmk::~Gmk()
+	GmkFile::~GmkFile()
 	{
 		CleanMemory();
 	}
 
-	bool Gmk::Save(const std::string& filename)
+	bool GmkFile::Save(const std::string& filename)
 	{
 		try
 		{
@@ -64,7 +64,7 @@ namespace Gmk
 		return true;
 	}
 
-	bool Gmk::Load(const std::string& filename)
+	bool GmkFile::Load(const std::string& filename)
 	{
 		CleanMemory();
 
@@ -86,7 +86,7 @@ namespace Gmk
 		return true;
 	}
 
-	inline void Gmk::Defragment(std::vector<GmkResource*>& vector)
+	inline void GmkFile::Defragment(std::vector<GmkResource*>& vector)
 	{
 		std::vector<GmkResource*>::iterator itr = vector.begin();
 		while(itr != vector.end())
@@ -102,7 +102,7 @@ namespace Gmk
 		}
 	}
 
-	void Gmk::DefragmentResources()
+	void GmkFile::DefragmentResources()
 	{
 		// Step 1: Delete non-existant resources
 		Defragment(reinterpret_cast<std::vector<GmkResource*>&>(sprites));
@@ -131,7 +131,7 @@ namespace Gmk
 		}
 	}
 
-	void Gmk::Finalize()
+	void GmkFile::Finalize()
 	{
 		// Finalize paths
 		for(std::size_t i = 0; i < paths.size(); ++i)
@@ -153,12 +153,12 @@ namespace Gmk
 		resourceTree->Finalize();
 	}
 
-	bool Gmk::IsLoaded() const
+	bool GmkFile::IsLoaded() const
 	{
 		return version != VerUnknown;
 	}
 
-	void Gmk::SaveGmk(Stream* stream)
+	void GmkFile::SaveGmk(Stream* stream)
 	{
 		const unsigned int Versions[6] = { 0, 530, 600, 701, 800, 810 };
 		
@@ -186,7 +186,7 @@ namespace Gmk
 		}
 	}
 
-	void Gmk::LoadGmk(Stream* stream)
+	void GmkFile::LoadGmk(Stream* stream)
 	{
 		// Read header
 		if (stream->ReadDword() != GMK_MAGIC)
@@ -232,7 +232,7 @@ namespace Gmk
 		Finalize();
 	}
 
-	void Gmk::SaveVer81(Stream* stream)
+	void GmkFile::SaveVer81(Stream* stream)
 	{
 		// Write settings
 		stream->WriteDword(800);
@@ -334,25 +334,11 @@ namespace Gmk
 		stream->WriteDword(800);
 		gameInformation->Write(stream);
 
-		// Write library creation code -- we should be able to safely ignore this
+		// Ignore library creation code (safe)
 		stream->WriteDword(500);
 		stream->WriteDword(0);
 
-		// Write room execution order
-		/*Tree::Node* roomNode = resourceTree->GetBranch(Tree::Node::GroupRooms);
-		if (roomNode == NULL)
-			throw new std::exception("Rooms not defined");
-
-		stream->WriteDword(700);
-		stream->WriteDword(roomNode->contents.size());
-		for(std::size_t i = 0; i < roomNode->contents.size(); ++i)
-		{
-			// BUG Doesn't decend into the tree, I think GM ignores this anyway so it doesn't matter
-			if (roomNode->contents[i]->resource != NULL)
-				stream->WriteDword(roomNode->contents[i]->resource->GetId());
-		}*/
-
-		// Fuck it
+		// Ignore room execution order (safe)
 		stream->WriteDword(700);
 		stream->WriteDword(0);
 
@@ -360,7 +346,7 @@ namespace Gmk
 		resourceTree->Write(stream);
 	}
 
-	void Gmk::LoadVer81(Stream* stream)
+	void GmkFile::LoadVer81(Stream* stream)
 	{
 		unsigned int count = 0;
 
@@ -515,7 +501,7 @@ namespace Gmk
 		while(count--)
 			stream->ReadString();
 
-		// Read room execution order
+		// Read room execution order -- this too
 		stream->ReadDword();
 		count = stream->ReadDword();
 		while(count--)
@@ -526,7 +512,7 @@ namespace Gmk
 		resourceTree->Read(stream);
 	}
 
-	void Gmk::CleanMemory()
+	void GmkFile::CleanMemory()
 	{
 		if (settings != NULL)
 		{
@@ -537,35 +523,58 @@ namespace Gmk
 		for(std::size_t i = 0; i < triggers.size(); ++i)
 			delete triggers[i];
 
+		triggers.clear();
+		constants.clear();
+
 		for(std::size_t i = 0; i < sounds.size(); ++i)
 			delete sounds[i];
+
+		sounds.clear();
 
 		for(std::size_t i = 0; i < sprites.size(); ++i)
 			delete sprites[i];
 
+		sprites.clear();
+
 		for(std::size_t i = 0; i < backgrounds.size(); ++i)
 			delete backgrounds[i];
+
+		backgrounds.clear();
 
 		for(std::size_t i = 0; i < paths.size(); ++i)
 			delete paths[i];
 
+		paths.clear();
+
 		for(std::size_t i = 0; i < scripts.size(); ++i)
 			delete scripts[i];
+
+		scripts.clear();
 
 		for(std::size_t i = 0; i < fonts.size(); ++i)
 			delete fonts[i];
 
+		fonts.clear();
+
 		for(std::size_t i = 0; i < timelines.size(); ++i)
 			delete timelines[i];
+
+		timelines.clear();
 
 		for(std::size_t i = 0; i < objects.size(); ++i)
 			delete objects[i];
 
+		objects.clear();
+
 		for(std::size_t i = 0; i < rooms.size(); ++i)
 			delete rooms[i];
 
+		rooms.clear();
+
 		for(std::size_t i = 0; i < includeFiles.size(); ++i)
 			delete includeFiles[i];
+
+		includeFiles.clear();
 
 		if (gameInformation != NULL)
 		{

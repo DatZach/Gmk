@@ -53,7 +53,7 @@ namespace Gmk
 		bool					seperateMasks;
 		unsigned int			boundingBox;
 
-		Sprite(Gmk* gmk);
+		Sprite(GmkFile* gmk);
 		~Sprite();
 
 		int GetId() const;

@@ -87,7 +87,7 @@ namespace Gmk
 		bool					mayBeRelative;									// "Relative" visible?
 		bool					not;											// Not flag
 
-		Action(Gmk* gmk);
+		Action(GmkFile* gmk);
 		~Action();
 
 		void Finalize();

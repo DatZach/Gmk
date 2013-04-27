@@ -8,7 +8,7 @@
 
 namespace Gmk
 {
-	Object::Object(Gmk* gmk)
+	Object::Object(GmkFile* gmk)
 		: GmkResource(gmk),
 		  spriteIndex(SpriteIndexNone),
 		  solid(false),

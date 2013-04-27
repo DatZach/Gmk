@@ -114,7 +114,7 @@ namespace Gmk
 		std::string		copyright;
 		std::string		description;
 
-		Settings(Gmk* gmk);
+		Settings(GmkFile* gmk);
 		~Settings();
 	};
 }

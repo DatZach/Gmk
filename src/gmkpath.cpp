@@ -8,7 +8,7 @@
 
 namespace Gmk
 {
-	Path::Path(Gmk* gmk)
+	Path::Path(GmkFile* gmk)
 		: GmkResource(gmk),
 		  connectionKind(KindStraight),
 		  closed(true),

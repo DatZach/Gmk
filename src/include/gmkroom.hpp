@@ -36,7 +36,7 @@ namespace Gmk
 			int					speedVertical;
 			bool				stretch;
 
-			Background(Gmk* gmk);
+			Background(GmkFile* gmk);
 			~Background();
 
 			void Finalize();
@@ -67,7 +67,7 @@ namespace Gmk
 			int					verticalSpeed;
 			Object*				objectFollowing;
 
-			View(Gmk* gmk);
+			View(GmkFile* gmk);
 			~View();
 
 			void Finalize();
@@ -90,7 +90,7 @@ namespace Gmk
 			std::string			creationCode;
 			bool				locked;
 
-			Instance(Gmk* gmk);
+			Instance(GmkFile* gmk);
 			~Instance();
 
 			void Finalize();
@@ -117,7 +117,7 @@ namespace Gmk
 			unsigned int		id;
 			bool				locked;
 
-			Tile(Gmk* gmk);
+			Tile(GmkFile* gmk);
 			~Tile();
 
 			void Finalize();
@@ -160,7 +160,7 @@ namespace Gmk
 		unsigned int				scrollbarX;
 		unsigned int				scrollbarY;
 		
-		Room(Gmk* gmk);
+		Room(GmkFile* gmk);
 		~Room();
 
 		int GetId() const;

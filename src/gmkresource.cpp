@@ -8,7 +8,7 @@
 
 namespace Gmk
 {
-	GmkResource::GmkResource(Gmk* gmk)
+	GmkResource::GmkResource(GmkFile* gmk)
 		: gmkHandle(gmk),
 		  exists(true),
 		  name("")

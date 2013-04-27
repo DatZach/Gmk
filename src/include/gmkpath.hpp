@@ -45,7 +45,7 @@ namespace Gmk
 		unsigned int			snapY;
 		std::vector<Point>		points;
 
-		Path(Gmk* gmk);
+		Path(GmkFile* gmk);
 		~Path();
 
 		int GetId() const;

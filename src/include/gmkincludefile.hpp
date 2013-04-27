@@ -37,7 +37,7 @@ namespace Gmk
 		bool					freeMemory;
 		bool					removeAtEndOfGame;
 
-		IncludeFile(Gmk* gmk);
+		IncludeFile(GmkFile* gmk);
 		~IncludeFile();
 	};
 }

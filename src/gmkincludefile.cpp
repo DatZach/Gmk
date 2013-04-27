@@ -7,7 +7,7 @@
 
 namespace Gmk
 {
-	IncludeFile::IncludeFile(Gmk* gmk)
+	IncludeFile::IncludeFile(GmkFile* gmk)
 		: GmkResource(gmk),
 		  filename(""),
 		  filepath(""),

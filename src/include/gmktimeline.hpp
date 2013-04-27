@@ -27,7 +27,7 @@ namespace Gmk
 	public:
 		std::vector<Moment>		moments;
 
-		Timeline(Gmk* gmk);
+		Timeline(GmkFile* gmk);
 		~Timeline();
 
 		int GetId() const;

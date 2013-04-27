@@ -45,7 +45,7 @@ namespace Gmk
 		double					pan;
 		bool					preload;
 
-		Sound(Gmk* gmk);
+		Sound(GmkFile* gmk);
 		~Sound();
 
 		int GetId() const;

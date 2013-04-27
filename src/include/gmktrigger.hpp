@@ -29,7 +29,7 @@ namespace Gmk
 		unsigned int		momentOfChecking;
 		std::string			constantName;
 
-		Trigger(Gmk* gmk);
+		Trigger(GmkFile* gmk);
 		~Trigger();
 	};
 }

@@ -30,7 +30,7 @@ namespace Gmk
 		bool					freeze;
 		std::string				information;
 
-		GameInformation(Gmk* gmk);
+		GameInformation(GmkFile* gmk);
 		~GameInformation();
 	};
 }

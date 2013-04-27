@@ -15,7 +15,7 @@
 
 namespace Gmk
 {
-	class Gmk;
+	class GmkFile;
 
 	class GmkResource
 	{
@@ -38,7 +38,7 @@ namespace Gmk
 		GmkResource* GetResource(unsigned int type, unsigned int index) const;
 
 	protected:
-		Gmk* gmkHandle;
+		GmkFile* gmkHandle;
 		bool exists;
 
 		virtual void WriteVer81(Stream* stream) = 0;
@@ -47,7 +47,7 @@ namespace Gmk
 	public:
 		std::string name;
 
-		GmkResource(Gmk* gmk);
+		GmkResource(GmkFile* gmk);
 
 		void Write(Stream* stream);
 		void Read(Stream* stream);

@@ -8,7 +8,7 @@
 
 namespace Gmk
 {
-	Tree::Tree(Gmk* gmk)
+	Tree::Tree(GmkFile* gmk)
 		: GmkResource(gmk),
 		  contents()
 	{

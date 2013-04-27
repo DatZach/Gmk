@@ -8,7 +8,7 @@
 
 namespace Gmk
 {
-	Room::Room(Gmk* gmk)
+	Room::Room(GmkFile* gmk)
 		: GmkResource(gmk),
 		  caption(""),
 		  width(640),
@@ -226,7 +226,7 @@ namespace Gmk
 			tiles[i]->Finalize();
 	}
 
-	Room::Background::Background(Gmk* gmk)
+	Room::Background::Background(GmkFile* gmk)
 		: GmkResource(gmk),
 		  visible(false),
 		  foreground(false),
@@ -281,7 +281,7 @@ namespace Gmk
 		image = (imageIndex != -1) ? gmkHandle->backgrounds[imageIndex] : NULL;
 	}
 
-	Room::View::View(Gmk* gmk)
+	Room::View::View(GmkFile* gmk)
 		: GmkResource(gmk),
 		  visible(false),
 		  viewX(0),
@@ -348,7 +348,7 @@ namespace Gmk
 		objectFollowing = (objectFollowingIndex != -1) ? gmkHandle->objects[objectFollowingIndex] : NULL;
 	}
 
-	Room::Instance::Instance(Gmk* gmk)
+	Room::Instance::Instance(GmkFile* gmk)
 		: GmkResource(gmk),
 		  x(0),
 		  y(0),
@@ -391,7 +391,7 @@ namespace Gmk
 		object = (objectIndex != -1) ? gmkHandle->objects[objectIndex] : NULL;
 	}
 
-	Room::Tile::Tile(Gmk* gmk)
+	Room::Tile::Tile(GmkFile* gmk)
 		: GmkResource(gmk),
 		  x(0),
 		  y(0),

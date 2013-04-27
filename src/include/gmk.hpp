@@ -1,6 +1,6 @@
 /*
  *	gmk.hpp
- *	Game Maker K?
+ *	Game Maker Kompressed and enKrypted format to piss of Klam
  */
 
 #ifndef __GMK_GMK_HPP
@@ -27,7 +27,7 @@
 
 namespace Gmk
 {
-	class Gmk
+	class GmkFile
 	{
 	public:
 		static const unsigned int GMK_MAGIC					= 1234321;
@@ -71,8 +71,8 @@ namespace Gmk
 		GameInformation*					gameInformation;
 		Tree*								resourceTree;
 
-		Gmk();
-		~Gmk();
+		GmkFile();
+		~GmkFile();
 
 		bool Save(const std::string& filename);
 		bool Load(const std::string& filename);
