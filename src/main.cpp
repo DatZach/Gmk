@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
 	Gmk::GmkFile* gmk = new Gmk::GmkFile();
 
 	std::cout << "Loading... ";
-	gmk->Load("test.gm81");
+	gmk->Load("gm7.gmk");
 	std::cout << "Done!" << std::endl;
 
 	std::cout << "Defragmenting... ";

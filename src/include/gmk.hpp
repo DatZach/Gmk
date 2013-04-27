@@ -44,6 +44,9 @@ namespace Gmk
 		void SaveVer81(Stream* stream);
 		void LoadVer81(Stream* stream);
 
+		void SaveVer7(Stream* stream);
+		void LoadVer7(Stream* stream);
+
 		void SaveGmk(Stream* stream);
 		void LoadGmk(Stream* stream);
 

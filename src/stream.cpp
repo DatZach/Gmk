@@ -131,11 +131,11 @@ namespace Gmk
 				break;
 
 			case SmRead:
-				fileStream.seekg(std::fstream::beg, value);
+				fileStream.seekg(value, std::fstream::beg);
 				break;
 
 			case SmWrite:
-				fileStream.seekp(std::fstream::beg, value);
+				fileStream.seekp(value, std::fstream::beg);
 				break;
 		}
 	}
@@ -167,14 +167,14 @@ namespace Gmk
 		if (streamMode == SmRead)
 		{
 			std::fstream::pos_type position = fileStream.tellg();
-			fileStream.seekg(std::fstream::end);
+			fileStream.seekg(0, std::fstream::end);
 			length = fileStream.tellg();
 			fileStream.seekg(position, std::fstream::beg);
 		}
 		else
 		{
 			std::fstream::pos_type position = fileStream.tellp();
-			fileStream.seekp(std::fstream::end);
+			fileStream.seekp(0, std::fstream::end);
 			length = fileStream.tellp();
 			fileStream.seekp(position, std::fstream::beg);
 		}
@@ -199,7 +199,7 @@ namespace Gmk
 	{
 		if (streamMode == SmMemory)
 		{
-			std::memcpy((void*)value.data(), buffer.data() + position, value.size());
+			std::memcpy((void*)value.data(), buffer.data() + position, std::max(value.size(), value.size() - buffer.size()));
 			position += value.size();
 		}
 		else

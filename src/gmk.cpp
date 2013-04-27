@@ -7,6 +7,7 @@
 #include <ctime>
 #include <stream.hpp>
 #include <gmk.hpp>
+#include <gmkrypt.hpp>
 
 namespace Gmk
 {
@@ -42,6 +43,106 @@ namespace Gmk
 	GmkFile::~GmkFile()
 	{
 		CleanMemory();
+	}
+
+	void GmkFile::CleanMemory()
+	{
+		if (settings != NULL)
+		{
+			delete settings;
+			settings = NULL;
+		}
+
+		for(std::size_t i = 0; i < triggers.size(); ++i)
+			delete triggers[i];
+
+		triggers.clear();
+		constants.clear();
+
+		for(std::size_t i = 0; i < sounds.size(); ++i)
+			delete sounds[i];
+
+		sounds.clear();
+
+		for(std::size_t i = 0; i < sprites.size(); ++i)
+			delete sprites[i];
+
+		sprites.clear();
+
+		for(std::size_t i = 0; i < backgrounds.size(); ++i)
+			delete backgrounds[i];
+
+		backgrounds.clear();
+
+		for(std::size_t i = 0; i < paths.size(); ++i)
+			delete paths[i];
+
+		paths.clear();
+
+		for(std::size_t i = 0; i < scripts.size(); ++i)
+			delete scripts[i];
+
+		scripts.clear();
+
+		for(std::size_t i = 0; i < fonts.size(); ++i)
+			delete fonts[i];
+
+		fonts.clear();
+
+		for(std::size_t i = 0; i < timelines.size(); ++i)
+			delete timelines[i];
+
+		timelines.clear();
+
+		for(std::size_t i = 0; i < objects.size(); ++i)
+			delete objects[i];
+
+		objects.clear();
+
+		for(std::size_t i = 0; i < rooms.size(); ++i)
+			delete rooms[i];
+
+		rooms.clear();
+
+		for(std::size_t i = 0; i < includeFiles.size(); ++i)
+			delete includeFiles[i];
+
+		includeFiles.clear();
+
+		if (gameInformation != NULL)
+		{
+			delete gameInformation;
+			gameInformation = NULL;
+		}
+
+		if (resourceTree != NULL)
+		{
+			delete resourceTree;
+			resourceTree = NULL;
+		}
+	}
+
+	void GmkFile::Finalize()
+	{
+		// Finalize paths
+		for(std::size_t i = 0; i < paths.size(); ++i)
+			paths[i]->Finalize();
+
+		// Finalize timelines
+		for(std::size_t i = 0; i < timelines.size(); ++i)
+			timelines[i]->Finalize();
+
+		// Finalize objects
+		for(std::size_t i = 0; i < objects.size(); ++i)
+			objects[i]->Finalize();
+
+		// Finalize rooms
+		for(std::size_t i = 0; i < rooms.size(); ++i)
+			rooms[i]->Finalize();
+
+		// Finalize resource tree
+		if (resourceTree != NULL)
+			resourceTree->Finalize();
 	}
 
 	bool GmkFile::Save(const std::string& filename)
@@ -131,28 +232,6 @@ namespace Gmk
 		}
 	}
 
-	void GmkFile::Finalize()
-	{
-		// Finalize paths
-		for(std::size_t i = 0; i < paths.size(); ++i)
-			paths[i]->Finalize();
-
-		// Finalize timelines
-		for(std::size_t i = 0; i < timelines.size(); ++i)
-			timelines[i]->Finalize();
-
-		// Finalize objects
-		for(std::size_t i = 0; i < objects.size(); ++i)
-			objects[i]->Finalize();
-
-		// Finalize rooms
-		for(std::size_t i = 0; i < rooms.size(); ++i)
-			rooms[i]->Finalize();
-
-		// Finalize resource tree
-		resourceTree->Finalize();
-	}
-
 	bool GmkFile::IsLoaded() const
 	{
 		return version != VerUnknown;
@@ -165,15 +244,6 @@ namespace Gmk
 		// Write header
 		stream->WriteDword(GMK_MAGIC);
 		stream->WriteDword(Versions[static_cast<int>(version)]);
-		stream->WriteDword(gameId);
-		for(unsigned int i = 0; i < GMK_GUID_LENGTH; ++i)
-		{
-			unsigned char guidByte = gameId >> i / 4;
-			guidByte %= ((i >> 6) + guidByte & 0x7F) + 0xFF;
-			guidByte ^= (i * guidByte >> 3) & 0xAB;
-
-			stream->WriteByte(guidByte);
-		}
 		
 		switch(version)
 		{
@@ -218,14 +288,14 @@ namespace Gmk
 				throw new std::exception("Unknown or unsupported version!");
 		}
 
-		gameId = stream->ReadDword();
-		for(unsigned int i = 0; i < GMK_GUID_LENGTH; ++i)
-			guid[i] = stream->ReadByte();
-
 		switch(version)
 		{
 			case Ver81:
 				LoadVer81(stream);
+				break;
+
+			case Ver7:
+				LoadVer7(stream);
 				break;
 		}
 
@@ -234,6 +304,17 @@ namespace Gmk
 
 	void GmkFile::SaveVer81(Stream* stream)
 	{
+		// Write header
+		stream->WriteDword(gameId);
+		for(unsigned int i = 0; i < GMK_GUID_LENGTH; ++i)
+		{
+			unsigned char guidByte = gameId >> i / 4;
+			guidByte %= ((i >> 6) + guidByte & 0x7F) + 0xFF;
+			guidByte ^= (i * guidByte >> 3) & 0xAB;
+
+			stream->WriteByte(guidByte);
+		}
+
 		// Write settings
 		stream->WriteDword(800);
 		if (settings == NULL)
@@ -349,6 +430,11 @@ namespace Gmk
 	void GmkFile::LoadVer81(Stream* stream)
 	{
 		unsigned int count = 0;
+
+		// Read header
+		gameId = stream->ReadDword();
+		for(unsigned int i = 0; i < GMK_GUID_LENGTH; ++i)
+			guid[i] = stream->ReadByte();
 
 		// Load settings
 		stream->ReadDword();
@@ -512,80 +598,24 @@ namespace Gmk
 		resourceTree->Read(stream);
 	}
 
-	void GmkFile::CleanMemory()
+	void GmkFile::SaveVer7(Stream* stream)
 	{
-		if (settings != NULL)
-		{
-			delete settings;
-			settings = NULL;
-		}
 
-		for(std::size_t i = 0; i < triggers.size(); ++i)
-			delete triggers[i];
+	}
 
-		triggers.clear();
-		constants.clear();
+	void GmkFile::LoadVer7(Stream* stream)
+	{
+		// Decrypt GMK
+		Gmkrypt gmkrypt(Gmkrypt::ReadSeedFromJunkyard(stream));
+		Stream* decryptedStream = gmkrypt.Decrypt(stream);
+		delete stream;
 
-		for(std::size_t i = 0; i < sounds.size(); ++i)
-			delete sounds[i];
+		// New stream
+		stream = decryptedStream;
 
-		sounds.clear();
-
-		for(std::size_t i = 0; i < sprites.size(); ++i)
-			delete sprites[i];
-
-		sprites.clear();
-
-		for(std::size_t i = 0; i < backgrounds.size(); ++i)
-			delete backgrounds[i];
-
-		backgrounds.clear();
-
-		for(std::size_t i = 0; i < paths.size(); ++i)
-			delete paths[i];
-
-		paths.clear();
-
-		for(std::size_t i = 0; i < scripts.size(); ++i)
-			delete scripts[i];
-
-		scripts.clear();
-
-		for(std::size_t i = 0; i < fonts.size(); ++i)
-			delete fonts[i];
-
-		fonts.clear();
-
-		for(std::size_t i = 0; i < timelines.size(); ++i)
-			delete timelines[i];
-
-		timelines.clear();
-
-		for(std::size_t i = 0; i < objects.size(); ++i)
-			delete objects[i];
-
-		objects.clear();
-
-		for(std::size_t i = 0; i < rooms.size(); ++i)
-			delete rooms[i];
-
-		rooms.clear();
-
-		for(std::size_t i = 0; i < includeFiles.size(); ++i)
-			delete includeFiles[i];
-
-		includeFiles.clear();
-
-		if (gameInformation != NULL)
-		{
-			delete gameInformation;
-			gameInformation = NULL;
-		}
-
-		if (resourceTree != NULL)
-		{
-			delete resourceTree;
-			resourceTree = NULL;
-		}
+		// Read header
+		gameId = stream->ReadDword();
+		for(unsigned int i = 0; i < GMK_GUID_LENGTH; ++i)
+			guid[i] = stream->ReadByte();
 	}
 }

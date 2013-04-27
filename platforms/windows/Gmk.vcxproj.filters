@@ -52,6 +52,7 @@
     <ClCompile Include="..\..\src\gmktree.cpp">
       <Filter>resources</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\gmkrypt.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
@@ -120,6 +121,9 @@
       <Filter>include\resources</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\include\gmkcommon.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\include\gmkrypt.hpp">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
