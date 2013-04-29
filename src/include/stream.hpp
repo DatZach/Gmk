@@ -38,7 +38,8 @@ namespace Gmk
 	{
 	public:
 		typedef std::vector<unsigned char> StreamBuffer;
-		typedef enum _StreamMode {
+		typedef enum _StreamMode
+		{
 			SmRead,
 			SmWrite,
 			SmMemory

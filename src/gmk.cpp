@@ -191,7 +191,8 @@ namespace Gmk
 	bool GmkFile::Load(const std::string& filename)
 	{
 		Stream* stream = NULL;
-		itemsProcessed = itemsToProcess = 0.0f;
+		itemsProcessed = 0.0f;
+		itemsToProcess = 20.0f;
 
 		CleanMemory();
 
@@ -477,11 +478,15 @@ namespace Gmk
 		gameId = stream->ReadDword();
 		for(unsigned int i = 0; i < GMK_GUID_LENGTH; ++i)
 			guid[i] = stream->ReadByte();
+
+		++itemsProcessed;
 		
 		// Load settings
 		stream->ReadDword();
 		settings = new Settings(this);
 		settings->Read(stream);
+
+		++itemsProcessed;
 
 		// Load triggers
 		stream->ReadDword();
@@ -494,6 +499,8 @@ namespace Gmk
 		}
 
 		stream->ReadTimestamp();
+
+		++itemsProcessed;
 
 		// Load constants
 		stream->ReadDword();
@@ -508,6 +515,8 @@ namespace Gmk
 
 		stream->ReadTimestamp();
 
+		++itemsProcessed;
+
 		// Load sounds
 		stream->ReadDword();
 		count = stream->ReadDword();
@@ -517,6 +526,8 @@ namespace Gmk
 			sound->Read(stream);
 			sounds.push_back(sound);
 		}
+
+		++itemsProcessed;
 
 		// Load sprites
 		stream->ReadDword();
@@ -528,6 +539,8 @@ namespace Gmk
 			sprites.push_back(sprite);
 		}
 
+		++itemsProcessed;
+
 		// Load backgrounds
 		stream->ReadDword();
 		count = stream->ReadDword();
@@ -537,6 +550,8 @@ namespace Gmk
 			background->Read(stream);
 			backgrounds.push_back(background);
 		}
+
+		++itemsProcessed;
 
 		// Load paths
 		stream->ReadDword();
@@ -548,6 +563,8 @@ namespace Gmk
 			paths.push_back(path);
 		}
 
+		++itemsProcessed;
+
 		// Load scripts
 		stream->ReadDword();
 		count = stream->ReadDword();
@@ -558,6 +575,8 @@ namespace Gmk
 			scripts.push_back(script);
 		}
 
+		++itemsProcessed;
+
 		// Load fonts
 		stream->ReadDword();
 		count = stream->ReadDword();
@@ -567,6 +586,8 @@ namespace Gmk
 			font->Read(stream);
 			fonts.push_back(font);
 		}
+
+		++itemsProcessed;
 	
 		// Load timelines
 		stream->ReadDword();
@@ -578,6 +599,8 @@ namespace Gmk
 			timelines.push_back(timeline);
 		}
 
+		++itemsProcessed;
+
 		// Load objects
 		stream->ReadDword();
 		count = stream->ReadDword();
@@ -587,6 +610,8 @@ namespace Gmk
 			object->Read(stream);
 			objects.push_back(object);
 		}
+
+		++itemsProcessed;
 
 		// Load rooms
 		stream->ReadDword();
@@ -598,9 +623,13 @@ namespace Gmk
 			rooms.push_back(room);
 		}
 
+		++itemsProcessed;
+
 		// Load last ids
 		lastInstancePlacedId = stream->ReadDword();
 		lastTilePlacedId = stream->ReadDword();
+
+		++itemsProcessed;
 
 		// Load include files
 		stream->ReadDword();
@@ -612,16 +641,22 @@ namespace Gmk
 			includeFiles.push_back(includeFile);
 		}
 
+		++itemsProcessed;
+
 		// Load packages
 		stream->ReadDword();
 		count = stream->ReadDword();
 		while(count--)
 			packages.push_back(stream->ReadString());
 
+		++itemsProcessed;
+
 		// Read game information
 		stream->ReadDword();
 		gameInformation = new GameInformation(this);
 		gameInformation->Read(stream);
+
+		++itemsProcessed;
 
 		// Read library creation code -- we should be able to safely ignore this
 		stream->ReadDword();
@@ -629,15 +664,21 @@ namespace Gmk
 		while(count--)
 			stream->ReadString();
 
+		++itemsProcessed;
+
 		// Read room execution order -- this too
 		stream->ReadDword();
 		count = stream->ReadDword();
 		while(count--)
 			stream->ReadDword();
 
+		++itemsProcessed;
+
 		// Read resource tree
 		resourceTree = new Tree(this);
 		resourceTree->Read(stream);
+
+		++itemsProcessed;
 	}
 
 	void GmkFile::SaveVer7(Stream* stream)
