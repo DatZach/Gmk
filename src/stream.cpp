@@ -53,63 +53,68 @@ namespace Gmk
 
 	unsigned char* Stream::DeflateStream(const StreamBuffer& sourceBuffer, std::size_t *deflatedLength)
 	{
-		// Find the required buffer size
-		uLongf destSize = (uLongf)((uLongf)sourceBuffer.size() * 1.001) + 12;
+		uLongf destSize = static_cast<uLongf>(sourceBuffer.size() * 1.001f + 12);
 		Bytef* destBuffer = new Bytef[destSize];
 
 		// Deflate
-		int result = compress2(destBuffer, &destSize, (const Bytef*)sourceBuffer.data(), sourceBuffer.size(), Z_BEST_COMPRESSION);
-		if (result != Z_OK) {
+		int result = compress2(destBuffer, &destSize, sourceBuffer.data(), sourceBuffer.size(), Z_BEST_SPEED);
+		if (result != Z_OK)
+		{
 			*deflatedLength = 0;
 			return NULL;
 		}
 
 		*deflatedLength = (size_t)destSize;
 
-		return (unsigned char*)destBuffer;
+		return destBuffer;
 	}
 
-	unsigned char* Stream::InflateStream(const StreamBuffer& sourceBuffer, std::size_t *infaltedLength)
+	unsigned char* Stream::InflateStream(const StreamBuffer& sourceBuffer, std::size_t *inflatedLength)
 	{
+		unsigned int destBufferSize = sourceBuffer.size();
+		unsigned char* destBuffer = new unsigned char[destBufferSize];
 		z_stream stream;
-		int len = sourceBuffer.size(), offset, retval;
-		char* out = new char[len];
-		memset(&stream, 0, sizeof(stream));
+		int result;
 
-		stream.next_in	= (Bytef*)sourceBuffer.data();
-		stream.avail_in = len;
-		stream.next_out = (Bytef*)out;
-		stream.avail_out = len;
+		std::memset(&stream, 0, sizeof(z_stream));
 
+		stream.next_in			= const_cast<Bytef*>(sourceBuffer.data());
+		stream.avail_in			= sourceBuffer.size();
+		stream.next_out			= destBuffer;
+		stream.avail_out		= destBufferSize;
+
+		// Begin inflating
 		inflateInit(&stream);
-		retval = inflate(&stream, 1);
-		while(stream.avail_in && !retval)
-		{
-			offset = (int)stream.next_out - (int)out;
-			len += 0x800;
-			stream.avail_out += 0x800;
-			out = (char*)realloc(out, len);
 
-			stream.next_out = (Bytef*)((int)out + offset);
-			retval = inflate(&stream, 1);
+		// Inflate blocks
+		while(stream.avail_in && !(result = inflate(&stream, 0)))
+		{
+			int offset = stream.next_out - destBuffer;
+
+			destBufferSize += 2048;
+			stream.avail_out += 2048;
+
+			destBuffer = static_cast<unsigned char*>(std::realloc(destBuffer, destBufferSize));
+			if (destBuffer == NULL)
+				return NULL;
+
+			stream.next_out = destBuffer + offset;
 		}
 
-		// TODO This shouldn't be verbose
-		if (!retval)
-			std::cerr << "[Warning] Unfinished compression?" << std::endl;
-		else if (retval != 1)
+		if (result != Z_STREAM_END)
 		{
-			std::cerr << "[Error  ] Compression error " << retval << std::endl;
-			delete[] out;
+			delete[] destBuffer;
+			return NULL;
 		}
 
-		len = stream.total_out;
-		out = (char*)realloc((void*)out, len);
+		// Trim excess memory allocated & end inflation
+		destBufferSize = stream.total_out;
+		destBuffer = static_cast<unsigned char*>(std::realloc(destBuffer, destBufferSize));
 		inflateEnd(&stream);
 
-		*infaltedLength = len;
+		*inflatedLength = destBufferSize;
 
-		return (unsigned char*)out;
+		return destBuffer;
 	}
 
 	void Stream::Rewind()
@@ -183,7 +188,7 @@ namespace Gmk
 		return static_cast<std::size_t>(length);
 	}
 
-	Stream::StreamBuffer Stream::GetMemoryBuffer() const
+	const Stream::StreamBuffer& Stream::GetMemoryBuffer() const
 	{
 		return buffer;
 	}

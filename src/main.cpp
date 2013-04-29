@@ -4,8 +4,9 @@
  */
 
 //#define USE_THREADS
+#define PROFILE
 
-#if defined USE_THREADS || defined _DEBUG
+#if defined USE_THREADS || defined _DEBUG || defined PROFILE
 #include <Windows.h>
 #endif
 
@@ -29,19 +30,29 @@ DWORD WINAPI SaveThread(LPVOID lpParam)
 
 int main(int argc, char* argv[])
 {
+	LARGE_INTEGER frequency, t1, t2;
+
+	QueryPerformanceFrequency(&frequency);
+
 	std::cout << "GMK API Library Test" << std::endl;
 
 	Gmk::GmkFile* gmk = new Gmk::GmkFile();
 
 	std::cout << "Loading... ";
-	gmk->Load("gm7.gmk");
+	QueryPerformanceCounter(&t1);
+	gmk->Load("Vivant.gm81");
+	QueryPerformanceCounter(&t2);
 	std::cout << "Done!" << std::endl;
+	std::cout << "Elapsed " << (t2.QuadPart - t1.QuadPart) * 1000.0 / frequency.QuadPart << "ms" << std::endl;
 
-	return 0;
+//	return 0;
 	
 	std::cout << "Defragmenting... ";
+	QueryPerformanceCounter(&t1);
 	gmk->DefragmentResources();
+	QueryPerformanceCounter(&t2);
 	std::cout << "Done!" << std::endl;
+	std::cout << "Elapsed " << (t2.QuadPart - t1.QuadPart) * 1000.0 / frequency.QuadPart << "ms" << std::endl;
 	
 #ifdef USE_THREADS
 	DWORD threadId;
@@ -53,8 +64,11 @@ int main(int argc, char* argv[])
 	CloseHandle(saveThread);
 #else
 	std::cout << "Saving... ";
+	QueryPerformanceCounter(&t1);
 	gmk->Save("out.gm81");
+	QueryPerformanceCounter(&t2);
 	std::cout << "Done!" << std::endl;
+	std::cout << "Elapsed " << (t2.QuadPart - t1.QuadPart) * 1000.0 / frequency.QuadPart << "ms" << std::endl;
 #endif
 	
 
@@ -63,6 +77,8 @@ int main(int argc, char* argv[])
 #ifdef _DEBUG
 	if (_CrtDumpMemoryLeaks() == 0)
 		std::cout << "No leaks!" << std::endl;
+	else
+		std::cout << "Leaks detected!" << std::endl;
 #endif
 
  	return 0;

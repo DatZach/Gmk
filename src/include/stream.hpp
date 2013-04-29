@@ -55,7 +55,7 @@ namespace Gmk
 
 		// Compression
 		unsigned char* DeflateStream(const StreamBuffer& sourceBuffer, std::size_t *deflatedLength);
-		unsigned char* InflateStream(const StreamBuffer& sourceBuffer, std::size_t *infaltedLength);
+		unsigned char* InflateStream(const StreamBuffer& sourceBuffer, std::size_t *inflatedLength);
 
 	public:
 		Stream(const std::string& filename, StreamMode mode);
@@ -67,7 +67,7 @@ namespace Gmk
 		void SetPosition(std::size_t value);
 		std::size_t GetPosition();
 		std::size_t GetLength();
-		StreamBuffer GetMemoryBuffer() const;
+		const StreamBuffer& GetMemoryBuffer() const;
 		const unsigned char* GetRawMemoryBuffer() const;
 
 		// Reading
