@@ -104,6 +104,26 @@ namespace Gmk
 
 	void Sound::ReadVer7(Stream* stream)
 	{
+		if (!stream->ReadBoolean())
+		{
+			exists = false;
+			return;
+		}
 
+		name			= stream->ReadString();
+		stream->ReadDword();
+		kind			= stream->ReadDword();
+		extension		= stream->ReadString();
+		filename		= stream->ReadString();
+
+		if (stream->ReadBoolean())
+			data = stream->Deserialize(false);
+
+		effects			= stream->ReadDword();
+		volume			= stream->ReadDouble();
+		pan				= stream->ReadDouble();
+		preload			= stream->ReadBoolean();
+
+		exists = true;
 	}
 }

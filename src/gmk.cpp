@@ -688,6 +688,8 @@ namespace Gmk
 
 	void GmkFile::LoadVer7(Stream* stream)
 	{
+		unsigned int count = 0;
+
 		// Decrypt GMK
 		Gmkrypt gmkrypt(Gmkrypt::ReadSeedFromJunkyard(stream));
 		Stream* decryptedStream = gmkrypt.Decrypt(stream);
@@ -705,6 +707,36 @@ namespace Gmk
 		settings = new Settings(this);
 		settings->Read(stream);
 
+		// Load sounds
+		stream->ReadDword();
+		count = stream->ReadDword();
+		while(count--)
+		{
+			Sound* sound = new Sound(this);
+			sound->Read(stream);
+			sounds.push_back(sound);
+		}
+
+		// Load sprites
+		stream->ReadDword();
+		count = stream->ReadDword();
+		while(count--)
+		{
+			Sprite* sprite = new Sprite(this);
+			sprite->Read(stream);
+			sprites.push_back(sprite);
+		}
+
+		// Load backgrounds
+		stream->ReadDword();
+		count = stream->ReadDword();
+		while(count--)
+		{
+			Background* background = new Background(this);
+			background->Read(stream);
+			backgrounds.push_back(background);
+		}
+		
 		delete decryptedStream;
 	}
 }

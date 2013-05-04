@@ -4,8 +4,9 @@
  *	(AKA Preprocessor madness)
  */
 
-#define USE_THREADS
-#define PROFILE
+//#define USE_THREADS
+//#define PROFILE
+//#define DEFRAGMENT
 
 #if defined USE_THREADS || defined _DEBUG || defined PROFILE
 #include <Windows.h>
@@ -19,8 +20,8 @@
 #include <iostream>
 #include <gmk.hpp>
 
+#define FILENAME_IN				"gm7.gmk"
 #define FILENAME_OUT			"out.gm81"
-#define FILENAME_IN				"Vivant.gm81"
 
 #ifdef USE_THREADS
 DWORD WINAPI SaveThread(LPVOID lpParam)
@@ -75,6 +76,7 @@ int main(int argc, char* argv[])
 #endif
 #endif
 
+#ifdef DEFRAGMENT
 	std::cout << "Defragmenting... ";
 #ifdef PROFILE
 	QueryPerformanceCounter(&t1);
@@ -86,6 +88,7 @@ int main(int argc, char* argv[])
 	std::cout << "Elapsed " << (t2.QuadPart - t1.QuadPart) * 1000.0 / frequency.QuadPart << "ms" << std::endl;
 #else
 	std::cout << "Done!" << std::endl;
+#endif
 #endif
 	
 #ifdef USE_THREADS
@@ -113,7 +116,7 @@ int main(int argc, char* argv[])
 
 	delete gmk;
 
-#ifdef _DEBUG
+#if defined _DEBUG && defined PROFILE
 	if (_CrtDumpMemoryLeaks() == 0)
 		std::cout << "No leaks!" << std::endl;
 	else

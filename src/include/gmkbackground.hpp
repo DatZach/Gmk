@@ -20,6 +20,9 @@ namespace Gmk
 		void ReadVer7(Stream* stream);
 
 	public:
+		bool					transparent;
+		bool					smoothEdges;
+		bool					preload;
 		bool					useAsTileset;
 		unsigned int			tileWidth;
 		unsigned int			tileHeight;

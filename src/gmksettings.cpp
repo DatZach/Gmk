@@ -335,6 +335,5 @@ namespace Gmk
 		product					= stream->ReadString();
 		copyright				= stream->ReadString();
 		description				= stream->ReadString();
-		stream->ReadTimestamp();
 	}
 }

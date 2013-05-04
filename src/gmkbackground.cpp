@@ -10,6 +10,9 @@ namespace Gmk
 {
 	Background::Background(GmkFile* gmk)
 		: GmkResource(gmk),
+		  transparent(false),
+		  smoothEdges(false),
+		  preload(false),
 		  useAsTileset(false),
 		  tileWidth(16),
 		  tileHeight(16),
@@ -107,6 +110,30 @@ namespace Gmk
 
 	void Background::ReadVer7(Stream* stream)
 	{
+		if (!stream->ReadBoolean())
+		{
+			exists = false;
+			return;
+		}
 
+		name						= stream->ReadString();
+		stream->ReadDword();
+		width						= stream->ReadDword();
+		height						= stream->ReadDword();
+		transparent					= stream->ReadBoolean();
+		smoothEdges					= stream->ReadBoolean();
+		preload						= stream->ReadBoolean();
+		useAsTileset				= stream->ReadBoolean();
+		tileWidth					= stream->ReadDword();
+		tileHeight					= stream->ReadDword();
+		tileHorizontalOffset		= stream->ReadDword();
+		tileVerticalOffset			= stream->ReadDword();
+		tileHorizontalSeperation	= stream->ReadDword();
+		tileVerticalSeperation		= stream->ReadDword();
+
+		if (stream->ReadBoolean())
+			data = stream->ReadBitmapOld();
+
+		exists = true;
 	}
 }

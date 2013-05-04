@@ -53,8 +53,12 @@ namespace Gmk
 		std::vector<Subimage>	subimages;
 		unsigned int			maskShape;
 		unsigned int			alphaTolerance;
+		bool					preciseCollisionChecking;
 		bool					seperateMasks;
+		bool					transparent;
+		bool					smoothEdges;
 		unsigned int			boundingBox;
+		bool					preload;
 
 		Sprite(GmkFile* gmk);
 		~Sprite();

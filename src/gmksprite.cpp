@@ -20,8 +20,13 @@ namespace Gmk
 		  originY(0),
 		  subimages(),
 		  maskShape(ShapePrecise),
+		  alphaTolerance(0),
+		  preciseCollisionChecking(true),
 		  seperateMasks(false),
-		  boundingBox(BbAutomatic)
+		  transparent(true),
+		  smoothEdges(false),
+		  boundingBox(BbAutomatic),
+		  preload(true)
 	{
 
 	}
@@ -141,6 +146,39 @@ namespace Gmk
 
 	void Sprite::ReadVer7(Stream* stream)
 	{
+		if (!stream->ReadBoolean())
+		{
+			exists = false;
+			return;
+		}
 
+		name			= stream->ReadString();
+		stream->ReadDword();
+		width			= stream->ReadDword();
+		height			= stream->ReadDword();
+		bboxLeft		= stream->ReadDword();
+		bboxRight		= stream->ReadDword();
+		bboxBottom		= stream->ReadDword();
+		bboxTop			= stream->ReadDword();
+		transparent		= stream->ReadBoolean();
+		smoothEdges		= stream->ReadBoolean();
+		preload			= stream->ReadBoolean();
+		boundingBox		= stream->ReadDword();
+		preciseCollisionChecking = stream->ReadBoolean();
+		originX			= stream->ReadDword();
+		originY			= stream->ReadDword();
+
+		unsigned int count = stream->ReadDword();
+		while(count--)
+		{
+			Subimage subimage;
+			subimage.width = width;
+			subimage.height = height;
+			subimage.data = stream->ReadBitmapOld();
+
+			subimages.push_back(subimage);
+		}
+
+		exists = true;
 	}
 }
