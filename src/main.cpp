@@ -4,6 +4,8 @@
  *	(AKA Preprocessor madness)
  */
 
+#ifdef STANDALONE
+
 //#define USE_THREADS
 //#define PROFILE
 #define DEFRAGMENT
@@ -127,3 +129,5 @@ int main(int argc, char* argv[])
 
  	return 0;
 }
+
+#endif

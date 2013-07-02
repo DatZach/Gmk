@@ -3,6 +3,7 @@
  *	GMK Action
  */
 
+#include <cstdlib>
 #include <sstream>
 #include <gmkaction.hpp>
 #include <gmk.hpp>

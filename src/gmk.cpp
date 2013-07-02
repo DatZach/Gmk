@@ -39,8 +39,8 @@ namespace Gmk
 		gameInformation = new GameInformation(this);
 		resourceTree = new Tree(this);
 
-		srand(static_cast<unsigned int>(time(NULL)));
-		gameId = rand() % GMK_MAX_ID;
+		std::srand(static_cast<unsigned int>(time(NULL)));
+		gameId = std::rand() % GMK_MAX_ID;
 	}
 
 	GmkFile::~GmkFile()

@@ -3,6 +3,8 @@
  *	Binary file stream helper
  */
 
+#include <cstdlib>
+#include <cstring>
 #include <stream.hpp>
 #include <zlib.h>
 
@@ -542,12 +544,12 @@ namespace Gmk
 
 	}
 
-	StreamException::~StreamException()
+	StreamException::~StreamException() throw()
 	{
 
 	}
 
-	const char* StreamException::what() const
+	const char* StreamException::what() const throw()
 	{
 		return message.c_str();
 	}
