@@ -4,6 +4,7 @@
  */
 
 #include <iostream>
+#include <cstdlib>
 #include <ctime>
 #include <stream.hpp>
 #include <gmk.hpp>
@@ -38,8 +39,8 @@ namespace Gmk
 		gameInformation = new GameInformation(this);
 		resourceTree = new Tree(this);
 
-		std::srand(static_cast<unsigned int>(time(NULL)));
-		gameId = std::rand() % GMK_MAX_ID;
+		srand(static_cast<unsigned int>(time(NULL)));
+		gameId = rand() % GMK_MAX_ID;
 	}
 
 	GmkFile::~GmkFile()
@@ -218,16 +219,20 @@ namespace Gmk
 		return true;
 	}
 
-#define Defragment(t, v)					\
-	for(std::vector<t ## *>::iterator itr = v ## .begin(); itr != v ## .end(); )  \
-	{										\
-		if (!(*itr)->GetExists())			\
-		{									\
-			delete *itr;					\
-			itr = v ## .erase(itr);			\
-			continue;						\
-		}									\
-		++itr;								\
+	template <class T>
+	void GmkFile::Defragment(std::vector<T*>& v)
+	{
+		for(typename std::vector<T*>::iterator itr = v.begin(); itr != v.end(); )
+		{
+			if (!(*itr)->GetExists())
+			{
+				delete *itr;
+				itr = v.erase(itr);
+				continue;
+			}
+				
+			++itr;
+		}
 	}
 
 	void GmkFile::DefragmentResources()
@@ -235,15 +240,15 @@ namespace Gmk
 		itemsProcessed = itemsToProcess = 0.0f;
 
 		// Step 1: Delete non-existant resources
-		Defragment(Sprite,		sprites);
-		Defragment(Sound,		sounds);
-		Defragment(Background,	backgrounds);
-		Defragment(Path,		paths);
-		Defragment(Script,		scripts);
-		Defragment(Font,		fonts);
-		Defragment(Timeline,	timelines);
-		Defragment(Object,		objects);
-		Defragment(Room,		rooms);
+		Defragment(sprites);
+		Defragment(sounds);
+		Defragment(backgrounds);
+		Defragment(paths);
+		Defragment(scripts);
+		Defragment(fonts);
+		Defragment(timelines);
+		Defragment(objects);
+		Defragment(rooms);
 
 		// Step 2: Defragment last placed IDs
 		lastInstancePlacedId = GMK_MIN_INSTANCE_LAST_ID;

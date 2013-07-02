@@ -6,7 +6,7 @@
 
 //#define USE_THREADS
 //#define PROFILE
-//#define DEFRAGMENT
+#define DEFRAGMENT
 
 #if defined USE_THREADS || defined _DEBUG || defined PROFILE
 #include <Windows.h>
@@ -20,7 +20,7 @@
 #include <iostream>
 #include <gmk.hpp>
 
-#define FILENAME_IN				"gm7.gmk"
+#define FILENAME_IN				"Vivant.gm81"
 #define FILENAME_OUT			"out.gm81"
 
 #ifdef USE_THREADS

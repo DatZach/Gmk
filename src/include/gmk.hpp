@@ -42,6 +42,9 @@ namespace Gmk
 		void CleanMemory();
 		void Finalize();
 
+		template <class T>
+		void Defragment(std::vector<T*>& v);
+
 		void SaveVer81(Stream* stream);
 		void LoadVer81(Stream* stream);
 
