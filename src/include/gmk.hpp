@@ -57,7 +57,7 @@ namespace Gmk
 		unsigned char						guid[GMK_GUID_LENGTH];
 		Settings*							settings;
 		std::vector<Trigger*>				triggers;
-		std::vector<std::pair<std::string, std::string>>
+		std::vector<std::pair<std::string, std::string> >
 											constants;
 		std::vector<Sound*>					sounds;
 		std::vector<Sprite*>				sprites;

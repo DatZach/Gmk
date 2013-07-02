@@ -53,6 +53,7 @@
       <Filter>resources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\gmkrypt.cpp" />
+    <ClCompile Include="..\..\src\gmkexception.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
@@ -124,6 +125,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\include\gmkrypt.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\include\gmkexception.hpp">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

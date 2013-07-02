@@ -6,6 +6,8 @@
 #ifndef __GMK_COMMON_HPP
 #define __GMK_COMMON_HPP
 
+#include <gmkexception.hpp>
+
 namespace Gmk
 {
 	typedef enum _Version

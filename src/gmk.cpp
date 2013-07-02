@@ -174,7 +174,7 @@ namespace Gmk
 
 			delete stream;
 		}
-		catch(std::exception e)
+		catch(GmkException e)
 		{
 			std::cerr << "Gmk::Save Error: " << e.what() << std::endl;
 			version = VerUnknown;
@@ -204,7 +204,7 @@ namespace Gmk
 
 			delete stream;
 		}
-		catch(std::exception e)
+		catch(GmkException e)
 		{
 			std::cerr << "Gmk::Load Error: " << e.what() << std::endl;
 			version = VerUnknown;
@@ -288,7 +288,7 @@ namespace Gmk
 				break;
 
 			default:
-				throw std::exception("Unsupported version");
+				throw GmkException("Unsupported version");
 		}
 	}
 
@@ -296,7 +296,7 @@ namespace Gmk
 	{
 		// Read header
 		if (stream->ReadDword() != GMK_MAGIC)
-			throw std::exception("Invalid magic!");
+			throw GmkException("Invalid magic!");
 
 		switch(stream->ReadDword())
 		{
@@ -321,7 +321,7 @@ namespace Gmk
 				break;
 
 			default:
-				throw std::exception("Unknown or unsupported version!");
+				throw GmkException("Unknown or unsupported version!");
 		}
 
 		switch(version)
@@ -356,7 +356,7 @@ namespace Gmk
 		// Write settings
 		stream->WriteDword(800);
 		if (settings == NULL)
-			throw std::exception("Settings are not declared");
+			throw GmkException("Settings are not declared");
 
 		settings->Write(stream);
 

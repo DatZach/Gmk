@@ -9,7 +9,6 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <exception>
 #include <stream.hpp>
 #include <gmkcommon.hpp>
 

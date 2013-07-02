@@ -88,7 +88,7 @@ namespace Gmk
 		bool					appliesToSomething;								// "Applies to" visible?
 		bool					question;										// Question flag
 		bool					mayBeRelative;									// "Relative" visible?
-		bool					not;											// Not flag
+		bool					notFlag;										// Not flag
 
 		Action(GmkFile* gmk);
 		~Action();

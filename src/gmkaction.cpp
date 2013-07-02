@@ -25,7 +25,7 @@ namespace Gmk
 		  appliesToSomething(false),
 		  question(false),
 		  mayBeRelative(false),
-		  not(false)
+		  notFlag(false)
 	{
 		for(unsigned int i = 0; i < ARGUMENT_COUNT; ++i)
 		{
@@ -117,7 +117,7 @@ namespace Gmk
 				stream->WriteString(argumentValue[i]);
 		}
 
-		stream->WriteBoolean(not);
+		stream->WriteBoolean(notFlag);
 	}
 
 	void Action::ReadVer81(Stream* stream)
@@ -149,7 +149,7 @@ namespace Gmk
 		for(unsigned int i = 0; i < count; ++i)
 			argumentValue[i] = stream->ReadString();
 
-		not						= stream->ReadBoolean();
+		notFlag					= stream->ReadBoolean();
 	}
 
 	void Action::WriteVer7(Stream* stream)

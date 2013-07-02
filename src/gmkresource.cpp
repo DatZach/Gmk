@@ -64,7 +64,7 @@ namespace Gmk
 				break;
 
 			default:
-				throw std::exception("No rule to Write resource");
+				throw GmkException("No rule to Write resource");
 		}
 	}
 
@@ -81,7 +81,7 @@ namespace Gmk
 				break;
 
 			default:
-				throw std::exception("No rule to Read resource");
+				throw GmkException("No rule to Read resource");
 		}
 	}
 

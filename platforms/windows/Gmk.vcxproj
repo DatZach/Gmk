@@ -77,6 +77,7 @@
     <ClCompile Include="..\..\src\gmk.cpp" />
     <ClCompile Include="..\..\src\gmkaction.cpp" />
     <ClCompile Include="..\..\src\gmkbackground.cpp" />
+    <ClCompile Include="..\..\src\gmkexception.cpp" />
     <ClCompile Include="..\..\src\gmkfont.cpp" />
     <ClCompile Include="..\..\src\gmkgameinfo.cpp" />
     <ClCompile Include="..\..\src\gmkincludefile.cpp" />
@@ -100,6 +101,7 @@
     <ClInclude Include="..\..\src\include\gmkaction.hpp" />
     <ClInclude Include="..\..\src\include\gmkbackground.hpp" />
     <ClInclude Include="..\..\src\include\gmkcommon.hpp" />
+    <ClInclude Include="..\..\src\include\gmkexception.hpp" />
     <ClInclude Include="..\..\src\include\gmkfont.hpp" />
     <ClInclude Include="..\..\src\include\gmkgameinfo.hpp" />
     <ClInclude Include="..\..\src\include\gmkincludefile.hpp" />

@@ -21,8 +21,9 @@ namespace Gmk
 			openMode |= std::fstream::out;
 
 		fileStream.open(filename.c_str(), openMode);
+
 		if (!fileStream)
-			throw std::exception("Cannot open file for streaming!");
+			throw StreamException("Cannot open file for streaming!");
 	}
 
 	Stream::Stream()
@@ -533,5 +534,16 @@ namespace Gmk
 		}
 		else
 			WriteDword(0);
+	}
+
+	StreamException::StreamException(const std::string& _message)
+		: message(_message)
+	{
+
+	}
+
+	const char* StreamException::what() const
+	{
+		return message.c_str();
 	}
 }

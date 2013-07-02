@@ -34,6 +34,8 @@ namespace Gmk
 	#define ColorGetGreen(x)							(((x) >> 8) & 0xFF)
 	#define ColorGetBlue(x)								(((x) >> 16) & 0xFF)
 
+	class StreamException;
+
 	class Stream
 	{
 	public:
@@ -46,7 +48,7 @@ namespace Gmk
 		} StreamMode;
 
 	private:
-		static const time_t GmTimestampEpoch = 0xFFFFFFFF7C5316BFULL;
+		static const unsigned long long GmTimestampEpoch = 0xFFFFFFFF7C5316BFULL;
 		std::fstream fileStream;
 		StreamBuffer buffer;
 		StreamMode streamMode;
@@ -106,6 +108,17 @@ namespace Gmk
 		// Serialization
 		Stream* Deserialize(bool decompress = true);
 		void Serialize(Stream* stream, bool compress = true);
+	};
+
+	class StreamException : public std::exception
+	{
+	private:
+		std::string message;
+
+	public:
+		StreamException(const std::string& _message);
+
+		const char* what() const;
 	};
 }
 

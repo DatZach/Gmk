@@ -128,7 +128,10 @@ namespace Gmk
 		for(unsigned int i = 0; i < count; ++i)
 		{
 			if (parent->contents[i]->resource == NULL && parent->contents[i]->status != Node::StatusGroup)
-				throw std::exception(("NULL resource \"" + parent->contents[i]->name + "\" in resource tree").c_str());
+			{
+				std::string message = "NULL resource \"" + parent->contents[i]->name + "\" in resource tree";
+				throw GmkException(message.c_str());
+			}
 
 			stream->WriteDword(parent->contents[i]->status);
 			stream->WriteDword(parent->contents[i]->group);
