@@ -13,7 +13,12 @@ namespace Gmk
 
 	}
 
-	const char* GmkException::what() const
+	GmkException::~GmkException() throw()
+	{
+
+	}
+
+	const char* GmkException::what() const throw()
 	{
 		return message.c_str();
 	}

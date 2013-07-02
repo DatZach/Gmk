@@ -542,6 +542,11 @@ namespace Gmk
 
 	}
 
+	StreamException::~StreamException()
+	{
+
+	}
+
 	const char* StreamException::what() const
 	{
 		return message.c_str();

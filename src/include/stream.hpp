@@ -117,8 +117,9 @@ namespace Gmk
 
 	public:
 		StreamException(const std::string& _message);
+		~StreamException() throw();
 
-		const char* what() const;
+		const char* what() const throw();
 	};
 }
 

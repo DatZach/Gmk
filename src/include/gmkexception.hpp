@@ -18,8 +18,9 @@ namespace Gmk
 
 	public:
 		GmkException(const std::string& _message);
+		~GmkException() throw();
 
-		const char* what() const;
+		const char* what() const throw();
 	};
 }
 
