@@ -22,14 +22,14 @@ OBJDIRS=$(sort $(dir $(OBJLIST))) $(dir $(TARGET))
 all: $(TARGET)
 
 $(TARGET): $(OBJLIST)
-	$(AR) rvs $(TARGET) $(OBJLIST)
+	@$(AR) rvs $(TARGET) $(OBJLIST) > /dev/null
 
 $(OBJECTS_PATH)/%.o: %.cpp | $(OBJDIRS)
-	$(CXX) $(foreach dir, $(INCLUDE_PATHS), -I$(dir)) -c $< -o $@
+	@$(CXX) $(foreach dir, $(INCLUDE_PATHS), -I$(dir)) -c $< -o $@
 
 $(OBJDIRS):
-	mkdir -p $@
+	@mkdir -p $@
 	
 clean:
-	@find $(OBJECTS_PATH) -name '*.o' | xargs rm  -f
-	@rm -f $(TARGET)
+	@find $(OBJECTS_PATH) -name '*.o' | xargs rm  -f > /dev/null
+	@rm -f $(TARGET) > /dev/null
